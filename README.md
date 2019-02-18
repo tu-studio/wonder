@@ -11,15 +11,21 @@ This package contains the following components of WONDER:
 The speaker configuration files and start-up scripts are for the I²AudioLab (https://i2audiolab.de) at the HAW Hamburg (https://haw-hamburg.de).
 
 Several bugfixes and changes have been applied to the code base of WONDER version 3.1.9 at the HAW.
+
 For a better portability the WONDER logging functionalities have been removed.
+
 Platform dependend code parts (suchs as POSIX *sleep*) have been replaced by platform independant versions from the C++ STL.
+
 The Qt4 dependencies of xwonder have been updated to Qt5.
 
 The code can be compiled on Linux and Windows.
+
 **Linux:** Tested with Ubuntu 17.10.
+
 **Windows:** Tested with Windows 10 64-bit, MSYS2 and MinGW-w64 GNU compiler toolchain 64.
 
 The SConstruct script for the compilation has been edited and compiles xwonder with Qt5 instead of Qt4 dependencies.
+
 **Note:** A compilation of xwonder with the SConstruct script on a Windows platforms is not implemented yet.
 
 ---
@@ -118,16 +124,21 @@ sudo ln -s wonderWinter/ current
 
 ##### Application configuration files:
 **/opt/wonder/current/configs/cwonder_config.xml:** Adjust projects path, number of sources and room geometry.
+
 **/opt/wonder/current/configs/twonder_config.xml:** Adjust speaker distance and focus radius.
 
 ##### Speaker configuration files:
 **/opt/wonder/current/configs/twonder_speakerarray.xml**
+
 or
+
 **/opt/wonder/current/configs/speakers/n101** and **/opt/wonder/current/configs/speakers/n102**
 
 ##### Node configuration files:
 **/opt/wonder/current/scripts/configs/cluster.conf:** Adjust username, IP address, JACK device, negative delay, etc.
+
 **/opt/wonder/current/scripts/configs/twonder_n101.conf:** Speaker array configuration of node 1 (n101).
+
 **/opt/wonder/current/scripts/configs/twonder_n102.conf:** Speaker array configuration of node 2 (n102).
 
 #### Important:
