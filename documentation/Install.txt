@@ -1,0 +1,246 @@
+========== WONDER BUILDING AND INSTALLATION ==========
+
+This manual should guide you when installing WONDER on your system and should be used as a reference for
+information regarding which files belong to the WONDER system. For information on using WONDER please
+refer to the file "Manual.txt", which should be found in the same directory this file is located in.
+
+
+
+===== REQUIREMENTS =====
+
+The libraries and tools you will need to build all modules of WONDER:
+scons
+pkg-config
+libxml++2.6
+libjack
+libfftw3
+libsndfile
+liblo
+Qt4.4x
+c++ compiler (like gcc/g++)
+
+
+
+===== QUICKSTART =====
+
+1) Go to WONDERs root directory. 
+   (Where the file SConstruct is located, usually one step above the directory where this file here is found.)
+2) As a normal user type: scons all=1
+   This will compile the sourcecode. 
+3) As a normal user type: sudo scons install all=1
+   (Or do it as root, if you cannot use sudo)
+   This will install the compiled code.
+4) Setup all the configuration files according to your system. Please refer to "Manual.txt" for this. 
+5) Start the modules you want to use.
+
+
+
+===== OVERVIEW =====
+
+WONDER uses SCons as its build tool. It enables you to compile and install WONDER quite easily. 
+WONDER is modular software so you can build each module on its own or the whole package.
+
+First navigate to WONDERs root directory, this is where the file SConstruct can be found.
+All the commands in this manual should be executed from this directory.
+
+In the WONDER root directory you will find the following subdirectories:
+
+"documentation" 
+Here you can find this installation instruction, a manual, an overview sheet for the OSC messages
+and commandline arguments for each module, the GPL and the WONDER fileheader which should also appear at the 
+beginning of every sourcecode file.
+
+"configs"
+Here you can find sample configuration files for all WONDER modules. Copies of these will also be installed
+when installing WONDER and used by default if you don't provide different files via commandline arguments
+when running the modules. 
+
+"dtd"
+This is where all the dtd (Document Type Definition) files are. Most modules use XML files for
+configuration and these XML files will be validated by the dtd files found here.
+
+"src"
+This is where all the source code is found. Each module has its own subdirectory. Library headers are
+located in "include". 
+
+"tools"
+Additional useful things. The qt4tool is needed so that SCons can build programms using Qt4. In
+scripts you can find some shell scripts which facilitate running WONDER as a distributed
+application across multiple machines. 
+
+
+After the first build you will find additional subdirectories:
+(It is mandatory that you run your first build as a normal user, i.e. the user who owns the
+WONDER directory, because these directories will be created with ownership for the user
+doing the build.)
+
+"bin"
+This is where all the final executable files and libraries will be written to when building.
+
+"obj"
+This is where all the intermediate build files (object files) will be written to. Usually
+nothing you would have to look into.
+
+
+If you haven't changed the default configuration in respect to where user data should be stored
+you will find two additional subdirectories when saving a project (and score):
+
+"projects"
+Cwonder stores its projects here by default.
+
+"scores"
+The Scoreplayer stores scores here by default.
+
+
+
+===== BUILDING =====
+
+You can build each WONDER module individually or multiple at once. 
+A build target is specified by name and by a flag (1 or 0) to build it (or not).
+
+Here are some examples:
+scons cwonder=1
+scons jfwonder=1 lib=1 cwonder=1
+scons all=1
+scons wfs=1
+
+Available modules are:
+lib         = the wonder library, needed by almost every other module
+jackpp      = a libray connecting WONDER to the JACK API
+cwonder     = the central communication program for all wfs related modules
+twonder     = wfs rendering
+fwonder     = convolution engine
+xwonder     = graphical user interface for wfs
+scoreplayer = "source data tape recorder" for wfs
+jfwonder    = auxiliary timer application for cwonder
+qfwonder    = graphical representation tool for fwonder
+tracker     = application generating osc messages based on a connected tracking device 
+
+There are some special convenience targets provided:
+all = this builds all of the above targets
+wfs = wavefield synthesis related targets, namely: lib, jackpp, twonder, cwonder, xwonder, scoreplayer, jfwonder
+bas = binaural  synthesis related targets, namely: lib, jackpp, fwonder, qfwonder, tracker
+
+All targets are turned off by default, so nothing really happens by running scons unless you specify one or 
+more targets.
+
+
+Options for debugging or optimizing the code are set by the build option:
+
+build=debug
+This passes the argument "-c" to the compiler and generates debuggable code.
+
+build=release
+This passes the following arguments to the compiler
+-O3
+-march=native
+-msse
+-msse2
+-msse3
+-mfpmath=sse
+and defines the NDEBUG symbol. This generates optimized code.
+Feel free to adjust those settings according to your system by editing the SConstruct file.
+
+Here is an example:
+scons bas=1 build=debug
+
+The optimized release configuration is used by default.
+
+
+A file containing information about your last build can be found in WONDERs root directory and is
+called wonder.built.info. This file also gets copied into the same directory as the configuration files 
+when installing, so you can reconstruct what happend on the last installation. But be aware that 
+currently only data about the last installation is kept. So if you only installed some modules in 
+addition to already existing other modules the data about the previous modules will not be kept
+in wonder.built.info.
+
+
+
+===== HELP =====
+
+To get help on SCons type:
+scons -H	( for standard SCons arguments )
+scons -h	( for WONDER related SCons build options, e.g. available targets and their default settings )
+
+
+
+===== CLEAN UP =====
+
+To remove the files built so far you can use scons' option "-c". This will clear all intermediate build files
+as well as the executables and libraries. This does not remove installed files. This only affects the WONDER root 
+directory and its subdirectories. You must provide targets just as when building. 
+
+Here are some examples:
+scons -c all=1
+scons -c twonder=1 fwonder=1
+scons -c wfs=1
+
+
+
+===== INSTALL =====
+
+In order to install modules on your system you need to first build the module. It is mandatory that you provide the
+correct "installto" path even when not yet installing. This will set some internal search paths which are vital to
+the correct workings of WONDER. If something does not work out when running WONDER, then delete the file "src/include/config.h"
+and redo the whole build process with the correct "installto" path set. For information on the build process please refer to
+the BUILD section for this. After the desired modules have been built you can install them by typing "scons install" along 
+with the target options you specified when building. By default installation will be done to "/usr/local". Your can 
+change this by providing scons with the option "installto" which should be the path you want to install to. For a detailed 
+overview of what will be installed where please refer to the UNINSTALL section below. Usually you need root privileges to 
+access directories suited for installation. 
+
+Here are some examples:
+(sudo) scons install all=1
+(sudo) scons install cwonder=1
+(sudo) scons install wfs=1 installto=/opt/wonder
+
+
+
+===== UNINSTALL =====
+
+There is no mechanism for a clean uninstall yet, sorry. In order to remove all installed parts of WONDER you have to remember (or find out) to 
+which directory it was installed. Below is a complete list of possibly installed files.
+
+The executables are by default located in /usr/local/bin. 
+Possible files are:
+cwonder3
+fwonder3
+jfwonder3
+qfwonder3
+scoreplayer3
+tracker3
+twonder3
+xwonder3
+
+The libraries are by default located in /usr/local/lib.
+Possible files are:
+libwonder3.so
+libjackpp.so
+libisense.so
+
+The configuration files are by default located in /usr/local/share/wonder3/configs.
+Possible files are:
+cwonder_config.xml
+fwonder_config.xml
+scoreplayer_config.xml
+tracker_config.xml
+twonder_config.xml
+twonder_speakerarray.xml
+wonder.built.info
+
+The dtd files are by default located in /usr/local/share/wonder3/dtd.
+cwonder_config.dtd
+cwonder_project.dtd
+fwonder_config.dtd
+scoreplayer_config.dtd
+scoreplayer_score.dtd
+tracker_config.dtd
+twonder_config.dtd
+twonder_speakerarray.dtd
+
+The files for the daemon services are usually /etc.
+Possible files are:
+init.d/cwonder-daemon
+init.d/jfwonder-daemon
+default/cwonder-daemon
+default/jfwonder-daemon

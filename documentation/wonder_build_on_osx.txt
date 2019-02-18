@@ -1,0 +1,43 @@
+Building wonder on OSX:
+
+Dependencies:
+
+- Mostly available from macports:
+
+  Make sure you have macports: http://www.macports.org/install.php
+  (Make sure "port" is in your path --- maybe it's in /opt/local/bin and you already had a .bash_profile, so the macports installer's changes to your .profile didn't do anythin...)
+
+  Install dependencies:
+  # sudo port install scons liblo pkgconfig libxmlxx2
+
+- Get from elsewhere:
+
+  - Take jack from jackosx.com
+  - Take Qt4 from qt website, and follow instructions there.  (http://qt.nokia.com/downloads/mac-os-cpp)
+
+- Get the source to WONDER!
+  http://swonder.sourceforge.net
+
+Make sure you have the updated SConstruct file.  (The correct new one does not include "-march=native" in the CCFLAGS.)
+
+cd to the top level of the wonder distribution
+
+The following builds all the components that will build on OSX: (= wfs minus scoreplayer and xwonder)
+
+We need to set the PKG_CONFIG_PATH and ensure that the PATH is set right.  This command is all one line:
+
+PKG_CONFIG_PATH=/opt/local/lib/pkgconfig/:/usr/local/lib/pkgconfig/  PATH=$PATH:/opt/local/bin/ scons lib=1 jackpp=1 cwonder=1 twonder=1 jfwonder=1
+
+# xwonder needs to be build separately for now:
+cd src/xwonder/
+qmake -spec macx-g++
+make
+
+cp -r xwonder3.app ../../bin/
+
+# installing (as root)
+# go back to the top level of the wonder distribution
+cd ../../
+
+# install (as root)
+ PKG_CONFIG_PATH=/opt/local/lib/pkgconfig/:/usr/local/lib/pkgconfig/ PATH=$PATH:/opt/local/bin/ sudo scons install lib=1 jackpp=1 cwonder=1 twonder=1 jfwonder=1

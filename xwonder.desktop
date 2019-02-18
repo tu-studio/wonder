@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=xwonder
+Version=1.0
+Comment=Graphical user interface to control the WONDER rendering suite
+Exec=/opt/wonder/current/bin/xwonder
+Icon=/opt/wonder/current/configs/xwonder_logo.png
+Categories=Audio;AudioVideo;Multimedia;
+Keywords=Audio;
+Terminal=false
+Type=Application

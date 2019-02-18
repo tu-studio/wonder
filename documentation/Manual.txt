@@ -1,0 +1,391 @@
+========== WONDER MANUAL ==========
+
+This is the WONDER manual. It should guide you when using WONDER and should be used as a reference for 
+information regarding configuring the WONDER system. For information on installing WONDER please
+refer to the file "Install.txt", which should be found in the same directory this file is located in.
+
+Information on the OSC messages of each module and on the commandline arguments of each module can be found in
+the file "OSC_and_Commandline_Overview.ods".
+Information on the configuration files of each module can be found in the file "Configurationfiles_Overview.ods".
+
+===== QUICKSTART =====
+
+
+===== OVERVIEW =====
+
+===== WAVE FIELD SYNTHESIS =====
+
+For general information on Wave Field Synthesis and the development of WONDER, you are advised to the Ph.D. thesis:
+
+On Wave Field Synthesis and electro-acoustic music, with a particular focus on the reproduction of arbitrarily shaped sound sources
+by Marije Baalman
+
+This is available as PDF at:
+http://opus.kobv.de/tuberlin/volltexte/2008/1836/
+Or as a book (VDM Verlag, ISBN 978-3639077315) via Amazon or other online shops.
+
+===== BINAURAL SYNTHESIS =====
+
+
+
+
+===== CWONDER =====
+Executable    file: cwonder3
+Configuration file: cwonder_config.xml
+
+1) build and install cwonder
+
+	a) build: to build cwonder and the other wonder programs change the directory to the svn copy you received. Once you are in the root directory of the svn copy you can build the wonder programs by just typing: 
+		- scons
+	This will build all the targets that are selected. When scons starts the decisions which targets are build are printed to the screen. Scons has several build targets (i.e. cwonder, jfwonder, twonder...) that can be selected. You can enable or disable them. The follwonig command will build all the selected tagets except cwonder:
+		- scons cwonder=0
+	To get more help you can use the following two commands:
+		- scons -h (help-wonder)
+		- scons -H (help-scons)
+ 
+	b) install: After you build cwonder you may want to install it. To install cwonder you must have root priviligies. Once you have the superuser powers type:
+		- scons install
+	The default path where the files (executables, dtd's etc) are copied is /usr/local. You can change this by setting the prefix (this must be done for each scons command).
+		- scons prefix=/opt install 
+
+
+2) start cwonder
+
+	a) from the command line
+ 		To see the command line options for cwonder start cwonder with the -h option. 
+		example: cwonder -h 
+		If you start cwonder without any options the default settings are used. They are set in cwonder_globalconfig.cpp.
+	
+	 b) A debian init script is placed in the /etc/init.d folder. This init script can be used to start and stop cwonder on a debian machine. It will not work for another distribution (except debian alikes like ubuntu). Since cwonder gets the time information from jfwonder this jack application needs to be started as well. jfwonder can run on a different machine that is why we did not include the start and stop in the init script of cwonder and therefore provided jfwonder with it's own debian init script. Both applications run daemonized in the background. The following commands can be used to control cwonder. You must be superuser to run the script.
+
+		- /etc/init.d/cwonder-daemon start
+		- /etc/init.d/cwonder-daemon stop
+		- /etc/init.d/cwonder-daemon restart
+		- /etc/init.d/cwonder-daemon status	
+
+	You can configure the script by editing the source defaults file which is /etc/default/cwonder-daemon. Even so the init script is run as root, the script changes to the USER before starting the process. The variable is also used to determine the name of the pid files which are saved in /tmp/wonder. This enables to run several instances at the same time. If the you check the status of cwonder and jfwonder and find out that they are not running you can find out what is going on by having a look in the log files. Cwonder uses syslog to do logging and the messages are placed in /var/log/wonder.log. To have a look at the log messages you may want to use one of the following commands.
+		- cat /var/log/wonder.log
+		- tail /var/log/wonder.log
+		- watch tail -n 23 /var/log/wonder.log
+
+You must setup syslog on your machine to write the logs in /var/log/wonder.log. Add this line at the end of /etc/syslog.conf (local7.* /var/log/wonder.log). Otherwise syslog will log the messages in /var/log/syslog (or /var/log/messages on a default fedora core 6) as well but this mixed with the rest of the syslog output. After modifying /etc/syslog.conf you must restart your syslog daemon (/etc/init.d/syslogd restart). The pid files of the process are saved in /tmp/wonder. The sticky bit (t) of this directory is set that the files of this directory can not be deleted of another user which has not created them. The directory gets created by the daemon of non-existent.
+
+If you do not use the debain init scripts yuo can start the deamonized cwonder and jfwonder by hand with the following commands:
+		- cwonder -d -u username -v
+		- jfwonder -d -u username -v
+These puts the applications in the background. The logs will be writen to the syslog daemon as well if the syslogd is runing on your system. To see if starting cwonder/jfwonder as a daemon you can do: 
+		- pstree | grep cwonder
+
+
+
+
+	Here is a step through a startup case on a single machine:
+		- start the jack server
+		- start cwonder
+			- a possible error is that you have cwonder already running and you can not start another osc server using the same port
+		- start jfwonder
+			- will try and connect to the jack server 
+				- a possible error is that the jackd is not running or as a differnt user and you do not have the priviligies to connect to 
+ 			- will try to connect to cwonder
+				- a possible error is that cwonder is not running, jfwonder will then wait for a second and retry to connect. After a certain number of retries (100) without beeing able to connect jfwonder will exit.
+	If you restart cwonder you need to restart jfwonder as well in order to get the timing information.
+				
+
+	c) wonder is a "distributed application" that communicates over OSC. cwonder is the glue part that each of the other parts communicates with. The only thing the applications need to know is the address of cwonder which can be retrieved from the config file. The address can either be a dotted-decimal IP address or a hostname which than is converted to an IP address by the underlying osc library liblo. 
+	The project path is the standard path cwonder will store its projects. When you use the "/WONDER/project/*" commands to handle your project work cwonder will use this path to store and read the projects when no absolute path is specified.  
+   	The maximum number of sources is an integer value which determines the maximum number of sources available in a project. Here is an example how a wonder config file looks like.
+
+	<?xml version="1.0"?>
+	<!DOCTYPE wonderconfig PUBLIC "" "wonderconfig.dtd">
+
+	<wonderconfig>
+  		<cwaddr host="127.0.0.1" port="58100"/> 
+        	<defaults projectpath="/home/wfsuser/wonder/projects" maxsources="64" />
+	</wonderconfig>
+
+	
+	To read in the wonder config file from within your aplication you can use the SwonderConfig class which use is described in wonder_config.h. Or have a look at a usecase in gwonder or cwonder.
+
+	
+3) streams
+
+	a) cwonder's basic structure can be described as an osc bridge. You can receive from and send to osc streams. The first thing we want to show is how to receive a specific osc stream. You only need to send a "connect command" to cwonder and cwonder will add you as a receiver to this stream. From now on you will receive all the messages that are send to that stream.
+	"/WONDER/stream/score/connect", "" 
+	"/WONDER/stream/score/connect", "ss", host, port 
+
+	If you use the first command (where you do not specify a host and port) the information within the message sent is used. The second command should be used if the address you want to receive the stream on differs from the one you are sending of. Cwonder will reply to the connect messages. The syntax of the reply message is:
+	/WONDER/reply, "sis", path, error_number, error_message 
+
+	If the error_number is not 0 an error occured. The error_message is a text about the status and the action. You can use the error_number to test the result and the error_message for verbose output.   
+	If you connect to the visual stream cwonder will send you in addition to the reply command the xml representation of the currently loaded project. You have to make your osc server to listen to the following command in order to recieve this message ( "/WONDER/project/current", "is", err_num, xmlstring ). err_num will be not 0 if no project is loaded in cwonder.
+
+	After you have been connected to a stream cwonder will send you a ping command periodically to see if you are still up and running. cwonder has an internal list of connections and will remove you from that list if you do not reply to the ping commands. Since commands can get lost you are not removed from the list when you do not reply to each ping, a threshold takes care of knowing when a receiver is down. To ping/pong commands have got the following syntax. 
+
+	- /WONDER/stream/score/ping", "i", sequence_number
+	- /WONDER/stream/score/pong", "i", sequence_number
+	
+	The sequence number is for internal use. Just send the number you received back. You do not need to disconnect from a stream. If you do not send the pong command back you are removed from the list.
+
+	There are commands where cwonder needs to change its state. For example cwonder keeps track of the current positions of the sources. The command /WONDER/source/position is processed by cwonder and the information then send to the streams (in this case to the streams: render, visual, score(if recording is enabled) ).  
+	You can send to a stream directly as well. This message is then only forwarded to a stream without cwonder processing it. One case where this should be used is for replies to actions. If for example the score player is started from the user interface the score player should use the following syntax to reply to this command. 
+
+	- "/WONDER/stream/score/send", "ssis", "/WONDER/reply", path, 0, "start to play"
+	
+	The namespace of the message is /WONDER/stream/score/send. The message the other receivers of this stream will receive is /WONDER/reply in this case which is the first argument of this message. The other arguments just follow like in the other cases. cwonder will then create from the above message the following message and send them to the receivers of the stream score.
+
+	- "/WONDER/reply", "sis" path, 0, "start to play"
+
+	b) In the current release 4 streams are implemented where you can connect to and receive from. OSC messages have to use the following pathes to use the streams. 
+    		- "/WONDER/stream/render
+		- "/WONDER/stream/score
+		- "/WONDER/stream/visual
+		- "/WONDER/stream/timer
+	Most users (like UI, visualisers) will connect to the stream visual. Whenever there is a change in the sources (position, angle, type) or a new scene is selected the receivers of the visual stream will get the OSC messsages as well. When you connect to such a stream cwonder will send you the current state of the scene. 
+	The render stream has the difference that the timing information in such a message (timestamp, duration) is converted to "inner wonder time" by cwonder.
+	cwonder does the timestamping for the messages when a score gets recorded. When cwonder gets the record message it will use the current time to generate the timestamps and will stamp the messages like position, angle etc with these stamps. This is why there is a score stream to which you can connect as well and from which you will receive the messages with the correct timestamps.
+
+4) scenes
+	All the commands below will send a reply command to the address the command is received from. The reply command has got the following form: /WONDER/reply, "sis", path, error_number, error_message. If there has been no error occured the error_number will be zero. 
+
+	- "/WONDER/project/load", "ss", projectname, path
+	   - In addition to the reply command the cwonder will send the calling application the xml representation of the currently loaded project. You have to make your osc server to listen to the following command in order to receive this message ( "/WONDER/project/current", "is", err_num, xmlstring ). err_num will be non 0 if no project is loaded in cwonder.
+
+	- "/WONDER/project/create", "ss", projectname, path
+	- "/WONDER/project/save", "ss", projectname, path
+
+	- "/WONDER/scene/select", "if", id, duration 
+	- "/WONDER/scene/set", "i", id
+	- "/WONDER/scene/add", "i", id
+	- "/WONDER/scene/remove", "i", id
+	- "/WONDER/scene/copy", "ii", sourceid, targetid 
+	- "/WONDER/scene/name", "is", id, name
+
+	These affect the current selected scene.
+	- "/WONDER/scene/source/name", "is", srcid, name   (enable srcid)	
+	- "/WONDER/scene/source/enable", "ii", srcid, 1   (enable srcid)	
+	- "/WONDER/scene/source/enable", "ii", srcid, 0   (disable srcid)
+	- "/WONDER/scene/source/enable", "ii", -1, 1   (enable all)
+	- "/WONDER/scene/source/enable", "ii", -1, 0   (disable all)
+
+
+5) position, angle and friends
+
+ 	To control the sources you will need the following commands.    
+    	- "/WONDER/source/position", "ifffff", srcid, x, y, z, timestamp, duration
+    	- "/WONDER/source/positionxy", "iff", srcid, x, y
+	This command is used to control the position of a source by a mobile phone connected to a laptop over bluetooth. For simplicity the z coordinate was not provided as argument. Since the commands must be processed directly the timestamp and duration arguments were set by cwonder to an appropriate value.	
+    	- "/WONDER/source/type", "iiff", srcid, type, angle, timestamp
+    	- "/WONDER/source/angle", "ifff", srcid, angle, timestamp, duration 
+	- "/WONDER/source/mute", "ii", srcid, mute
+		mute=1 the source is muted, mute=0 the source is unmuted
+    	- "/WONDER/source/fadejump_threshold", "ii", srcid, threshold 
+
+
+6) control cwonder 
+	These are commands for debugging use. A source may change its position quite often that is why these events are not logged by cwonder by default. In some cases you may want to check if cwonder is receiving messages already. You can toggle logging of these messages (inclede are type and angle as well) on or off with the following command "/CWONDER/enable/posout". To debug the timing information you receive by jfwonder you can toggle the logging of this informmation by the following command "/CWONDER/enable/timerout". Do not forget to turn these commmands off again when not in use anymore since they may result in bad performance.
+
+
+
+===== TWONDER =====
+Executable    file: twonder3
+Configuration file: twonder_config.xml
+                    twonder_speakerarray.xml
+
+
+
+
+===== XWONDER =====
+Executable file: xwonder3
+
+xwonder - graphical user interface for WONDER (Wave field synthesis of new dimensions
+
+As of now these preliminary presumptions are made:
+	- If at startup of xwonder there is already a project loaded in cwonder, the
+	  user can choose whether to use this project or to discard it and reset all
+	  sources. If he chooses to use the current project cwonder will be set to the
+	  data transmitted by /WONDER/project/current (the scene with the lowest id
+	  will be "selected", because the actual state of cwonder may differ from this data. 
+	  (Further explanation:
+	   at startup xwonder connects itself with the cwonder-messagestream
+	   /WONDER/stream/visual, which replies to a connect with a /WONDER/source/posi-
+	   tion and a /WONDER/source/type message for each source (even for disabled
+	   sources) and in addition to that it sends an xml-string representation of the
+	   currently loaded project in it's actual state. Problem is, that there is no
+	   full information about the current state of cwonder (number of sources used, 
+	   names, mute) so in order to give a representations of what you will actu-
+	   ally hear xwonder selects a scene.)
+	- The dimensions of the room in which the WFS (Wavefield-Synthesis) system is
+	  installed are known to xwonder (this version here is hardcoded for room H104
+	  of the Technical Universitiy of Berlin (TU))
+	- Cwonder (the controlling unit of WONDER) the scoreplayer and xwonder run on 
+	  the same computer, so that all files will be stored locally. (A SAMBA-solution
+	  to this will be tested in the next few days, to allow a distriution of the
+	  WONDER components to several computers.)
+
+
+
+a) The aim of xwonder is to provide an interface, which facilitates the use of WONDERs
+   functions and establishes a stringent workflow for particular tasks.
+   Right now there are 4 tasks defined (for definitions of terms see section b)):
+
+	1) Invoke a defined, static state of the room in which there are x sound
+	   sources, each of a certain type, with a fixed position (and orientation,
+	   if it's a planewave-source) and ID-number. (In short: "Load a Scene")
+	2) Create or edit a defined static state of the room and store it for future 
+	   use. ("Create/edit an save a Scene")
+	3) Play a pre-recorded or -composed piece in which the room changes its state
+	   over time. ("Play a Score")
+	4) Create or edit a piece where the room changes its state over time and 
+	   store it for future use. ("Create/edit and save a score")
+
+   So there are two different output entities with WONDER, a Scene or a Score. There is
+   a third intermediate entity called a Project.
+	 
+b) In order to provide a consistent and meaningful terminology for users of WONDER the
+   following entities are defined.
+   (The terms here may differ slightly in meaning from similar terms used in other
+    "backend" softwaremodules of WONDER, which should not be visible to the users.)
+
+	- Scene:
+		A defined, static state of the room with a fixed number of soundsources,
+		each with the parameters position (and orientation for planewave-sources),
+		type, name and id#. A Scene always has a name.
+		A Scene can be stored in an individual file.
+		("backend"-wise this is a cwonder-projectfile consisting of a single scene)
+
+	- Score:
+		A piece containing movements and events of sources over time. A Score
+		always has a name. A Score represents a finished piece of work, ready for
+		playback.
+		A Score can be stored in an individual file.
+		("backend"-wise this is a scoreplayer-scorefile.)
+
+	- Project:
+		It's purpose is to create Scenes and/or Scores. A Project is a collection
+		of Scenes. 
+		A Project can be stored in an individual file.
+		(a cwonder-Projectfile)
+		NOT IMPLEMENTED YET:
+		A Project should have an associated Scorefile, which should be loaded
+		along with the Project.
+
+	- Scene-Selector: (Only available if working on a "Project" as opposed to a "Scene")
+		A GUI-tool, which is a collection of pushbuttons. Each button is assigned
+		an individual Scene. It's purpose is to compose a Score of several Scenes,
+		either by navigating to a certain point in time(NOT IMPLEMENTED YET)
+		and selecting a Scene or selecting a Scene when in scoreplayer-recordmode.
+		This works much like your tv-remotecontrol, push a button and the room responds.
+		To assign a Scene to a button just organise the sources in the room to your
+		liking and assign this configuration to an existing button or add a new button
+		which will be associated with this current configuration.
+
+
+
+
+
+===== SCOREPLAYER =====
+Executable    file: scoreplayer3
+Configuration file: scoreplayer_config.xml
+
+REQUIREMENTS
+
+- MIDI:
+- scoreplayer is dependent from a MTC (MIDI Time Code) master like ardour and the MTC master should talk MMC (MIDI Machine Control), too.   
+    - Both hast to enabled inside the chosen sequencer (maybe ardour).  
+    - the MTC Master has to talk with scoreplayer's virtual MIDI ports (scoreplayer_in, scoreplayer_out). 
+    - hint: these connections can be automised with the help of jack's patchbay functionality.
+
+    - at startup scoreplayer builds a virtual midi input and output port. these ports are used for the MTC and MMC communication. 
+      the MMC and MTC client has to connect to these ports
+    - scoreplayer lstens to every incoming MIDI traffic on the scoreplayer_in port, the usage of more than one MTC/MMC client is not 
+      tested so take care if you connect other sequencers.
+    - MTC:	
+        - choose as MTC framerate 25 frames per second, because there is currently a synch problem especially with ardour by using different framerates.
+    - MMC:
+        - MMC is used for the transports communication between scoreplayer and the chosen sequencer. scoreplayer is able to care for the transports of 
+        connected MMC machines and/or to the "OSC visual-stream" connected clients (like xwonder)
+
+- OSC: 
+    - scoreplayer is connected to the swonder modules (cwonder, xwonder, etc.) per OSC (open sound control). 
+     at startup time scoreplayer tries to connect to cwonder's visual stream.
+    - scoreplayer reads cwonder's address from swonder's defaults.xml file but 
+    - it is possible to set cwonder's address per command line (see scoreplayer -h)
+
+DOCUMENTATION
+
+scoreplayer's basic functionality is to record and play back incoming WFS control datas. these datas can be saved in a XML file which contains a complete description of a time changing 
+scenario like a musical piece for instance.
+this description, let's say the scorefile format, is devided into two parts: 
+	1. the orchestra section 
+	2. and a time dependent score section
+
+this kind of representation is devided from XML3DAUDIO and csound.
+
+orchestra: 
+	the orchestra describes the start situation at time 0.0 sec and contains a complete description of every possible source.
+score:
+	the score contains the time based control datas. theses datas are not complete source descriptions they contain
+        just the changing information of a source. 
+
+
+at startuptime 
+- scoreplayer receives swonders system state and uses it as startscene (the orchestra). after the system check scoreplayer receives the name of the 
+currently used project file and tries to read it from the actual project path. inside the project file is saved the name of the project's scorefile. 
+if scoreplayer is able to read this scorefile, it will load the scorefile. so the startscene is set with the orchestra contents and the score is set by the score contents of the file.
+- then swonder, xwonder and every possible MMC and OSC Client are set to time 0.0sec and the transports stati are disabled (global rec off, source rec off, stop)
+- now swonder is ready to start the play back of the "piece".
+
+playback
+- press play in xwonder, the MMC client (ardour) or send /WONDER/score/play (OSC)
+
+recording
+- enable record mode in xwonder, ardour or with "/WONDER/score/record 1"
+- press play in xwonder, the MMC client (ardour) or send /WONDER/score/play (OSC)
+
+save scorefile
+- use xwonder, or send "/WONDER/score/save path"
+
+read scorefile
+- use xwonder, or send "/WONDER/score/load path"
+
+ERRORS:
+ERROR 1: a possible error is that the MTC Master is not connected to scoreplayer's MIDI port. 
+
+
+
+
+
+===== JFWONDER =====
+Executable file: jfwonder3
+
+jfwonder is a helper application for cwonder.
+Its purpose is to provide the current timing information of the render engines which is used to synchronize the control commands and it's chain of execution.
+jfwonder is a jack client that sends the actual frame rate to cwonder every 1024 samples by default.
+This event makes cwonder 'tick'.
+Commands gets processed each 1024 samples - the control rate is 1024 samples.
+This is true for commands with a timestamp > 0.
+The realtime commands (timestamp 0) gets processed immediatly (they are not put on the event stack) and distributed to the render engines.
+So even when running the jack server at a sampling rate of for example 128 the control rate will be 1024 by default when not sending 'realtime commands'.
+The 'tick' is also used to provide the timing basis for sending the ping commands. If jfwonder is not connected to cwonder the ping commands will not work because of the lack of a time basis. 
+
+
+
+===== FWONDER =====
+Executable    file: fwonder3
+Configuration file: fwonder_config.xml
+
+
+
+===== QFWONDER =====
+Executable file: qfwonder3
+
+You have to provide qfwonder with the same configuration file that is used by the instance of fwonder, that qfwonder should visualize.
+
+
+===== TRACKER =====
+Executable    file: tracker3
+Configuration file: tracker_config.xml
+
+===== QUESTIONS =====
+Questions can be directed to the swonder user mailinglist on sourceforge.net
+https://lists.sourceforge.net/lists/listinfo/swonder-list

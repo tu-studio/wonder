@@ -1,0 +1,17 @@
+WONDER - Wave field synthesis Of New Dimensions of Electronic music in Realtime
+http://swonder.sourceforge.net    
+
+Authors:
+
+Marije Baalman
+Tobias Blaschke
+Torben Hohn
+Thilo Koch
+Eddie Mond
+Daniel Plewe 
+Simon Schampijer
+
+Technische Universität Berlin, Germany
+ *  Audio Communication Group          *
+ *  www.ak.tu-berlin.de                *
+ *  Copyright 2006-2008  		       *

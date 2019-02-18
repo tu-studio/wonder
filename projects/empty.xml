@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<!DOCTYPE cwonder_project SYSTEM "cwonder_project.dtd">
+<cwonder_project name="empty">
+  <scenario/>
+  <snapshot id="1" name="Snapshot1">
+    <source id="0" type="1" name="Source #1" posx="3" posy="-0" posz="2" angle="-0" groupId="0" colorR="0" colorG="0" colorB="255" invRotation="0" invScaling="0" doppler="1"/>
+  </snapshot>
+</cwonder_project>
