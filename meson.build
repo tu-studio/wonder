@@ -10,8 +10,7 @@ lodep = dependency('liblo')
 gludep = dependency('glu')
 
 inc = include_directories('src/include')
-
-moc_files = qt5.preprocess(moc_headers: ['src/xwonder/XwonderMainWindow.h',
+moc_h = ['src/xwonder/XwonderMainWindow.h',
 	'src/xwonder/XwonderConfig.h',
 	'src/xwonder/Sources3DWidget.h',
 	'src/xwonder/SourcePositionDialog.h',
@@ -27,10 +26,11 @@ moc_files = qt5.preprocess(moc_headers: ['src/xwonder/XwonderMainWindow.h',
 	'src/xwonder/OSCReceiver.h',
 	'src/xwonder/FilenameDialog.h',
 	'src/xwonder/AddChannelsDialog.h',
-	'src/xwonder/StreamClientWidget.h'],
-                           moc_extra_arguments: ['-DMAKES_MY_MOC_HEADER_COMPILE'],
-                           include_directories: inc,
-                           dependencies: qt5dep)
+	'src/xwonder/StreamClientWidget.h']
+qrc = 'src/xwonder/icons.qrc'
+preproc_files = qt5.preprocess(moc_headers: moc_h,
+	qresources: qrc)
+
 conf_data = configuration_data()
 conf_data.set('VERSION_STR', '"3.1.9"')
 
@@ -52,9 +52,8 @@ xwonder_src = ['src/xwonder/Xwonder.cpp',
 	'src/xwonder/FilenameDialog.cpp',
 	'src/xwonder/AddChannelsDialog.cpp',
 	'src/xwonder/StreamClientWidget.cpp',
-	qt5.preprocess(qresources : 'src/xwonder/icons.qrc'),
 	'src/lib/oscin.cpp']
 	
-executable('xwonder', xwonder_src, moc_files,
+executable('xwonder', xwonder_src, preproc_files,
            include_directories: inc, 
            dependencies : [qt5dep, xmldep, jackdep, lodep, gludep])
