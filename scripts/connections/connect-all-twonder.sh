@@ -9,5 +9,5 @@ source ${SCRIPTDIR}/../configs/cluster.conf
 # - connect the outputs (Speaker) of the twonder instance with the outputs of the soundcard
 for node in $CLUSTER_NODES;
 do
-    rsh $USER_NAME@$node /opt/wonder/current/scripts/connections/connect-twonder.sh $node > /dev/null &
+    ssh $USER_NAME@$node "/opt/wonder/current/scripts/connections/connect-twonder.sh $node > /dev/null &"
 done

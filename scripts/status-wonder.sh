@@ -17,14 +17,14 @@ echo "Pre-Delay      : $NEG_DELAY meters"
 ## Scan control computer
 echo ""
 echo ".::| WFS CONTROL |::."
-rsh $CWONDER_IP pstree | egrep "(jackd|cwonder|twonder|xwonder)"
+ssh $CWONDER_IP pstree | egrep "(jackd|cwonder|twonder|xwonder)"
 echo ""
 
 # Scan nodes
 for node in $CLUSTER_NODES;
 do
     echo $node;
-    rsh $USER_NAME@$node pstree | egrep "(jackd|cwonder|twonder|xwonder)"
+    ssh $USER_NAME@$node pstree | egrep "(jackd|cwonder|twonder|xwonder)"
     echo ""
 done
 echo ""

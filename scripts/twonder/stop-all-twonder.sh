@@ -6,5 +6,5 @@ source ${SCRIPTDIR}/../configs/cluster.conf
 
 for node in $CLUSTER_NODES;
 do
-    rsh $USER_NAME@$node killall twonder
+    ssh $USER_NAME@$node "killall twonder"
 done

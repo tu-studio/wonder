@@ -6,5 +6,5 @@ source ${SCRIPTDIR}/../configs/cluster.conf
 
 for node in $CLUSTER_NODES;
 do
-    rsh $USER_NAME@$node /opt/wonder/current/scripts/jack/start-jackd.sh
+    ssh $USER_NAME@$node "/opt/wonder/current/scripts/jack/start-jackd.sh"
 done
