@@ -1647,7 +1647,8 @@ void Sources3DWidget::mousePressEvent(QMouseEvent* event) {
             }
         } else if(groupHit) {
             currGroup = pSelectBuf[ hitIndexes[ assumedHit ] + 3 + pSelectBuf[ hitIndexes[ assumedHit ] ] - 1 ];
-            sliceHit  = pSelectBuf[ hitIndexes[ assumedHit ] + 3 ];
+            // TODO: Think about dead code
+            // sliceHit  = pSelectBuf[ hitIndexes[ assumedHit ] + 3 ];
         }
 
         update(false, false);
