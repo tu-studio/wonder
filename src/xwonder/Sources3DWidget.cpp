@@ -93,7 +93,8 @@ Sources3DWidget::Sources3DWidget(QWidget* parent) : QGLWidget(parent),
     connect(timer, SIGNAL(timeout()), this, SLOT(updateGL()));
     //timer->start(100);    // timeout after   100 ms => 10 fps
     //timer->start(50);     // timeout after    50 ms => 20 fps
-    timer->start(16.66667); // timeout after 16.67 ms => 60 fps
+    timer->start(16);   // timeout after 16.67 ms => 60 fps
+                        // explicit conversion to int = 16
 }
 
 
