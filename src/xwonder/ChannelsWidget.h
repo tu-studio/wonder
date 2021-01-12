@@ -67,7 +67,7 @@ public:
     void reset();
 
     void  setMode(bool projectOnlyMode);
-    QSize sizeHint();
+    QSize sizeHint() const override;
     void  setChannel(Source& source);
     int   getNoSources() const;
     int   sourceIDIsActive(int sourceID);

@@ -121,7 +121,7 @@ void ChannelsWidget::setMode(bool projectOnlyMode) {
     }
 }
 
-QSize ChannelsWidget::sizeHint() {
+QSize ChannelsWidget::sizeHint() const {
     //temporal dummy-widget, in order to give ChannelsWidget its later size
     SourceWidget temp("1234567890", 0, 0);
     return temp.sizeHint();
