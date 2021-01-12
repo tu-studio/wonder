@@ -2050,9 +2050,9 @@ void Sources3DWidget::wheelEvent(QWheelEvent* event) {
         //else
         {
             if(perspectiveOn) {
-                zoom -= event->delta() / (8 * 30.0);
+                zoom -= event->angleDelta().y() / (8 * 30.0);
             } else {
-                orthoBounds += event->delta() / (8 * 30.0);
+                orthoBounds += event->angleDelta().y() / (8 * 30.0);
                 project();
             }
         }

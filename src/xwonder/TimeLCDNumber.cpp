@@ -200,10 +200,10 @@ void TimeLCDNumber::wheelEvent(QWheelEvent* event) {
     int s  = seconds;
     int ms = milliSeconds;
 
-    int delta = event->delta() / (8 * 15);
+    int delta = event->angleDelta().y() / (8 * 15);
 
     // check over which element we are and set new value with check for wrap arounds
-    int x = event->x();
+    int x = event->position().x();
 
     if(x <= 28) { // hours
         h += delta;
