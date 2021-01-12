@@ -67,9 +67,9 @@ public:
     XwonderConfig(int argc, char* argv[], QObject* parent = 0);
 
     lo_address  cwonderAddr;
-    const char* cwonderHost;
-    const char* cwonderPort;
-    const char* xwonderPort;
+    std::string cwonderHost;
+    std::string cwonderPort;
+    std::string xwonderPort;
     int  maxNoSources;
     bool verbose;
     bool runWithoutCwonder;
