@@ -959,8 +959,8 @@ void Sources3DWidget::drawSphere(int ndiv, float radius) {
 
     glBegin(GL_TRIANGLES);
 
-    for(int i = 0 ; i < 20; ++i) {
-        drawTriangle(vdata[ tindices[ i ][ 0 ] ], vdata[ tindices[ i ][ 1 ]], vdata[ tindices[ i ][ 2 ]], ndiv, radius);
+    for(auto & tindice : tindices) {
+        drawTriangle(vdata[ tindice[0] ], vdata[ tindice[1] ], vdata[ tindice[2] ], ndiv, radius);
     }
 
     glEnd();
