@@ -47,7 +47,7 @@ QString Snapshot::getName() const {
 }
 
 
-QList<unsigned int> Snapshot::getXids() const {
+QList<unsigned int> Snapshot::getXIDs() const {
     return sources.keys();
 }
 
@@ -59,8 +59,8 @@ Source& Snapshot::getSourceByXid(unsigned int xID) {
         return *(sources.value(xID));
     } else {
         Source* invalidSource = new Source(0, 0, this);
-        sources.insert(invalidSource->getXid(), invalidSource);
-        return *(sources.value(invalidSource->getXid()));
+        sources.insert(invalidSource->getXID(), invalidSource);
+        return *(sources.value(invalidSource->getXID()));
     }
 }
 
@@ -99,7 +99,7 @@ void Snapshot::setSnapshot(Snapshot& snapshot) {
     }
 
     // now copy the data from the incoming snapshot
-    QList<unsigned int> xIDs = snapshot.getXids();
+    QList<unsigned int> xIDs = snapshot.getXIDs();
     QList<unsigned int>::const_iterator it;
 
     for(it = xIDs.constBegin(); it != xIDs.constEnd(); ++it) {
@@ -116,7 +116,7 @@ void Snapshot::setName(QString newName) {
 
 
 void Snapshot::addSource(const Source& source) {
-    sources.insert(source.getXid(), new Source(source, this));
+    sources.insert(source.getXID(), new Source(source, this));
 }
 
 
