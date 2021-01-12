@@ -496,7 +496,6 @@ void XwonderMainWindow::sendOSCSourceColor(unsigned int xID, const QColor& color
 
 void XwonderMainWindow::sendOSCSourceType(unsigned int xID, bool planewave) {
     const Source& source     =  sources3DView->getSource(xID);
-    SourceCoordinates coords =  source.getCoordinatesRounded().mapGLCoordToWonderCoord();
 
     //type point = 1, type planewave = 0
     int type = (int) ! planewave;
