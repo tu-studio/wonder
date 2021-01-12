@@ -1747,15 +1747,12 @@ void Sources3DWidget::mouseMoveEvent(QMouseEvent* event) {
                             QList< unsigned int >::iterator it;
 
                             for(it = sourceXIDs.begin(); it != sourceXIDs.end(); ++it) {
-                                if(sources.contains(*it)) {
-                                    temp1 = sources.value(*it);
-                                }
-
+                                temp1 = sources.value(*it);
                                 temp1->setx(temp1->getx()  + (dx / mouseGranularity));
                             }
 
                             update(true, false, true, true);
-                        } else { // single source
+                        } else if(temp1) { // single source
                             temp1->setx(temp1->getx() + (dx / mouseGranularity));
                             update(true, false);
                         }
@@ -1769,15 +1766,12 @@ void Sources3DWidget::mouseMoveEvent(QMouseEvent* event) {
                             QList<unsigned int>::iterator it;
 
                             for(it = sourceXIDs.begin(); it != sourceXIDs.end(); ++it) {
-                                if(sources.contains(*it)) {
-                                    temp1 = sources.value(*it);
-                                }
-
+                                temp1 = sources.value(*it);
                                 temp1->sety(temp1->gety() - (dy / mouseGranularity));
                             }
 
                             update(true, false, true, true);
-                        } else { // single source
+                        } else if(temp1) { // single source
                             temp1->sety(temp1->gety() - (dy / mouseGranularity));
                             update(true, false);
                         }
@@ -1914,16 +1908,13 @@ void Sources3DWidget::mouseMoveEvent(QMouseEvent* event) {
                             QList< unsigned int >::iterator it;
 
                             for(it = sourceXIDs.begin(); it != sourceXIDs.end(); ++it) {
-                                if(sources.contains(*it)) {
-                                    temp1 = sources.value(*it);
-                                }
-
+                                temp1 = sources.value(*it);
                                 temp1->sety(temp1->gety() - (dy / mouseGranularity));
                                 temp1->setx(temp1->getx() + (dx / mouseGranularity));
                             }
 
                             update(true, false, true, true);
-                        } else {
+                        } else if(temp1) {
                             temp1->sety(temp1->gety() - (dy / mouseGranularity));
                             temp1->setx(temp1->getx() + (dx / mouseGranularity));
                             update(true, false);
@@ -1951,11 +1942,7 @@ void Sources3DWidget::mouseMoveEvent(QMouseEvent* event) {
                 }
 
                 //rotate planewave-sources
-                Source* temp1 = NULL;
-
-                if(sources.contains(currSource)) {
-                    temp1 = sources.value(currSource);
-                }
+                Source* temp1 = sources.value(currSource);
 
                 //timesliceList* tempAll = sources[currSource-1];
 
