@@ -122,8 +122,8 @@ signals:
     void viewRelatedKeyPressed(QKeyEvent* event);
 
 protected:
-    void contextMenuEvent(QContextMenuEvent* event);
-    void keyPressEvent(QKeyEvent* event);
+    void contextMenuEvent(QContextMenuEvent* event) override;
+    void keyPressEvent(QKeyEvent* event) override;
 
 private slots:
     //void changeID( unsigned int xID, int oldID, int sourceID );
