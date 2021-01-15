@@ -21,8 +21,10 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "SourceGroup.h"
 #include <QGLWidget>
+#include "SourceGroup.h"
+#include "Colors.h"
+
 
 SourceGroup::SourceGroup(int groupID, QObject* parent) : QObject(parent), active(false), groupID(groupID), coordinates(0.0, 0.0, 0.0) {
     // defaultcolor is red

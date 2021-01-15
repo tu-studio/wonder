@@ -40,9 +40,6 @@
 #include <QColor>
 
 
-
-#include "Colors.h"
-
 class QLineEdit;
 class QToolButton;
 class QLabel;

@@ -39,6 +39,7 @@
 
 #include <QDebug>
 
+#include "Colors.h"
 #include "SourceWidget.h"
 #include "XwonderConfig.h"
 

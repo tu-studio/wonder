@@ -30,7 +30,6 @@
 #include <QList>
 #include <QMap>
 
-#include "Colors.h"
 
 class QVBoxLayout;
 class QContextMenuEvent;

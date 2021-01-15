@@ -35,6 +35,7 @@
 #include "SourceWidget.h"
 #include "AddChannelsDialog.h"
 #include "XwonderConfig.h"
+#include "Colors.h"
 
 #include <QDebug>
 //----------------------------------------------------------------------------//

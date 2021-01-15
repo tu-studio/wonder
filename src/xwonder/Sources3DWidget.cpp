@@ -36,6 +36,7 @@
 #include "SourcePositionDialog.h"
 #include "Sources3DWidget.h"
 #include "XwonderConfig.h"
+#include "Colors.h"
 
 #include <QMenu>
 #include <QVector>
