@@ -30,6 +30,13 @@
 
 #include <GL/glu.h>
 
+#ifdef __gl_glext_h_
+#ifndef __glext_h_
+#define __glext_h_ 1
+#endif
+#endif
+
+
 #include <QGLWidget>
 //#include <QList>
 #include <QMap>

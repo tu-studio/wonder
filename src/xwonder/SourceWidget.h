@@ -24,6 +24,14 @@
 #ifndef SOURCEWIDGET_H
 #define SOURCEWIDGET_H
 
+#include <GL/glu.h>
+
+#ifdef __gl_glext_h_
+#ifndef __glext_h_
+#define __glext_h_ 1
+#endif
+#endif
+
 #include <QApplication>
 #include <QGroupBox>
 #include <QComboBox>
@@ -31,7 +39,7 @@
 #include <QWheelEvent>
 #include <QColor>
 
-#include <GL/glu.h>
+
 
 #include "Colors.h"
 
