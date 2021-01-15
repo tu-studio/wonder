@@ -1889,7 +1889,7 @@ void XwonderMainWindow::parseLoadedProjectXMLDump(QString xmlProject) {
         QColor color(0, 255, 0);
         QDomNamedNodeMap attributes = sources.attributes();
 
-        for(unsigned int i = 0; i < attributes.length(); ++i) {
+        for(int i = 0; i < attributes.length(); ++i) {
             QDomAttr attr;
 
             if(attributes.item(i).isAttr()) {
@@ -1948,7 +1948,7 @@ void XwonderMainWindow::parseLoadedProjectXMLDump(QString xmlProject) {
         QColor color(255, 0, 0);
         QDomNamedNodeMap attributes = groups.attributes();
 
-        for(unsigned int i = 0; i < attributes.length(); ++i) {
+        for(int i = 0; i < attributes.length(); ++i) {
             QDomAttr attr;
 
             if(attributes.item(i).isAttr()) {
