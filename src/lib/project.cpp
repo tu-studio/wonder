@@ -42,7 +42,7 @@ using std::exception;
 using std::list;
 
 using xmlpp::Attribute;
-using xmlpp::NodeSet;
+// using xmlpp::Node::NodeSet;
 using xmlpp::DtdValidator;
 using xmlpp::Document;
 using xmlpp::Node;
@@ -137,7 +137,7 @@ void Project::writeProjectToDOM() {
     try {
         Element::AttributeList::const_iterator attribIter;
 
-        if(const Element* nodeElement = dynamic_cast< const Element* >(rootNode)) {
+        if(Element* nodeElement = dynamic_cast<Element* >(rootNode)) {
             // write header
             for(auto& attribute : nodeElement->get_attributes()) {
                 attribName = attribute->get_name();
@@ -329,9 +329,8 @@ int Project::takeSnapshot(int snapshotID, string name) {
         // Add snapshot to the Dom representation and list of snapshots
         if(rootNode) {
             // construct new node for new snapshot
-            Element* snapshotElement = NULL;
+            Element* snapshotElement = dynamic_cast<xmlpp::Element*>(rootNode)->add_child_element("snapshot");
             ostringstream os;
-            snapshotElement = rootNode->add_child("snapshot");
             os.str("");
             os << snapshotID;
             snapshotElement->set_attribute("id", os.str());
@@ -521,7 +520,7 @@ int Project::copySnapshot(int fromID, int toID) {
                 // construct new node for new snapshot
                 Element* newSnapshotElement = NULL;
                 ostringstream os;
-                newSnapshotElement = rootNode->add_child("snapshot");
+                newSnapshotElement = dynamic_cast<xmlpp::Element*>(rootNode)->add_child_element("snapshot");
                 os.str("");
                 os << toID;
                 newSnapshotElement->set_attribute("id", os.str());
@@ -868,7 +867,7 @@ void Scenario::writeToDOM() {
             }
 
             const Glib::ustring out = os.str();
-            attribute->set_value(out);
+            dynamic_cast<xmlpp::AttributeNode*>(attribute)->set_value(out);
         }
 
         // write source data
@@ -910,7 +909,7 @@ void Scenario::writeToDOM() {
                         }
 
                         const Glib::ustring out = os.str();
-                        srcAttrib->set_value(out);
+                        dynamic_cast<xmlpp::AttributeNode*>(srcAttrib)->set_value(out);
                     }
                 }
             }
@@ -941,7 +940,7 @@ void Scenario::writeToDOM() {
                         }
 
                         const Glib::ustring out = os.str();
-                        grpAttrib->set_value(out);
+                        dynamic_cast<xmlpp::AttributeNode*>(grpAttrib)->set_value(out);
                     }
                 }
             }
@@ -961,7 +960,7 @@ void Scenario::activateSource(int id) {
             // but only if a parent node does exist
             if(sourcesVector[ i ].node == NULL  &&  node != NULL) {
                 ostringstream os;
-                Element* srcElement = node->add_child("source");
+                Element* srcElement = dynamic_cast<xmlpp::Element*>(node)->add_child_element("source");
                 os.str("");
                 os << sourcesVector[ i ].id;
                 srcElement->set_attribute("id", os.str());
@@ -1030,7 +1029,7 @@ void Scenario::activateSource(int id) {
             // add it to the dom representation
             if(sourcesVector[ id ].node == NULL  &&  node != NULL) {
                 ostringstream os;
-                Element* srcElement = node->add_child("source");
+                Element* srcElement = dynamic_cast<xmlpp::Element*>(node)->add_child_element("source");
                 os.str("");
                 os << sourcesVector[ id ].id;
                 srcElement->set_attribute("id", os.str());

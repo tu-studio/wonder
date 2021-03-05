@@ -123,7 +123,7 @@ void Segment::syncToXML() {
             }
 
             const Glib::ustring out = os.str();
-            attribute->set_value(out);
+            dynamic_cast<xmlpp::AttributeNode*>(attribute)->set_value(out);
         }
     }
 }
@@ -227,7 +227,7 @@ int SegmentArray::readFromFile(string fileName) {
 Segment* SegmentArrayIter::operator*() {
     //Segment *tmp = new Segment( xmlpp::NodeSet::iterator::operator*() );
     //return tmp;
-    return new Segment(xmlpp::NodeSet::iterator::operator*());
+    return new Segment(xmlpp::Node::NodeSet::iterator::operator*());
 }
 
 //---------------------------end of SegmentArrayIter-------------------------//

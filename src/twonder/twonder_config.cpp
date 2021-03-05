@@ -272,7 +272,7 @@ int TwonderConfig::readConfig() {
 
 
 void TwonderConfig::getFocus(xmlpp::Node* node) {
-    xmlpp::NodeSet nset = node->find("/twonder_config/focus");
+    auto nset = node->find("/twonder_config/focus");
 
     if(nset.size() > 0) {
         if(const xmlpp::Element* nodeElement = dynamic_cast<const xmlpp::Element*>(*nset.begin())) {
