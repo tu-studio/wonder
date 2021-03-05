@@ -1,4 +1,7 @@
-project('wonder', 'cpp', license: 'GPL', default_options: 'cpp_std=c++11')
+project('wonder', 'cpp',
+        version: '3.1.9',
+        license: 'GPL',
+        default_options: 'cpp_std=c++11')
 qt5 = import('qt5')
 
 qt5_dep = dependency('qt5', modules: ['Core', 'Gui', 'Widgets', 'OpenGL', 'Xml'])
