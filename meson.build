@@ -1,10 +1,7 @@
 project('wonder', 'cpp',
         version: '3.1.9',
-        license: 'GPL',
+        license: 'GPL-3.0-or-later',
         default_options: 'cpp_std=c++11')
-
-conf_data = configuration_data()
-conf_data.set('VERSION_STR', '"3.1.9"')
 
 qt5 = import('qt5')
 
@@ -16,6 +13,7 @@ liblo_dep = dependency('liblo')
 # Xwonder dependencies
 glu_dep = dependency('glu')
 
+subdir('src/include')
 inc = include_directories('src/include')
 
 subdir('src/lib')
