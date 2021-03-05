@@ -5,7 +5,7 @@ project('wonder', 'cpp',
 
 qt5 = import('qt5')
 
-qt5_dep = dependency('qt5', modules: ['Core', 'Gui', 'Widgets', 'OpenGL', 'Xml'])
+qt5_dep = dependency('qt5', modules: ['Core', 'Gui', 'Widgets', 'OpenGL', 'Xml'], include_type: 'system')
 thread_dep = dependency('threads')
 xml_dep = dependency('libxml++-2.6')
 jack_dep = dependency('jack')
