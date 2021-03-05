@@ -80,7 +80,7 @@ public:
     std::vector<Segment*> segments;
 
 private:
-    void getSegments(const xmlpp::Node* node, const Glib::ustring& xpath);
+    void getSegments(xmlpp::Node* node, const Glib::ustring& xpath);
 
     int readFromFile(std::string fileName);
 };
@@ -93,14 +93,14 @@ private:
 // An iterator for the dom representation of the segments of speakers.
 // This iterator is used to traverse the dom tree. If a segment is found, a new object of
 // type Segment gets constructed and initialised by the attributes of the xml-element.
-class SegmentArrayIter : public xmlpp::NodeSet::iterator {
+class SegmentArrayIter : public xmlpp::Node::NodeSet::iterator {
 
 public:
-    SegmentArrayIter() : xmlpp::NodeSet::iterator() {
+    SegmentArrayIter() : xmlpp::Node::NodeSet::iterator() {
         // nothing
     }
 
-    SegmentArrayIter(const xmlpp::NodeSet::iterator& other) : xmlpp::NodeSet::iterator(other) {
+    SegmentArrayIter(const xmlpp::Node::NodeSet::iterator& other) : xmlpp::Node::NodeSet::iterator(other) {
     }
 
     ~SegmentArrayIter() {

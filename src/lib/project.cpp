@@ -42,7 +42,7 @@ using std::exception;
 using std::list;
 
 using xmlpp::Attribute;
-using xmlpp::NodeSet;
+// using xmlpp::Node::NodeSet;
 using xmlpp::DtdValidator;
 using xmlpp::Document;
 using xmlpp::Node;
@@ -106,9 +106,7 @@ int Project::createScenario() {
     newSnapshot->id = 0; // 0 is default, but just to make sure
 
     if(rootNode) {
-        Element* snapshotElement = NULL;
-        snapshotElement   = rootNode->add_child("scenario");
-        newSnapshot->node = snapshotElement;
+        newSnapshot->node = dynamic_cast<xmlpp::Element*>(rootNode)->add_child_element("scenario");
 
         // Validate and add snapshot to the list of snapshots
         validate();
@@ -137,12 +135,9 @@ void Project::writeProjectToDOM() {
     try {
         Element::AttributeList::const_iterator attribIter;
 
-        if(const Element* nodeElement = dynamic_cast< const Element* >(rootNode)) {
+        if(Element* nodeElement = dynamic_cast<Element* >(rootNode)) {
             // write header
-            const Element::AttributeList& attributes = nodeElement->get_attributes();
-
-            for(attribIter = attributes.begin(); attribIter != attributes.end(); ++attribIter) {
-                Attribute* attribute = *attribIter;
+            for(auto& attribute : nodeElement->get_attributes()) {
                 attribName = attribute->get_name();
                 ostringstream os;
 
@@ -151,7 +146,7 @@ void Project::writeProjectToDOM() {
                 }
 
                 const Glib::ustring out = os.str();
-                attribute->set_value(out);
+                dynamic_cast<xmlpp::AttributeNode*>(attribute)->set_value(out);
             }
 
             // write snapshots
@@ -238,7 +233,7 @@ void Project::readFromFile(Glib::ustring filepath) {
                 Node* snapshotNode = *it;
 
                 if(snapshotNode->get_name() == "text") {
-                    rootNode->remove_child(snapshotNode);
+                    rootNode->remove_node(snapshotNode);
                 } else {
                     Node::NodeList childNodeList = snapshotNode->get_children();
                     Node::NodeList::iterator it;
@@ -247,7 +242,7 @@ void Project::readFromFile(Glib::ustring filepath) {
                         Node* sourceOrGroupNode = *it;
 
                         if(sourceOrGroupNode->get_name() == "text") {
-                            snapshotNode->remove_child(sourceOrGroupNode);
+                            snapshotNode->remove_node(sourceOrGroupNode);
                         }
                     }
                 }
@@ -285,7 +280,7 @@ string Project::show() {
                     childList =  nodeElement->get_children();
 
                     for(Node::NodeList::iterator srcIt = childList.begin(); srcIt != childList.end(); ++srcIt) {
-                        nodeElement->remove_child(*srcIt);
+                        nodeElement->remove_node(*srcIt);
                     }
                 }
             }
@@ -332,9 +327,8 @@ int Project::takeSnapshot(int snapshotID, string name) {
         // Add snapshot to the Dom representation and list of snapshots
         if(rootNode) {
             // construct new node for new snapshot
-            Element* snapshotElement = NULL;
+            Element* snapshotElement = dynamic_cast<xmlpp::Element*>(rootNode)->add_child_element("snapshot");
             ostringstream os;
-            snapshotElement = rootNode->add_child("snapshot");
             os.str("");
             os << snapshotID;
             snapshotElement->set_attribute("id", os.str());
@@ -481,11 +475,11 @@ int Project::deleteSnapshot(int snapshotID) {
             Node::NodeList nList = ((*iter)->node)->get_children();
 
             for(Node::NodeList::iterator niter = nList.begin(); niter != nList.end(); ++niter) {
-                (*iter)->node->remove_child((*niter));
+                (*iter)->node->remove_node((*niter));
             }
 
             // remove snapshot from the dom representation
-            rootNode->remove_child((*iter)->node);
+            rootNode->remove_node((*iter)->node);
 
             // delete snapshot and remove it from the snapshots list
             delete *iter;
@@ -524,7 +518,7 @@ int Project::copySnapshot(int fromID, int toID) {
                 // construct new node for new snapshot
                 Element* newSnapshotElement = NULL;
                 ostringstream os;
-                newSnapshotElement = rootNode->add_child("snapshot");
+                newSnapshotElement = dynamic_cast<xmlpp::Element*>(rootNode)->add_child_element("snapshot");
                 os.str("");
                 os << toID;
                 newSnapshotElement->set_attribute("id", os.str());
@@ -566,12 +560,9 @@ int Project::renameSnapshot(int snapshotID, string name) {
 }
 
 
-void Project::readSnapshotsFromDOM(const Node* node, const Glib::ustring& xmlPath) {
-    NodeSet nSet = node->find(xmlPath);
-    NodeSet::iterator iter;
-
-    for(iter = nSet.begin(); iter != nSet.end(); ++iter) {
-        Scenario* t = new Scenario(*iter, maxNoSources);
+void Project::readSnapshotsFromDOM(Node* node, const Glib::ustring& xmlPath) {
+    for(auto& iter : node->find(xmlPath) ) {
+        Scenario* t = new Scenario(iter, maxNoSources);
         snapshots.push_back(t) ;
     }
 }
@@ -675,11 +666,7 @@ Scenario::~Scenario() {
 void Scenario::readFromDOM() {
     if(const Element* nodeElement = dynamic_cast< const Element* >(node)) {
         // read scenario data
-        const Element::AttributeList& attributes = nodeElement->get_attributes();
-
-        for(Element::AttributeList::const_iterator iter = attributes.begin(); iter != attributes.end(); ++iter) {
-            const Attribute* attribute = *iter;
-
+        for(auto const& attribute : nodeElement->get_attributes()) {
             attribName = attribute->get_name();
             istringstream is(attribute->get_value());
 
@@ -861,13 +848,9 @@ void Scenario::writeToDOM() {
     Element::AttributeList::const_iterator srcAttrIter;
     Element::AttributeList::const_iterator grpAttrIter;
 
-    if(const Element* nodeElement = dynamic_cast< const Element* >(node)) {
+    if(Element* nodeElement = dynamic_cast<Element* >(node)) {
         // write scenario data
-        const Element::AttributeList& attributes = nodeElement->get_attributes();
-
-        for(scenarioAttrIter = attributes.begin(); scenarioAttrIter != attributes.end(); ++scenarioAttrIter) {
-            Attribute* attribute = *scenarioAttrIter;
-
+        for(auto& attribute : nodeElement->get_attributes()) {
             attribName = attribute->get_name();
             ostringstream os;
 
@@ -878,18 +861,14 @@ void Scenario::writeToDOM() {
             }
 
             const Glib::ustring out = os.str();
-            attribute->set_value(out);
+            dynamic_cast<xmlpp::AttributeNode*>(attribute)->set_value(out);
         }
 
         // write source data
         for(int i = 0 ; i < (int) sourcesVector.size(); i++) {
             if(sourcesVector[ i ].active) {
-                if(const Element* sourceElement = dynamic_cast< const Element* >(sourcesVector[ i ].node)) {
-                    const Element::AttributeList& srcAttribs = sourceElement->get_attributes();
-
-                    for(srcAttrIter = srcAttribs.begin(); srcAttrIter != srcAttribs.end(); ++srcAttrIter) {
-                        Attribute* srcAttrib = *srcAttrIter;
-
+                if(Element* sourceElement = dynamic_cast<Element* >(sourcesVector[ i ].node)) {
+                    for(auto& srcAttrib : sourceElement->get_attributes()) {
                         attribName = srcAttrib->get_name();
                         ostringstream os;
 
@@ -924,7 +903,7 @@ void Scenario::writeToDOM() {
                         }
 
                         const Glib::ustring out = os.str();
-                        srcAttrib->set_value(out);
+                        dynamic_cast<xmlpp::AttributeNode*>(srcAttrib)->set_value(out);
                     }
                 }
             }
@@ -933,12 +912,8 @@ void Scenario::writeToDOM() {
         // write group data
         for(int i = 0 ; i < (int) sourceGroupsVector.size(); i++) {
             if(sourceGroupsVector[ i ].active) {
-                if(const Element* groupElement = dynamic_cast< const Element* >(sourceGroupsVector[ i ].node)) {
-                    const Element::AttributeList& grpAttribs = groupElement->get_attributes();
-
-                    for(grpAttrIter = grpAttribs.begin(); grpAttrIter != grpAttribs.end(); ++grpAttrIter) {
-                        Attribute* grpAttrib = *grpAttrIter;
-
+                if(Element* groupElement = dynamic_cast<Element* >(sourceGroupsVector[ i ].node)) {
+                    for(auto& grpAttrib : groupElement->get_attributes()) {
                         attribName = grpAttrib->get_name();
                         ostringstream os;
 
@@ -959,7 +934,7 @@ void Scenario::writeToDOM() {
                         }
 
                         const Glib::ustring out = os.str();
-                        grpAttrib->set_value(out);
+                        dynamic_cast<xmlpp::AttributeNode*>(grpAttrib)->set_value(out);
                     }
                 }
             }
@@ -979,7 +954,7 @@ void Scenario::activateSource(int id) {
             // but only if a parent node does exist
             if(sourcesVector[ i ].node == NULL  &&  node != NULL) {
                 ostringstream os;
-                Element* srcElement = node->add_child("source");
+                Element* srcElement = dynamic_cast<xmlpp::Element*>(node)->add_child_element("source");
                 os.str("");
                 os << sourcesVector[ i ].id;
                 srcElement->set_attribute("id", os.str());
@@ -1048,7 +1023,7 @@ void Scenario::activateSource(int id) {
             // add it to the dom representation
             if(sourcesVector[ id ].node == NULL  &&  node != NULL) {
                 ostringstream os;
-                Element* srcElement = node->add_child("source");
+                Element* srcElement = dynamic_cast<xmlpp::Element*>(node)->add_child_element("source");
                 os.str("");
                 os << sourcesVector[ id ].id;
                 srcElement->set_attribute("id", os.str());
@@ -1140,7 +1115,7 @@ void Scenario::deactivateSource(int id) {
             temp->dopplerEffect = true;
 
             if(sourcesVector[ i ].node  &&  node != NULL) {
-                node->remove_child(sourcesVector[ i ].node);
+                node->remove_node(sourcesVector[ i ].node);
             }
 
             sourcesVector[ i ].node = NULL;
@@ -1173,7 +1148,7 @@ void Scenario::deactivateSource(int id) {
             temp->dopplerEffect = true;
 
             if(sourcesVector[ id ].node  && node != NULL) {
-                node->remove_child(sourcesVector[ id ].node);
+                node->remove_node(sourcesVector[ id ].node);
             }
 
             sourcesVector[ id ].node = NULL;
@@ -1183,48 +1158,45 @@ void Scenario::deactivateSource(int id) {
 
 
 void Scenario::activateGroup(int groupID) {
-    int id = groupID - 1;
+    auto& sourceGroup = sourceGroupsVector.at(groupID - 1);
+    sourceGroup.active = true;
 
-    //mandatory boundschecking, operator[] of std::vector is unchecked!
-    if((id >= 0) && (id < (int) sourceGroupsVector.size())) {
-        sourceGroupsVector[ id ].active = true;
+    // if this is the first time this group is activated then
+    // add it to the dom representation
+    if(sourceGroup.node == NULL  &&  node != NULL) {
+        ostringstream os;
+        Element* grpElement = dynamic_cast<xmlpp::Element*>(node)->add_child_element("group");
+        os.str("");
+        os << sourceGroup.id;
+        grpElement->set_attribute("id", os.str());
 
-        // if this is the first time this group is activated then
-        // add it to the dom representation
-        if(sourceGroupsVector[ id ].node == NULL  &&  node != NULL) {
-            ostringstream os;
-            Element* grpElement = node->add_child("group");
-            os.str("");
-            os << sourceGroupsVector[ id ].id;
-            grpElement->set_attribute("id", os.str());
+        os.str("");
+        os << sourceGroup.pos[ 0 ];
+        grpElement->set_attribute("posx", os.str());
 
-            os.str("");
-            os << sourceGroupsVector[ id ].pos[ 0 ];
-            grpElement->set_attribute("posx", os.str());
+        os.str("");
+        os << sourceGroup.pos[ 1 ];
+        grpElement->set_attribute("posy", os.str());
 
-            os.str("");
-            os << sourceGroupsVector[ id ].pos[ 1 ];
-            grpElement->set_attribute("posy", os.str());
+        os.str("");
+        os << sourceGroup.pos[ 2 ];
+        grpElement->set_attribute("posz", os.str());
 
-            os.str("");
-            os << sourceGroupsVector[ id ].pos[ 2 ];
-            grpElement->set_attribute("posz", os.str());
+        os.str("");
+        os << sourceGroup.color[ 0 ];
+        grpElement->set_attribute("colorR", os.str());
 
-            os.str("");
-            os << sourceGroupsVector[ id ].color[ 0 ];
-            grpElement->set_attribute("colorR", os.str());
+        os.str("");
+        os << sourceGroup.color[ 1 ];
+        grpElement->set_attribute("colorG", os.str());
 
-            os.str("");
-            os << sourceGroupsVector[ id ].color[ 1 ];
-            grpElement->set_attribute("colorG", os.str());
+        os.str("");
+        os << sourceGroup.color[ 2 ];
+        grpElement->set_attribute("colorB", os.str());
 
-            os.str("");
-            os << sourceGroupsVector[ id ].color[ 2 ];
-            grpElement->set_attribute("colorB", os.str());
-
-            sourceGroupsVector[ id ].node = grpElement;
-        }
+        sourceGroup.node = grpElement;
     }
+
 }
 
 
@@ -1236,7 +1208,7 @@ void Scenario::deactivateGroup(int groupID) {
         sourceGroupsVector[ id ].active = false;
 
         if(sourceGroupsVector[ id ].node  &&  node != NULL) {
-            node->remove_child(sourceGroupsVector[ id ].node);
+            node->remove_node(sourceGroupsVector[ id ].node);
         }
 
         sourceGroupsVector[ id ].node = NULL;
@@ -1343,23 +1315,6 @@ Source& Source::operator = (Source const& other) {
 //-----------------------------end of Source----------------------------------//
 
 //------------------------------SourceGroup-----------------------------------//
-
-SourceGroup::SourceGroup() {
-    // set default values
-    node    = NULL;
-    id      = -1;
-    active  = false;
-
-    // default color is red
-    color[ 0 ] = 255;
-    color[ 1 ] = 0;
-    color[ 2 ] = 0;
-}
-
-
-SourceGroup::~SourceGroup() {
-    node = NULL;
-}
 
 
 SourceGroup& SourceGroup::operator = (SourceGroup const& other) {

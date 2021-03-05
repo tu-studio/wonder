@@ -176,18 +176,14 @@ int CwonderConfig::readConfig() {
 
 
 void CwonderConfig::getSettings(xmlpp::Node* node) {
-    xmlpp::NodeSet nset = node->find("/cwonder_config/settings");
+    auto nset = node->find("/cwonder_config/settings");
 
     if(nset.size() > 0) {
         if(const xmlpp::Element* nodeElement = dynamic_cast< const xmlpp::Element* >(*nset.begin())) {
-            const xmlpp::Element::AttributeList& attributes = nodeElement->get_attributes();
-            xmlpp::Element::AttributeList::const_iterator iter;
 
-            for(iter = attributes.begin(); iter != attributes.end(); ++iter) {
-                const xmlpp::Attribute* attribute = *iter;
+            for(const auto& attribute : nodeElement->get_attributes()) {
 
                 Glib::ustring nodeName = attribute->get_name();
-
                 std::stringstream ss(attribute->get_value());
 
                 if(nodeName == "projectpath") {
@@ -203,20 +199,20 @@ void CwonderConfig::getSettings(xmlpp::Node* node) {
 
 
 void CwonderConfig::getRenderPolygon(xmlpp::Node* node) {
-    xmlpp::NodeSet nset = node->find("/cwonder_config/renderpolygon");
+    auto nset = node->find("/cwonder_config/renderpolygon");
 
     if(nset.size() > 0) {
         if(const xmlpp::Element* nodeElement = dynamic_cast< const xmlpp::Element* >(*nset.begin())) {
             roomName = nodeElement->get_attribute("roomname")->get_value();
         }
 
-        xmlpp::NodeSet pointsSet = node->find("/cwonder_config/renderpolygon/point");
+        auto pointsSet = node->find("/cwonder_config/renderpolygon/point");
 
         // iterate over all points and add them to vector roomPoints
-        xmlpp::NodeSet::iterator pointIt;
+        // auto::iterator pointIt;
 
-        for(pointIt = pointsSet.begin(); pointIt != pointsSet.end(); ++pointIt) {
-            const xmlpp::Element* pointElement = dynamic_cast< const xmlpp::Element* >(*pointIt);
+        for(auto const& pointIt : pointsSet) {
+            const xmlpp::Element* pointElement = dynamic_cast< const xmlpp::Element* >(pointIt);
 
             Vector3D point;
             float x;
