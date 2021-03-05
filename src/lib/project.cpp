@@ -848,13 +848,9 @@ void Scenario::writeToDOM() {
     Element::AttributeList::const_iterator srcAttrIter;
     Element::AttributeList::const_iterator grpAttrIter;
 
-    if(const Element* nodeElement = dynamic_cast< const Element* >(node)) {
+    if(Element* nodeElement = dynamic_cast<Element* >(node)) {
         // write scenario data
-        const Element::AttributeList& attributes = nodeElement->get_attributes();
-
-        for(scenarioAttrIter = attributes.begin(); scenarioAttrIter != attributes.end(); ++scenarioAttrIter) {
-            Attribute* attribute = *scenarioAttrIter;
-
+        for(auto& attribute : nodeElement->get_attributes()) {
             attribName = attribute->get_name();
             ostringstream os;
 
