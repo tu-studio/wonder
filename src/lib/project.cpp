@@ -174,7 +174,6 @@ void Project::readProjectFromDOM() {
                 name = projectAttribute->get_value();
             }
         }
-    }
 
     try {
         readSnapshotsFromDOM(rootNode, "/cwonder_project/scenario");
@@ -190,6 +189,7 @@ void Project::readProjectFromDOM() {
         }
 
         throw;
+    }
     }
 
     scenario = snapshots.front();
