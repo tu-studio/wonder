@@ -41,4 +41,6 @@ xwonder_src = ['Xwonder.cpp',
 executable('xwonder', xwonder_src, preproc_files,
            include_directories: inc,
            dependencies : [qt5_dep, xml_dep, jack_dep, liblo_dep, glu_dep],
-           link_with: libwonder)
+           link_with: libwonder,
+           install: true
+           )

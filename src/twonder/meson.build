@@ -12,5 +12,6 @@ twonder_src = ['angle.cpp',
 executable('twonder', twonder_src,
            include_directories: inc,
            dependencies: [jack_dep, thread_dep, xml_dep, liblo_dep],
-           link_with: libwonder
+           link_with: libwonder,
+           install: true
            )
