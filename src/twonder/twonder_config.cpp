@@ -276,12 +276,8 @@ void TwonderConfig::getFocus(xmlpp::Node* node) {
 
     if(nset.size() > 0) {
         if(const xmlpp::Element* nodeElement = dynamic_cast<const xmlpp::Element*>(*nset.begin())) {
-            const xmlpp::Element::AttributeList& attributes = nodeElement->get_attributes();
-            xmlpp::Element::AttributeList::const_iterator iter;
 
-            for(iter = attributes.begin(); iter != attributes.end(); ++iter) {
-                const xmlpp::Attribute* attribute = *iter;
-
+            for(auto const& attribute : nodeElement->get_attributes()) {
                 Glib::ustring nodeName = attribute->get_name();
 
                 std::stringstream ss(attribute->get_value());
@@ -299,16 +295,12 @@ void TwonderConfig::getFocus(xmlpp::Node* node) {
 
 
 void TwonderConfig::getSpeakers(xmlpp::Node* node) {
-    xmlpp::NodeSet nset = node->find("/twonder_config/speakers");
+    auto nset = node->find("/twonder_config/speakers");
 
     if(nset.size() > 0) {
         if(const xmlpp::Element* nodeElement = dynamic_cast<const xmlpp::Element*>(*nset.begin())) {
-            const xmlpp::Element::AttributeList& attributes = nodeElement->get_attributes();
-            xmlpp::Element::AttributeList::const_iterator iter;
 
-            for(iter = attributes.begin(); iter != attributes.end(); ++iter) {
-                const xmlpp::Attribute* attribute = *iter;
-
+            for(auto const& attribute : nodeElement->get_attributes()) {
                 Glib::ustring nodeName = attribute->get_name();
 
                 std::stringstream ss(attribute->get_value());

@@ -139,10 +139,7 @@ void Project::writeProjectToDOM() {
 
         if(const Element* nodeElement = dynamic_cast< const Element* >(rootNode)) {
             // write header
-            const Element::AttributeList& attributes = nodeElement->get_attributes();
-
-            for(attribIter = attributes.begin(); attribIter != attributes.end(); ++attribIter) {
-                Attribute* attribute = *attribIter;
+            for(auto& attribute : nodeElement->get_attributes()) {
                 attribName = attribute->get_name();
                 ostringstream os;
 
@@ -566,12 +563,9 @@ int Project::renameSnapshot(int snapshotID, string name) {
 }
 
 
-void Project::readSnapshotsFromDOM(const Node* node, const Glib::ustring& xmlPath) {
-    NodeSet nSet = node->find(xmlPath);
-    NodeSet::iterator iter;
-
-    for(iter = nSet.begin(); iter != nSet.end(); ++iter) {
-        Scenario* t = new Scenario(*iter, maxNoSources);
+void Project::readSnapshotsFromDOM(Node* node, const Glib::ustring& xmlPath) {
+    for(auto& iter : node->find(xmlPath) ) {
+        Scenario* t = new Scenario(iter, maxNoSources);
         snapshots.push_back(t) ;
     }
 }
@@ -675,11 +669,7 @@ Scenario::~Scenario() {
 void Scenario::readFromDOM() {
     if(const Element* nodeElement = dynamic_cast< const Element* >(node)) {
         // read scenario data
-        const Element::AttributeList& attributes = nodeElement->get_attributes();
-
-        for(Element::AttributeList::const_iterator iter = attributes.begin(); iter != attributes.end(); ++iter) {
-            const Attribute* attribute = *iter;
-
+        for(auto const& attribute : nodeElement->get_attributes()) {
             attribName = attribute->get_name();
             istringstream is(attribute->get_value());
 
@@ -884,12 +874,8 @@ void Scenario::writeToDOM() {
         // write source data
         for(int i = 0 ; i < (int) sourcesVector.size(); i++) {
             if(sourcesVector[ i ].active) {
-                if(const Element* sourceElement = dynamic_cast< const Element* >(sourcesVector[ i ].node)) {
-                    const Element::AttributeList& srcAttribs = sourceElement->get_attributes();
-
-                    for(srcAttrIter = srcAttribs.begin(); srcAttrIter != srcAttribs.end(); ++srcAttrIter) {
-                        Attribute* srcAttrib = *srcAttrIter;
-
+                if(Element* sourceElement = dynamic_cast<Element* >(sourcesVector[ i ].node)) {
+                    for(auto& srcAttrib : sourceElement->get_attributes()) {
                         attribName = srcAttrib->get_name();
                         ostringstream os;
 
@@ -933,12 +919,8 @@ void Scenario::writeToDOM() {
         // write group data
         for(int i = 0 ; i < (int) sourceGroupsVector.size(); i++) {
             if(sourceGroupsVector[ i ].active) {
-                if(const Element* groupElement = dynamic_cast< const Element* >(sourceGroupsVector[ i ].node)) {
-                    const Element::AttributeList& grpAttribs = groupElement->get_attributes();
-
-                    for(grpAttrIter = grpAttribs.begin(); grpAttrIter != grpAttribs.end(); ++grpAttrIter) {
-                        Attribute* grpAttrib = *grpAttrIter;
-
+                if(Element* groupElement = dynamic_cast<Element* >(sourceGroupsVector[ i ].node)) {
+                    for(auto& grpAttrib : groupElement->get_attributes()) {
                         attribName = grpAttrib->get_name();
                         ostringstream os;
 

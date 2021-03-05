@@ -56,12 +56,7 @@ Segment::Segment(xmlpp::Node* n) {
 
 void Segment::readFromXML() {
     if(const xmlpp::Element* nodeElement = dynamic_cast< const xmlpp::Element* >(node)) {
-        const xmlpp::Element::AttributeList& attributes = nodeElement->get_attributes();
-        xmlpp::Element::AttributeList::const_iterator iter;
-
-        for(iter = attributes.begin(); iter != attributes.end(); ++iter) {
-            const xmlpp::Attribute* attribute = *iter;
-
+        for(auto const& attribute : nodeElement->get_attributes()) {
             nodeName = attribute->get_name();
             istringstream is(attribute->get_value());
 
@@ -96,12 +91,8 @@ void Segment::readFromXML() {
 
 
 void Segment::syncToXML() {
-    if(const xmlpp::Element* nodeElement = dynamic_cast< const xmlpp::Element* >(node)) {
-        const xmlpp::Element::AttributeList& attributes = nodeElement->get_attributes();
-
-        for(xmlpp::Element::AttributeList::const_iterator iter = attributes.begin(); iter != attributes.end(); ++iter) {
-            xmlpp::Attribute* attribute = *iter;
-
+    if(xmlpp::Element* nodeElement = dynamic_cast<xmlpp::Element* >(node)) {
+        for(auto & attribute : nodeElement->get_attributes()) {
             nodeName = attribute->get_name();
             ostringstream os;
 
@@ -159,14 +150,10 @@ SegmentArray::~SegmentArray() {
     }
 }
 
-void SegmentArray::getSegments(const xmlpp::Node* node, const Glib::ustring& xpath) {
-    xmlpp::NodeSet set = node->find(xpath);
-    SegmentArrayIter i;
-
-    for(i = set.begin(); i != set.end(); ++i) {
-        //Segment* t = ( *i );
-        //segments.push_back( t );
-        segments.push_back(*i);
+void SegmentArray::getSegments(xmlpp::Node* node, const Glib::ustring& xpath) {
+    for(auto& i : node->find(xpath)) {
+        Segment* t = new Segment(i);
+        segments.push_back(t);
     }
 }
 

@@ -180,14 +180,10 @@ void CwonderConfig::getSettings(xmlpp::Node* node) {
 
     if(nset.size() > 0) {
         if(const xmlpp::Element* nodeElement = dynamic_cast< const xmlpp::Element* >(*nset.begin())) {
-            const xmlpp::Element::AttributeList& attributes = nodeElement->get_attributes();
-            xmlpp::Element::AttributeList::const_iterator iter;
 
-            for(iter = attributes.begin(); iter != attributes.end(); ++iter) {
-                const xmlpp::Attribute* attribute = *iter;
+            for(const auto& attribute : nodeElement->get_attributes()) {
 
                 Glib::ustring nodeName = attribute->get_name();
-
                 std::stringstream ss(attribute->get_value());
 
                 if(nodeName == "projectpath") {
@@ -215,8 +211,8 @@ void CwonderConfig::getRenderPolygon(xmlpp::Node* node) {
         // iterate over all points and add them to vector roomPoints
         xmlpp::NodeSet::iterator pointIt;
 
-        for(pointIt = pointsSet.begin(); pointIt != pointsSet.end(); ++pointIt) {
-            const xmlpp::Element* pointElement = dynamic_cast< const xmlpp::Element* >(*pointIt);
+        for(auto const& pointIt : pointsSet) {
+            const xmlpp::Element* pointElement = dynamic_cast< const xmlpp::Element* >(pointIt);
 
             Vector3D point;
             float x;
