@@ -106,9 +106,7 @@ int Project::createScenario() {
     newSnapshot->id = 0; // 0 is default, but just to make sure
 
     if(rootNode) {
-        Element* snapshotElement = NULL;
-        snapshotElement   = rootNode->add_child("scenario");
-        newSnapshot->node = snapshotElement;
+        newSnapshot->node = dynamic_cast<xmlpp::Element*>(rootNode)->add_child_element("scenario");
 
         // Validate and add snapshot to the list of snapshots
         validate();
@@ -148,7 +146,7 @@ void Project::writeProjectToDOM() {
                 }
 
                 const Glib::ustring out = os.str();
-                attribute->set_value(out);
+                dynamic_cast<xmlpp::AttributeNode*>(attribute)->set_value(out);
             }
 
             // write snapshots
@@ -1164,48 +1162,45 @@ void Scenario::deactivateSource(int id) {
 
 
 void Scenario::activateGroup(int groupID) {
-    int id = groupID - 1;
+    auto& sourceGroup = sourceGroupsVector.at(groupID - 1);
+    sourceGroup.active = true;
 
-    //mandatory boundschecking, operator[] of std::vector is unchecked!
-    if((id >= 0) && (id < (int) sourceGroupsVector.size())) {
-        sourceGroupsVector[ id ].active = true;
+    // if this is the first time this group is activated then
+    // add it to the dom representation
+    if(sourceGroup.node == NULL  &&  node != NULL) {
+        ostringstream os;
+        Element* grpElement = dynamic_cast<xmlpp::Element*>(node)->add_child_element("group");
+        os.str("");
+        os << sourceGroup.id;
+        grpElement->set_attribute("id", os.str());
 
-        // if this is the first time this group is activated then
-        // add it to the dom representation
-        if(sourceGroupsVector[ id ].node == NULL  &&  node != NULL) {
-            ostringstream os;
-            Element* grpElement = node->add_child("group");
-            os.str("");
-            os << sourceGroupsVector[ id ].id;
-            grpElement->set_attribute("id", os.str());
+        os.str("");
+        os << sourceGroup.pos[ 0 ];
+        grpElement->set_attribute("posx", os.str());
 
-            os.str("");
-            os << sourceGroupsVector[ id ].pos[ 0 ];
-            grpElement->set_attribute("posx", os.str());
+        os.str("");
+        os << sourceGroup.pos[ 1 ];
+        grpElement->set_attribute("posy", os.str());
 
-            os.str("");
-            os << sourceGroupsVector[ id ].pos[ 1 ];
-            grpElement->set_attribute("posy", os.str());
+        os.str("");
+        os << sourceGroup.pos[ 2 ];
+        grpElement->set_attribute("posz", os.str());
 
-            os.str("");
-            os << sourceGroupsVector[ id ].pos[ 2 ];
-            grpElement->set_attribute("posz", os.str());
+        os.str("");
+        os << sourceGroup.color[ 0 ];
+        grpElement->set_attribute("colorR", os.str());
 
-            os.str("");
-            os << sourceGroupsVector[ id ].color[ 0 ];
-            grpElement->set_attribute("colorR", os.str());
+        os.str("");
+        os << sourceGroup.color[ 1 ];
+        grpElement->set_attribute("colorG", os.str());
 
-            os.str("");
-            os << sourceGroupsVector[ id ].color[ 1 ];
-            grpElement->set_attribute("colorG", os.str());
+        os.str("");
+        os << sourceGroup.color[ 2 ];
+        grpElement->set_attribute("colorB", os.str());
 
-            os.str("");
-            os << sourceGroupsVector[ id ].color[ 2 ];
-            grpElement->set_attribute("colorB", os.str());
-
-            sourceGroupsVector[ id ].node = grpElement;
-        }
+        sourceGroup.node = grpElement;
     }
+
 }
 
 
