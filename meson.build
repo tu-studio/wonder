@@ -21,4 +21,5 @@ subdir('src/cwonder')
 subdir('src/twonder')
 subdir('src/xwonder')
 
-install_subdir('configs/.', install_dir : get_option('sysconfdir') / 'wonder')
+install_subdir('configs/.', install_dir : '/etc/wonder')
+install_subdir('scripts', install_dir: get_option('datadir') / 'wonder')
