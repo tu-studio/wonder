@@ -235,7 +235,7 @@ int main(int argc, char* argv[]) {
 
     // start the OSC engine
     try {
-        oscReceiver = new OSCReceiver(xwConf->xwonderPort, &app);
+        oscReceiver = new OSCReceiver(xwConf->xwonderPort.c_str(), &app);
     } catch(OSCServer::EServ e) {
         std::cerr << "Unable to run xwonder!"                                 << std::endl
                   << "OSC communication could not be established."            << std::endl

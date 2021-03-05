@@ -23,6 +23,7 @@
 
 
 #include "Source.h"
+#include "Colors.h"
 
 #include <QGLWidget>
 

@@ -59,7 +59,7 @@ XwonderConfig::XwonderConfig(int argc, char* argv[], QObject* parent) : QObject(
     roomName = "20m x 20m Demoroom";
 
     parseArgs(argc, argv);
-    cwonderAddr = lo_address_new(cwonderHost, cwonderPort);
+    cwonderAddr = lo_address_new(cwonderHost.c_str(), cwonderPort.c_str());
 
     // in demomode maxNoSources will not be set by cwonder
     if(runWithoutCwonder) {
@@ -96,15 +96,15 @@ void XwonderConfig::parseArgs(int argc, char* argv[]) {
 
         switch(c) {
              case 'i':
-                cwonderHost = strdup(optarg);
+                cwonderHost = optarg;
                 break;
 
             case 'p':
-                cwonderPort = strdup(optarg);
+                cwonderPort = optarg;
                 break;
 
             case 'o':
-                xwonderPort = strdup(optarg);
+                xwonderPort = optarg;
                 break;
 
             case 't':
@@ -112,7 +112,7 @@ void XwonderConfig::parseArgs(int argc, char* argv[]) {
                 break;
 
             case 'n':
-                name = strdup(optarg);
+                name = optarg;
                 break;
 
             case 'd':

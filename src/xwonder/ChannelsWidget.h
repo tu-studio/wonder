@@ -30,7 +30,6 @@
 #include <QList>
 #include <QMap>
 
-#include "Colors.h"
 
 class QVBoxLayout;
 class QContextMenuEvent;
@@ -67,7 +66,7 @@ public:
     void reset();
 
     void  setMode(bool projectOnlyMode);
-    QSize sizeHint();
+    QSize sizeHint() const override;
     void  setChannel(Source& source);
     int   getNoSources() const;
     int   sourceIDIsActive(int sourceID);
@@ -123,8 +122,8 @@ signals:
     void viewRelatedKeyPressed(QKeyEvent* event);
 
 protected:
-    void contextMenuEvent(QContextMenuEvent* event);
-    void keyPressEvent(QKeyEvent* event);
+    void contextMenuEvent(QContextMenuEvent* event) override;
+    void keyPressEvent(QKeyEvent* event) override;
 
 private slots:
     //void changeID( unsigned int xID, int oldID, int sourceID );

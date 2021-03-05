@@ -28,7 +28,6 @@
 
 #include <QObject>
 
-#include "Colors.h"
 #include "SourceCoordinates.h"
 
 //----------------------------------------------------------------------------//

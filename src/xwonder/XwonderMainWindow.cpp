@@ -496,7 +496,6 @@ void XwonderMainWindow::sendOSCSourceColor(unsigned int xID, const QColor& color
 
 void XwonderMainWindow::sendOSCSourceType(unsigned int xID, bool planewave) {
     const Source& source     =  sources3DView->getSource(xID);
-    SourceCoordinates coords =  source.getCoordinatesRounded().mapGLCoordToWonderCoord();
 
     //type point = 1, type planewave = 0
     int type = (int) ! planewave;
@@ -1149,16 +1148,16 @@ void XwonderMainWindow::createToolBars() {
     //get access to the transport QToolButtons by name
     QList< QToolButton* > widgets = scoreplayerToolBar->findChildren< QToolButton* >();
 
-    for(int i = 0; i < widgets.size(); ++i) {
-        if(widgets.at(i)->property("text") == "Record mode") {
-            globalRecButton = widgets.at(i);
-        } else if(widgets.at(i)->property("text") == "Read mode") {
-            globalReadButton = widgets.at(i);
+    for(auto widget : widgets) {
+        if(widget->property("text") == "Record mode") {
+            globalRecButton = widget;
+        } else if(widget->property("text") == "Read mode") {
+            globalReadButton = widget;
             //globalReadButton->setMinimumSize( globalRecButton->sizeHint() );
-        } else if(widgets.at(i)->property("text") == "Start") {
-            startButton = widgets.at(i);
-        } else if(widgets.at(i)->property("text") == "Stop") {
-            stopButton = widgets.at(i);
+        } else if(widget->property("text") == "Start") {
+            startButton = widget;
+        } else if(widget->property("text") == "Stop") {
+            stopButton = widget;
         }
     }
 
@@ -1890,7 +1889,7 @@ void XwonderMainWindow::parseLoadedProjectXMLDump(QString xmlProject) {
         QColor color(0, 255, 0);
         QDomNamedNodeMap attributes = sources.attributes();
 
-        for(unsigned int i = 0; i < attributes.length(); ++i) {
+        for(int i = 0; i < attributes.length(); ++i) {
             QDomAttr attr;
 
             if(attributes.item(i).isAttr()) {
@@ -1949,7 +1948,7 @@ void XwonderMainWindow::parseLoadedProjectXMLDump(QString xmlProject) {
         QColor color(255, 0, 0);
         QDomNamedNodeMap attributes = groups.attributes();
 
-        for(unsigned int i = 0; i < attributes.length(); ++i) {
+        for(int i = 0; i < attributes.length(); ++i) {
             QDomAttr attr;
 
             if(attributes.item(i).isAttr()) {

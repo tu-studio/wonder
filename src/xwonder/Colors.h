@@ -43,7 +43,7 @@
 #include <QGLWidget>
 
 //!number of available initial colors
-static int noColors = 20;
+constexpr int noColors = 20;
 
 //!names of colors for accessing the colors array
 enum colorNames {
