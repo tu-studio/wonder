@@ -106,8 +106,6 @@ private:
 class SourceGroup {
 
 public:
-    SourceGroup();
-    ~SourceGroup();
 
     // do the sources have the same id
     bool operator == (SourceGroup const& other) const {
@@ -118,19 +116,19 @@ public:
     SourceGroup& operator = (SourceGroup const& other);
 
     // unique identifier of the group ( starting at 1 )
-    int id;
+    int id{-1};
 
     // if the group is active
-    bool active;
+    bool active{false};
 
     // x/y/z-coordinates of the group
     Vector3D pos;
 
     // color in RGB (values from 0 to 255)
-    int color[ 3 ];
+    int color[ 3 ] = {255, 0, 0};
 
     // node in the DOM representation
-    xmlpp::Node* node;
+    xmlpp::Node* node{nullptr};
 
 private:
     Glib::ustring nodeName;
@@ -289,7 +287,7 @@ private:
     // get scenario/snapshot specific data from the DOM representation.
     //  this allocates memory for new Scenarios and calls their constructor which
     //  reads data (through Scenario::readFromDOM()) from the given node.
-    void readSnapshotsFromDOM(const xmlpp::Node* node, const Glib::ustring& xpath);
+    void readSnapshotsFromDOM(xmlpp::Node* node, const Glib::ustring& xpath);
 
     // validates the DOM representation against a DTD
     int validate();

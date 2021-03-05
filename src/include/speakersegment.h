@@ -80,7 +80,7 @@ public:
     std::vector<Segment*> segments;
 
 private:
-    void getSegments(const xmlpp::Node* node, const Glib::ustring& xpath);
+    void getSegments(xmlpp::Node* node, const Glib::ustring& xpath);
 
     int readFromFile(std::string fileName);
 };

@@ -1325,23 +1325,6 @@ Source& Source::operator = (Source const& other) {
 
 //------------------------------SourceGroup-----------------------------------//
 
-SourceGroup::SourceGroup() {
-    // set default values
-    node    = NULL;
-    id      = -1;
-    active  = false;
-
-    // default color is red
-    color[ 0 ] = 255;
-    color[ 1 ] = 0;
-    color[ 2 ] = 0;
-}
-
-
-SourceGroup::~SourceGroup() {
-    node = NULL;
-}
-
 
 SourceGroup& SourceGroup::operator = (SourceGroup const& other) {
     id     = other.id;
