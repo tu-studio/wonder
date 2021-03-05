@@ -19,9 +19,6 @@ qrc = 'icons.qrc'
 preproc_files = qt5.preprocess(moc_headers: moc_h,
 	qresources: qrc)
 
-conf_data = configuration_data()
-conf_data.set('VERSION_STR', '"3.1.9"')
-
 xwonder_src = ['Xwonder.cpp',
 	'XwonderMainWindow.cpp',
 	'XwonderConfig.cpp',
