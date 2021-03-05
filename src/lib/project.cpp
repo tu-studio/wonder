@@ -233,7 +233,7 @@ void Project::readFromFile(Glib::ustring filepath) {
                 Node* snapshotNode = *it;
 
                 if(snapshotNode->get_name() == "text") {
-                    rootNode->remove_child(snapshotNode);
+                    rootNode->remove_node(snapshotNode);
                 } else {
                     Node::NodeList childNodeList = snapshotNode->get_children();
                     Node::NodeList::iterator it;
@@ -242,7 +242,7 @@ void Project::readFromFile(Glib::ustring filepath) {
                         Node* sourceOrGroupNode = *it;
 
                         if(sourceOrGroupNode->get_name() == "text") {
-                            snapshotNode->remove_child(sourceOrGroupNode);
+                            snapshotNode->remove_node(sourceOrGroupNode);
                         }
                     }
                 }
@@ -280,7 +280,7 @@ string Project::show() {
                     childList =  nodeElement->get_children();
 
                     for(Node::NodeList::iterator srcIt = childList.begin(); srcIt != childList.end(); ++srcIt) {
-                        nodeElement->remove_child(*srcIt);
+                        nodeElement->remove_node(*srcIt);
                     }
                 }
             }
@@ -475,11 +475,11 @@ int Project::deleteSnapshot(int snapshotID) {
             Node::NodeList nList = ((*iter)->node)->get_children();
 
             for(Node::NodeList::iterator niter = nList.begin(); niter != nList.end(); ++niter) {
-                (*iter)->node->remove_child((*niter));
+                (*iter)->node->remove_node((*niter));
             }
 
             // remove snapshot from the dom representation
-            rootNode->remove_child((*iter)->node);
+            rootNode->remove_node((*iter)->node);
 
             // delete snapshot and remove it from the snapshots list
             delete *iter;
@@ -1119,7 +1119,7 @@ void Scenario::deactivateSource(int id) {
             temp->dopplerEffect = true;
 
             if(sourcesVector[ i ].node  &&  node != NULL) {
-                node->remove_child(sourcesVector[ i ].node);
+                node->remove_node(sourcesVector[ i ].node);
             }
 
             sourcesVector[ i ].node = NULL;
@@ -1152,7 +1152,7 @@ void Scenario::deactivateSource(int id) {
             temp->dopplerEffect = true;
 
             if(sourcesVector[ id ].node  && node != NULL) {
-                node->remove_child(sourcesVector[ id ].node);
+                node->remove_node(sourcesVector[ id ].node);
             }
 
             sourcesVector[ id ].node = NULL;
@@ -1212,7 +1212,7 @@ void Scenario::deactivateGroup(int groupID) {
         sourceGroupsVector[ id ].active = false;
 
         if(sourceGroupsVector[ id ].node  &&  node != NULL) {
-            node->remove_child(sourceGroupsVector[ id ].node);
+            node->remove_node(sourceGroupsVector[ id ].node);
         }
 
         sourceGroupsVector[ id ].node = NULL;
