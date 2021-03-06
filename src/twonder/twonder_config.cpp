@@ -45,8 +45,8 @@ TwonderConfig* twonderConf = NULL;
 TwonderConfig::TwonderConfig(int argc, char* argv[]) {
     verbose = false;
 
-    twonderConfigfile  = join(INSTALL_PREFIX, "configs/twonder_config.xml");
-    speakersConfigfile = join(INSTALL_PREFIX, "configs/twonder_speakerarray.xml");
+    twonderConfigfile  = join(CONFIG_DIR, "twonder_config.xml");
+    speakersConfigfile = join(CONFIG_DIR, "twonder_speakerarray.xml");
 
     jackName  = "twonder";  // JACK client name
     name      = "twonder";  // Client name for cwonder registration
@@ -236,7 +236,7 @@ int TwonderConfig::readConfig() {
             if (root) {
                 // validate the current dom representation but first find the dtd
                 std::string dtdPath;
-                dtdPath = join(INSTALL_PREFIX, "configs/dtd/twonder_config.dtd");
+                dtdPath = join(DATA_DIR, "dtd/twonder_config.dtd");
                 fin.open(dtdPath.c_str(), std::ios_base::in);
 
                 if (!fin.is_open()) {
