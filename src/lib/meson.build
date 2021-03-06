@@ -8,8 +8,7 @@ libwonder_sources = ['commandqueue.cpp',
 		     'timestamp.cpp',
 		     'wonder_path.cpp'
 		     ]
-libwonder = library('wonder',
+libwonder = static_library('wonder',
                         libwonder_sources,
                         include_directories : inc,
-                        dependencies: [xml_dep, liblo_dep, jack_dep],
-                        install : false)
+                        dependencies: [xml_dep, liblo_dep, jack_dep])
