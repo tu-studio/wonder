@@ -66,7 +66,7 @@ class Event
 class Timeline
 {
   public:
-    Timeline()  {}
+    Timeline()  = default;
 
     ~Timeline();
 

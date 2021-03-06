@@ -109,7 +109,7 @@ class Cwonder
     TimeStamp recordTime;
 
     Project* project;
-    Scenario* scenario;
+    Scenario* scenario{nullptr};
 
     std::string projectFileName;
     std::string projectPath;

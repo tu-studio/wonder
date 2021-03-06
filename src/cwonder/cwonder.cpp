@@ -50,15 +50,8 @@ Cwonder::Cwonder() {
     visualStream = new OSCStream("visual");
     timerStream  = new OSCStream("timer");
 
-    returnString = "";
-
     // create the project and the scenario
     project  = new Project(cwonderConf->maxNoSources);
-    scenario = nullptr;
-
-    // these must be set externally !
-    dtdPath     = "";
-    projectPath = "";
 }
 
 Cwonder::~Cwonder() {
