@@ -1865,34 +1865,32 @@ void Sources3DWidget::mouseMoveEvent(QMouseEvent* event) {
             break;
         }
         }
-    } else {  // no selection, navigation of the whole image
-        if (!viewLockOn) {
-            switch (delegateEvent->buttons()) {
-            case Qt::LeftButton:
-                if (delegateEvent->modifiers() == Qt::CTRL) {  // move whole image
-                    xposition += dx / mouseGranularity;
-                    yposition -= dy / mouseGranularity;
-                } else if (delegateEvent->modifiers() == Qt::SHIFT) {  // z-axis rotation
-                    zrotation -= 180 * dy / width();
-                } else if (delegateEvent->modifiers()
-                           == Qt::ALT) {  // rotate image along x- and/or y-axis
-                    xrotation += 180 * dy / width();
-                    yrotation += 180 * dx / height();
-                } else {  // zoom in/out
-                    if (perspectiveOn) {
-                        zoom += dy / (mouseGranularity / 3);
-                    } else {
-                        orthoBounds += dy / (mouseGranularity / 2);
-                        project();
-                    }
+    } else if (!viewLockOn) {  // no selection, navigation of the whole image
+        switch (delegateEvent->buttons()) {
+        case Qt::LeftButton:
+            if (delegateEvent->modifiers() == Qt::CTRL) {  // move whole image
+                xposition += dx / mouseGranularity;
+                yposition -= dy / mouseGranularity;
+            } else if (delegateEvent->modifiers() == Qt::SHIFT) {  // z-axis rotation
+                zrotation -= 180 * dy / width();
+            } else if (delegateEvent->modifiers()
+                       == Qt::ALT) {  // rotate image along x- and/or y-axis
+                xrotation += 180 * dy / width();
+                yrotation += 180 * dx / height();
+            } else {  // zoom in/out
+                if (perspectiveOn) {
+                    zoom += dy / (mouseGranularity / 3);
+                } else {
+                    orthoBounds += dy / (mouseGranularity / 2);
+                    project();
                 }
-
-                break;
-                // case Qt::RightButton:
-                // if(delegateEvent->modifiers() == Qt::SHIFT)
-                // setSliceDist(dy/mouseGranularity);
-                // break;
             }
+
+            break;
+            // case Qt::RightButton:
+            // if(delegateEvent->modifiers() == Qt::SHIFT)
+            // setSliceDist(dy/mouseGranularity);
+            // break;
         }
     }
 
