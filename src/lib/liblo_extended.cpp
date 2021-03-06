@@ -31,7 +31,7 @@
 #include <cstring>
 
 int issame(lo_address a, lo_address b) {
-    if (a == NULL || b == NULL) {
+    if (a == nullptr || b == nullptr) {
         return -1;  // at least one invalid address
     }
 

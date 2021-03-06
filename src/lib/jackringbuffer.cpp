@@ -50,5 +50,5 @@ void* JackRingbuffer::read() {
         return readData;
     }
 
-    return 0;
+    return nullptr;
 }

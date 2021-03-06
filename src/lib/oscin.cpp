@@ -31,9 +31,9 @@
 #include <sstream>
 
 OSCServer::OSCServer(const char* port) {
-    serverThread = lo_server_thread_new(port, NULL);
+    serverThread = lo_server_thread_new(port, nullptr);
 
-    if (serverThread == NULL) { throw EServ(); }
+    if (serverThread == nullptr) { throw EServ(); }
 }
 
 OSCServer::~OSCServer() {

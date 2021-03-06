@@ -31,7 +31,7 @@
 #include <algorithm>
 
 RTCommandEngine::RTCommandEngine() : commandQueue(), freeQueue(), accumulatedCommands() {
-    commandsToBeFreed = NULL;
+    commandsToBeFreed = nullptr;
 }
 
 RTCommandEngine::~RTCommandEngine() {
@@ -46,10 +46,10 @@ void RTCommandEngine::put(Command* cmd) {
 void RTCommandEngine::mergeIncomingCommands() {
     CommandList* queuedCommandList;
 
-    while ((queuedCommandList = commandQueue.get()) != NULL) {
+    while ((queuedCommandList = commandQueue.get()) != nullptr) {
         accumulatedCommands.merge(*queuedCommandList);
 
-        if (commandsToBeFreed == NULL) {
+        if (commandsToBeFreed == nullptr) {
             commandsToBeFreed = queuedCommandList;
         } else {
             if (commandsToBeFreed->empty()) {
@@ -63,7 +63,7 @@ void RTCommandEngine::mergeIncomingCommands() {
 }
 
 CommandList* RTCommandEngine::getDueCommands(TimeStamp timeStamp) {
-    if ((!accumulatedCommands.empty()) && (commandsToBeFreed != NULL)) {
+    if ((!accumulatedCommands.empty()) && (commandsToBeFreed != nullptr)) {
         CommandList::iterator it = accumulatedCommands.begin();
 
         while (it != accumulatedCommands.end() && ((*it)->getTimeStamp() < timeStamp)) {
@@ -75,10 +75,10 @@ CommandList* RTCommandEngine::getDueCommands(TimeStamp timeStamp) {
                                    accumulatedCommands.begin(), it);
             return &returnValueList;
         } else {
-            return NULL;
+            return nullptr;
         }
     } else {
-        return NULL;
+        return nullptr;
     }
 }
 

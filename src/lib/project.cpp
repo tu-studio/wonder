@@ -55,9 +55,9 @@ using xmlpp::Node;
 Project::Project(int maxNoSources) {
     fromFile = true;
 
-    rootNode = NULL;
-    doc      = NULL;
-    scenario = NULL;
+    rootNode = nullptr;
+    doc      = nullptr;
+    scenario = nullptr;
     dtdFile  = "cwonder_project.dtd";
     dtdPath  = "";
 
@@ -70,7 +70,7 @@ Project::~Project() {
     if (!fromFile) {
         if (doc) {
             delete doc;
-            doc = NULL;
+            doc = nullptr;
         }
     }
 
@@ -122,7 +122,7 @@ Scenario* Project::getScenario() {
     if (!snapshots.empty()) {
         return snapshots.front();
     } else {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -177,8 +177,8 @@ void Project::readProjectFromDOM() {
             clearSnaphots();
 
             if (doc) {
-                doc      = NULL;
-                rootNode = NULL;
+                doc      = nullptr;
+                rootNode = nullptr;
             }
 
             throw;
@@ -206,7 +206,7 @@ void Project::readFromFile(Glib::ustring filepath) {
     if (parser) {
         rootNode = parser.get_document()->get_root_node();
 
-        if (rootNode != NULL) {
+        if (rootNode != nullptr) {
             if (fromFile == false) { delete doc; }
 
             fromFile = true;
@@ -385,7 +385,7 @@ int Project::recallSnapshot(int snapshotID) {
     // deactivate the other sources and groups
 
     // get the right snapshot
-    Scenario* recall = NULL;
+    Scenario* recall = nullptr;
     list<Scenario*>::iterator iter;
 
     for (iter = snapshots.begin(); iter != snapshots.end(); ++iter) {
@@ -395,7 +395,7 @@ int Project::recallSnapshot(int snapshotID) {
         }
     }
 
-    if (recall == NULL) {
+    if (recall == nullptr) {
         return -1;  // snapshot does not exist
     }
 
@@ -490,7 +490,7 @@ int Project::copySnapshot(int fromID, int toID) {
             // Add snapshot to the Dom representation and list of snapshots
             if (rootNode) {
                 // construct new node for new snapshot
-                Element* newSnapshotElement = NULL;
+                Element* newSnapshotElement = nullptr;
                 ostringstream os;
                 newSnapshotElement =
                     dynamic_cast<xmlpp::Element*>(rootNode)->add_child_element(
@@ -567,7 +567,7 @@ Scenario::Scenario(int maxNoSources) : maxNoSources(maxNoSources) {
     }
 
     id   = 0;
-    node = NULL;
+    node = nullptr;
 }
 
 Scenario::Scenario(Node* n, int maxNoSources) : maxNoSources(maxNoSources) {
@@ -915,7 +915,7 @@ void Scenario::activateSource(int id) {
             // if this is the first time this source is activated then
             // add it to the dom representation
             // but only if a parent node does exist
-            if (sourcesVector[i].node == NULL && node != NULL) {
+            if (sourcesVector[i].node == nullptr && node != nullptr) {
                 ostringstream os;
                 Element* srcElement =
                     dynamic_cast<xmlpp::Element*>(node)->add_child_element("source");
@@ -985,7 +985,7 @@ void Scenario::activateSource(int id) {
 
             // if this is the first time this source is activated then
             // add it to the dom representation
-            if (sourcesVector[id].node == NULL && node != NULL) {
+            if (sourcesVector[id].node == nullptr && node != nullptr) {
                 ostringstream os;
                 Element* srcElement =
                     dynamic_cast<xmlpp::Element*>(node)->add_child_element("source");
@@ -1078,11 +1078,11 @@ void Scenario::deactivateSource(int id) {
 
             temp->dopplerEffect = true;
 
-            if (sourcesVector[i].node && node != NULL) {
+            if (sourcesVector[i].node && node != nullptr) {
                 node->remove_node(sourcesVector[i].node);
             }
 
-            sourcesVector[i].node = NULL;
+            sourcesVector[i].node = nullptr;
         }
     } else {
         // mandatory boundschecking, operator[] of std::vector is unchecked!
@@ -1110,11 +1110,11 @@ void Scenario::deactivateSource(int id) {
 
             temp->dopplerEffect = true;
 
-            if (sourcesVector[id].node && node != NULL) {
+            if (sourcesVector[id].node && node != nullptr) {
                 node->remove_node(sourcesVector[id].node);
             }
 
-            sourcesVector[id].node = NULL;
+            sourcesVector[id].node = nullptr;
         }
     }
 }
@@ -1125,7 +1125,7 @@ void Scenario::activateGroup(int groupID) {
 
     // if this is the first time this group is activated then
     // add it to the dom representation
-    if (sourceGroup.node == NULL && node != NULL) {
+    if (sourceGroup.node == nullptr && node != nullptr) {
         ostringstream os;
         Element* grpElement =
             dynamic_cast<xmlpp::Element*>(node)->add_child_element("group");
@@ -1168,11 +1168,11 @@ void Scenario::deactivateGroup(int groupID) {
     if ((id >= 0) && (id < (int)sourceGroupsVector.size())) {
         sourceGroupsVector[id].active = false;
 
-        if (sourceGroupsVector[id].node && node != NULL) {
+        if (sourceGroupsVector[id].node && node != nullptr) {
             node->remove_node(sourceGroupsVector[id].node);
         }
 
-        sourceGroupsVector[id].node = NULL;
+        sourceGroupsVector[id].node = nullptr;
     }
 }
 
@@ -1218,7 +1218,7 @@ string Scenario::show() {
 
 Source::Source() {
     // set default values
-    node    = NULL;
+    node    = nullptr;
     id      = -1;
     type    = 1;
     name    = "";
@@ -1236,7 +1236,7 @@ Source::Source() {
     dopplerEffect             = true;
 }
 
-Source::~Source() { node = NULL; }
+Source::~Source() { node = nullptr; }
 
 Source& Source::operator=(Source const& other) {
     id      = other.id;

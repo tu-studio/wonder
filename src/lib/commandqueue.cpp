@@ -61,7 +61,7 @@ CommandList::~CommandList() {
 
 //------------------------------CommandQueue----------------------------------//
 
-CommandQueue::CommandQueue() { pthread_mutex_init(&mutex, NULL); }
+CommandQueue::CommandQueue() { pthread_mutex_init(&mutex, nullptr); }
 
 CommandQueue::~CommandQueue() { pthread_mutex_destroy(&mutex); }
 
@@ -83,7 +83,7 @@ CommandList* CommandQueue::get() { return reinterpret_cast<CommandList*>(read())
 
 //--------------------------------FreeQueue-----------------------------------//
 
-FreeQueue::FreeQueue() { pthread_mutex_init(&mutex, NULL); }
+FreeQueue::FreeQueue() { pthread_mutex_init(&mutex, nullptr); }
 
 FreeQueue::~FreeQueue() { pthread_mutex_destroy(&mutex); }
 
@@ -103,7 +103,7 @@ void FreeQueue::flush() {
 
     pthread_mutex_lock(&mutex);
 
-    while ((commandListToDelete = reinterpret_cast<CommandList*>(read())) != NULL) {
+    while ((commandListToDelete = reinterpret_cast<CommandList*>(read())) != nullptr) {
         delete commandListToDelete;
     }
 
