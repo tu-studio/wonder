@@ -32,14 +32,15 @@ class QLabel;
 class QLineEdit;
 class QPushButton;
 
-//Doxygen description
+// Doxygen description
 /*!
  *      \brief
  *      Inputdialog used when adding snapshots.
  *
  *      \details
- *      If a snapshot is added the user is prompted to enter a name for the new snapshot. Empty entries are not allowed,
- *      so the OK-button is only enabled if acceptable input exists.
+ *      If a snapshot is added the user is prompted to enter a name for the new snapshot.
+ * Empty entries are not allowed, so the OK-button is only enabled if acceptable input
+ * exists.
  *
  *      \author
  *      Hans-Joachim Mond
@@ -48,23 +49,25 @@ class QPushButton;
  *      11.10.2007
  */
 
-class SnapshotNameDialog : public QDialog {
+class SnapshotNameDialog : public QDialog
+{
     Q_OBJECT
 
-public:
-    SnapshotNameDialog(bool displayOldName, const QString oldName = "", QWidget* parent = 0);
+  public:
+    SnapshotNameDialog(bool displayOldName, const QString oldName = "",
+                       QWidget* parent = 0);
 
     QString newName;
 
-private slots:
+  private slots:
     void readName();
     void enableOKButton();
 
-private:
+  private:
     QVBoxLayout* layout;
     QHBoxLayout* nameLayout;
 
-    QLabel*    nameLabel;
+    QLabel* nameLabel;
     QLineEdit* nameLE;
 
     QHBoxLayout* buttonsLayout;
@@ -72,4 +75,4 @@ private:
     QPushButton* cancelButton;
 };
 
-#endif // SNAPSHOTNAMEDIALOG_H
+#endif  // SNAPSHOTNAMEDIALOG_H

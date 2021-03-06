@@ -29,25 +29,26 @@
 #pragma once
 
 #include <lo/lo.h>
+
 #include <string>
 
-
-
 /// A wrapper class for the liblo osc server
-class OSCServer {
-
-public:
+class OSCServer
+{
+  public:
     OSCServer(const char* port = "58200");
     ~OSCServer();
 
     void start();
     void stop();
 
-    void        addMethod(const char* path, const char* types, lo_method_handler h, void* user_data = NULL);
+    void addMethod(const char* path, const char* types, lo_method_handler h,
+                   void* user_data = NULL);
     std::string getContent(const char* path, const char* types, lo_arg** argv, int argc);
 
     lo_server_thread serverThread;
 
     // internal exception class
-    class EServ { };
+    class EServ
+    {};
 };

@@ -21,10 +21,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
 #ifndef XWONDERMAINWINDOW_H
 #define XWONDERMAINWINDOW_H
-
 
 //----------------------------------includes----------------------------------//
 
@@ -49,19 +47,18 @@ class SourceGroup;
 
 //----------------------------------------------------------------------------//
 
-
-
 //----------------------------------Doxygen-----------------------------------//
 /*!
  *      \brief
  *      The main interface to xwonder.
  *
  *      \details
- *      This is the main window of xwonder. Complete application interface with menubar, toolbar, statusbar and the
- *      two custom wigdets ChannelsWidget (left screen side) and Sources3DWidget (right screen side).
- *      It connects these widgets and dispatches OSC-messages to the appropriate receiver.
- *      Coordination of cwonder and scoreplayer is done here. It keeps track of changes worth
- *      saving and handles all file I/O according to cwonder's location (local/remote).
+ *      This is the main window of xwonder. Complete application interface with menubar,
+ * toolbar, statusbar and the two custom wigdets ChannelsWidget (left screen side) and
+ * Sources3DWidget (right screen side). It connects these widgets and dispatches
+ * OSC-messages to the appropriate receiver. Coordination of cwonder and scoreplayer is
+ * done here. It keeps track of changes worth saving and handles all file I/O according to
+ * cwonder's location (local/remote).
  *
  *      \author
  *      Hans-Joachim Mond
@@ -70,24 +67,27 @@ class SourceGroup;
  *      09.08.2008
  *
  *      \todo
- *      - extend contextmenu for groups (remove all members, setPostionDialog (extend SourcesDialog))
+ *      - extend contextmenu for groups (remove all members, setPostionDialog (extend
+ * SourcesDialog))
  *      - complete doxygen documentation
  *      - lo_send returnvalues should be evaluated (i.e. more errorchecking)
  *
  */
 
-class XwonderMainWindow : public QMainWindow {
+class XwonderMainWindow : public QMainWindow
+{
     Q_OBJECT
 
-public:
+  public:
     XwonderMainWindow(QWidget* parent = 0);
     virtual QSize minimumSizeHint() const;
-protected:
+
+  protected:
     // event handlers
     void closeEvent(QCloseEvent* event);
-    void keyPressEvent(QKeyEvent*   event);
+    void keyPressEvent(QKeyEvent* event);
 
-private slots:
+  private slots:
     // outgoing OSC
     void sendOSCSourceActivate(int sourceID);
     void sendOSCSourceDeactivate(int sourceID);
@@ -133,24 +133,25 @@ private slots:
     void showStreamClientWidget(bool showIt);
     void streamClientWidgetClosedItself();
 
-    //void showTimeSelector(bool showIt);
-    //void timeSelectorClosedItself();
+    // void showTimeSelector(bool showIt);
+    // void timeSelectorClosedItself();
 
     // scoreplayer
     void startScoreplayer();
     void stopScoreplayer();
-    void setRecordmodeInScoreplayer(bool recEnabled,  bool externaSet = false);
+    void setRecordmodeInScoreplayer(bool recEnabled, bool externaSet = false);
     void setReadmodeInScoreplayer(bool readEnabled, bool externaSet = false);
     void returnToZeroInScoreplayer();
     void fetchClearScoreRequest();
     void clearScoreplayer();
     void setStartScenarioInScoreplayer();
-    //void undoInScoreplayer();
-    //void redoInScoreplayer();
+    // void undoInScoreplayer();
+    // void redoInScoreplayer();
     void enableMMC(bool enableIt, bool externalSet = false);
     void enableMSRC(bool enableIt, bool externalSet = false);
 
-    // functions for setting xwonder's transportbuttons according to messages sent by scoreplayer
+    // functions for setting xwonder's transportbuttons according to messages sent by
+    // scoreplayer
     void scoreplayerStopped();
     void scoreplayerStarted();
 
@@ -167,7 +168,8 @@ private slots:
     void setModified();
     void setNotModified();
 
-    void toggleAddChannelActs(unsigned int notUsed1 = 0, int notUsed2 = 0, bool notUsed3 = false);
+    void toggleAddChannelActs(unsigned int notUsed1 = 0, int notUsed2 = 0,
+                              bool notUsed3 = false);
     void shiftFocusToSources3DWidget(unsigned int notUsed);
     void updateStatusBar(const Source&);
     void updateStatusBar(const SourceGroup&);
@@ -177,7 +179,7 @@ private slots:
     // dispatch all keys related to the sources view
     void dispatchViewRelatedKeys(QKeyEvent* event);
 
-private:
+  private:
     // widget initialisation
     void createActions();
     void createMenus();
@@ -190,43 +192,46 @@ private:
     void setNoProjectMode();
     void setProjectWithScoreMode();
     void setProjectWithoutScoreMode();
-    void setMode(bool projectOnlyMode);   // otherwise projectWithScoreMode
+    void setMode(bool projectOnlyMode);  // otherwise projectWithScoreMode
 
     // cwonder
     void parseLoadedProjectXMLDump(QString xmlProject);
-    //void clearSnapshotsList();
+    // void clearSnapshotsList();
 
     bool fetchUnsavedChanges();
 
     // if cwonder does not run on localhost, then project and score names are
     // only filenames without the path part
-    QString projectname;      // absolute filename for cwonderproject (without ".xml")
-    QString basicWindowTitle; // base for the text that will be displayed in xwonders windowtitle
+    QString projectname;       // absolute filename for cwonderproject (without ".xml")
+    QString basicWindowTitle;  // base for the text that will be displayed in xwonders
+                               // windowtitle
 
     // true if cwonder is running on same computer
     bool localMode;
 
-    // cwonder knows two kinds of projects, with or without score. Xwonder provides the adequate
-    // interface and functionality. If projectOnlyMode  is false, we are in projectWithScoreMode.
+    // cwonder knows two kinds of projects, with or without score. Xwonder provides the
+    // adequate interface and functionality. If projectOnlyMode  is false, we are in
+    // projectWithScoreMode.
     bool projectOnlyMode;
 
     // flag for scoreplayers current mode, playing or stopped
     bool scoreplayerIsPlaying;
 
     // permanent widgets of the main window (according to mode)
-    Sources3DWidget*    sources3DView;
-    QScrollArea*        channelsScrollArea;
-    ChannelsWidget*     channelsView;
-    SnapshotSelector*   snapshotSelector;
+    Sources3DWidget* sources3DView;
+    QScrollArea* channelsScrollArea;
+    ChannelsWidget* channelsView;
+    SnapshotSelector* snapshotSelector;
     StreamClientWidget* streamClientWidget;
-    TimeLCDNumber*      timeLCD;
-    QToolBar*           scoreplayerToolBar;
-    QStatusBar*         theStatusBar;
-    //TimelineWidget*    timeSelector;
-    QWidget*            centralWidget;
-    QHBoxLayout*        hLayout;
+    TimeLCDNumber* timeLCD;
+    QToolBar* scoreplayerToolBar;
+    QStatusBar* theStatusBar;
+    // TimelineWidget*    timeSelector;
+    QWidget* centralWidget;
+    QHBoxLayout* hLayout;
 
-    // this dialog is needed if cwonder runs on a different machine and thus filebrowsing is not possible
+    // this dialog is needed if cwonder runs on a different machine and thus filebrowsing
+    // is not possible
     FilenameDialog* filenameDialog;
 
     // access to transportbuttons for setting their palettes
@@ -254,9 +259,9 @@ private:
     // display/view related
     QAction* resetViewAct;
     QAction* showPerspectiveViewAct;
-    //QAction* showLightingAct;
-    //QAction* showTimesliceConnectionsAct;
-    //QAction* showTimeTicsAct;
+    // QAction* showLightingAct;
+    // QAction* showTimesliceConnectionsAct;
+    // QAction* showTimeTicsAct;
     QAction* showCoordOriginAct;
     QAction* showNamesAct;
     QAction* showCoordinatesAct;
@@ -279,10 +284,10 @@ private:
     QAction* returnToZeroInScoreplayerAct;
     QAction* clearScoreplayerAct;
     QAction* setStartScenarioInScoreplayerAct;
-    //QAction* undoInScoreplayerAct;
-    //QAction* redoInScoreplayerAct;
-    //QAction* loadWithScoreplayerAct;
-    //QAction* saveWithScoreplayerAct;
+    // QAction* undoInScoreplayerAct;
+    // QAction* redoInScoreplayerAct;
+    // QAction* loadWithScoreplayerAct;
+    // QAction* saveWithScoreplayerAct;
     QAction* enableMMCAct;
     QAction* enableMSRCAct;
 
@@ -311,9 +316,9 @@ private:
     bool myProjectLoadRequest;
 
     // score related data
-    //unsigned int scoreDuration;    //in ms
-    //unsigned int timegridDistance; //in ms
+    // unsigned int scoreDuration;    //in ms
+    // unsigned int timegridDistance; //in ms
 
-}; // class XwonderMainWindow
+};  // class XwonderMainWindow
 
-#endif //XWONDERMAINWINDOW_H
+#endif  // XWONDERMAINWINDOW_H

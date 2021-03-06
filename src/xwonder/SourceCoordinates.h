@@ -26,16 +26,15 @@
 
 #include <QGLWidget>
 
-//Doxygen description
+// Doxygen description
 /*!
  *      \brief
  *      Internal coordinate system (in accordance with OpenGL)
  *
  *      \details
  *      Coordinates and orientation of a single source.
- *      WONDER uses a somewhat awkward coordinate system so a mapping to OpenGL and overall generally
- *      usefull coordinates is needed.
- *      Conventions internal to Xwonder:
+ *      WONDER uses a somewhat awkward coordinate system so a mapping to OpenGL and
+ * overall generally usefull coordinates is needed. Conventions internal to Xwonder:
  *      - origin is in the middle of the room
  *      - x-axis points to the right
  *      - y-axis points upwards
@@ -48,48 +47,46 @@
  *      31.12.2007
  */
 
-class SourceCoordinates {
-public:
-    SourceCoordinates(GLfloat initX = 0.0, GLfloat initY = 0.0, GLfloat initOrientation = 0.0)
-        : x(initX), y(initY), orientation(initOrientation) {};
+class SourceCoordinates
+{
+  public:
+    SourceCoordinates(GLfloat initX = 0.0, GLfloat initY = 0.0,
+                      GLfloat initOrientation = 0.0)
+        : x(initX), y(initY), orientation(initOrientation){};
 
-    SourceCoordinates mapGLCoordToWonderCoord() {
-        return mapGLCoordToWonderCoord(*this);
-    }
+    SourceCoordinates mapGLCoordToWonderCoord() { return mapGLCoordToWonderCoord(*this); }
 
-    SourceCoordinates mapWonderCoordToGLCoord() {
-        return mapWonderCoordToGLCoord(*this);
-    }
+    SourceCoordinates mapWonderCoordToGLCoord() { return mapWonderCoordToGLCoord(*this); }
 
     static SourceCoordinates mapGLCoordToWonderCoord(SourceCoordinates glCoord) {
-        //WONDER has the origin in the middle of the frontal speakerarray, y-axis points downwoard inside the room, degrees increase clockwise
+        // WONDER has the origin in the middle of the frontal speakerarray, y-axis points
+        // downwoard inside the room, degrees increase clockwise
         SourceCoordinates WonderCoord(0.0, 0.0, 0.0);
-        WonderCoord.x = glCoord.x;
-        WonderCoord.y = -(glCoord.y);
+        WonderCoord.x           = glCoord.x;
+        WonderCoord.y           = -(glCoord.y);
         WonderCoord.orientation = -glCoord.orientation;
         return WonderCoord;
     }
 
     static SourceCoordinates mapWonderCoordToGLCoord(SourceCoordinates glCoord) {
-        //WONDER has the origin in the middle of the frontal speakerarray, y-axis points downwoard inside the room, degrees increase clockwise
+        // WONDER has the origin in the middle of the frontal speakerarray, y-axis points
+        // downwoard inside the room, degrees increase clockwise
         SourceCoordinates GLCoord(0.0, 0.0, 0.0);
-        GLCoord.x = glCoord.x;
-        GLCoord.y = -glCoord.y;
+        GLCoord.x           = glCoord.x;
+        GLCoord.y           = -glCoord.y;
         GLCoord.orientation = -glCoord.orientation;
         return GLCoord;
     }
 
-    bool operator == (const SourceCoordinates& other) {
-        return (other.x == x  &&  other.y == y  &&  other.orientation == orientation);
+    bool operator==(const SourceCoordinates& other) {
+        return (other.x == x && other.y == y && other.orientation == orientation);
     }
 
-    SourceCoordinates& operator = (const SourceCoordinates& other) {
-        if(this == &other) {
-            return *this;
-        }
+    SourceCoordinates& operator=(const SourceCoordinates& other) {
+        if (this == &other) { return *this; }
 
-        this->x = other.x;
-        this->y = other.y;
+        this->x           = other.x;
+        this->y           = other.y;
         this->orientation = other.orientation;
         return *this;
     }
@@ -99,4 +96,4 @@ public:
     GLfloat orientation;
 };
 
-#endif //SOURCECOORDINATES_H
+#endif  // SOURCECOORDINATES_H

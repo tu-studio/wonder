@@ -21,7 +21,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
 #ifndef STREAMCLIENTWIDGET_H
 #define STREAMCLIENTWIDGET_H
 
@@ -31,25 +30,26 @@ class QCloseEvent;
 class QTableWidget;
 class QVBoxLayout;
 
-class StreamClientWidget : public QDialog {
+class StreamClientWidget : public QDialog
+{
     Q_OBJECT
 
-public:
+  public:
     StreamClientWidget(QWidget* parent = 0);
 
-public slots:
+  public slots:
     void insert(QString host, QString port, QString name);
     void remove(QString host, QString port, QString name);
 
-protected:
+  protected:
     void closeEvent(QCloseEvent* event);
 
-signals:
+  signals:
     void closedMyself();
 
-private:
-    QVBoxLayout*  layout;
+  private:
+    QVBoxLayout* layout;
     QTableWidget* table;
 };
 
-#endif //STREAMCLIENTWIDGET_H
+#endif  // STREAMCLIENTWIDGET_H

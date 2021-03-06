@@ -30,47 +30,50 @@
 
 class DelayCoeff;
 
-
-
-class DelayLine {
-
-public:
+class DelayLine
+{
+  public:
     // This function must be called before instantiating any DelayLine objects in order
     // to setup the crossfade factors according to the runtime audio blocksize !
     static void initFadeBuffers(const unsigned int blockSize);
 
-    enum CrossfadeType {
+    enum CrossfadeType
+    {
         dB3,
         dB6
     };
 
-
-    // maxDelay is the maximum possible negative delay this DelayLine can handle. In meters.
+    // maxDelay is the maximum possible negative delay this DelayLine can handle. In
+    // meters.
     DelayLine(float maxDelay = 10.0);
     ~DelayLine();
 
     // XXX WARNING: must write power of 2 only;
     void put(float* samples, unsigned int nsamples);
 
-    // read samples from this delayLine, make sure to set the contents of samples to 0.0 before
+    // read samples from this delayLine, make sure to set the contents of samples to 0.0
+    // before
     void get(unsigned int sampleDelay, float* samples, unsigned int nsamples);
-    void get(DelayCoeff& coeff,  float* samples, unsigned int nsamples);
-    void get(DelayCoeff& coeff0, DelayCoeff& coeff1, float* samples, unsigned int nsamples);
-    void getInterp(DelayCoeff& coeff0, DelayCoeff& coeff1, float* samples, unsigned int nsamples);
+    void get(DelayCoeff& coeff, float* samples, unsigned int nsamples);
+    void get(DelayCoeff& coeff0, DelayCoeff& coeff1, float* samples,
+             unsigned int nsamples);
+    void getInterp(DelayCoeff& coeff0, DelayCoeff& coeff1, float* samples,
+                   unsigned int nsamples);
 
-    void getFadej(DelayCoeff& coeff0, DelayCoeff& coeff1, float* samples, unsigned int nsamples, CrossfadeType fadeType = dB3);
+    void getFadej(DelayCoeff& coeff0, DelayCoeff& coeff1, float* samples,
+                  unsigned int nsamples, CrossfadeType fadeType = dB3);
 
-private:
-    //The length of this buffer in samples.
+  private:
+    // The length of this buffer in samples.
     // XXX WARNING: must be power of two.
-    int   lineLength;
+    int lineLength;
     float lineLengthF;
 
-    float  maxDelay;
+    float maxDelay;
     float* line;
-    int    writePos;
-    int    readPos;
-    float  readPosF;
+    int writePos;
+    int readPos;
+    float readPosF;
 
     // arrays of actual blockSize ( determined at runtime ) containing
     // factors for crossfading with either a -3dB or -6dB crossover point

@@ -24,14 +24,16 @@
 #include "SnapshotNameDialog.h"
 
 #include <QHBoxLayout>
-#include <QVBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QRegExp>
 #include <QRegExpValidator>
+#include <QVBoxLayout>
 
-SnapshotNameDialog::SnapshotNameDialog(bool displayOldName, const QString oldName, QWidget* parent) : QDialog(parent, Qt::Dialog) {  //|Qt::FramelessWindowHint)
+SnapshotNameDialog::SnapshotNameDialog(bool displayOldName, const QString oldName,
+                                       QWidget* parent)
+    : QDialog(parent, Qt::Dialog) {  //|Qt::FramelessWindowHint)
     setModal(true);
     setWindowTitle("Enter Snapshotname:");
 
@@ -53,36 +55,32 @@ SnapshotNameDialog::SnapshotNameDialog(bool displayOldName, const QString oldNam
     layout->addLayout(buttonsLayout);
     setLayout(layout);
 
-    //Connect Signals and Slots
-    connect(okButton,     SIGNAL(clicked()),                    this, SLOT(accept()));
-    connect(cancelButton, SIGNAL(clicked()),                    this, SLOT(reject()));
-    connect(nameLE,       SIGNAL(textEdited(const QString&)), this, SLOT(enableOKButton()));
-    connect(this,         SIGNAL(accepted()),                   this, SLOT(readName()));
+    // Connect Signals and Slots
+    connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
+    connect(nameLE, SIGNAL(textEdited(const QString&)), this, SLOT(enableOKButton()));
+    connect(this, SIGNAL(accepted()), this, SLOT(readName()));
 
-    //Set Validators to limit the length of the name to 15 characters
+    // Set Validators to limit the length of the name to 15 characters
     QRegExp nameRegExp(".{1,15}");
     nameLE->setValidator(new QRegExpValidator(nameRegExp, this));
 
     okButton->setDisabled(true);
 
-    if(displayOldName) {
-        if(! oldName.isEmpty()) {
+    if (displayOldName) {
+        if (!oldName.isEmpty()) {
             nameLE->setText(oldName);
             enableOKButton();
         }
     }
 }
 
-
 void SnapshotNameDialog::enableOKButton() {
-    if(nameLE->hasAcceptableInput()) {
+    if (nameLE->hasAcceptableInput()) {
         okButton->setEnabled(true);
     } else {
         okButton->setEnabled(false);
     }
 }
 
-
-void SnapshotNameDialog::readName() {
-    newName = nameLE->text();
-}
+void SnapshotNameDialog::readName() { newName = nameLE->text(); }

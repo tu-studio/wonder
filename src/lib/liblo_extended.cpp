@@ -26,39 +26,38 @@
  *                                                                                   *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include <cstring>
 #include "liblo_extended.h"
 
+#include <cstring>
 
 int issame(lo_address a, lo_address b) {
-    if(a == NULL || b == NULL) {
-        return -1;    // at least one invalid address
+    if (a == NULL || b == NULL) {
+        return -1;  // at least one invalid address
     }
 
-    if(strcmp(lo_address_get_hostname(a), lo_address_get_hostname(b)) == 0 &&
-            strcmp(lo_address_get_port(a), lo_address_get_port(b)) == 0) {
-        return 1;    // addresses are equal
+    if (strcmp(lo_address_get_hostname(a), lo_address_get_hostname(b)) == 0
+        && strcmp(lo_address_get_port(a), lo_address_get_port(b)) == 0) {
+        return 1;  // addresses are equal
     }
 
-    return 0; // adresses are not equal
-
+    return 0;  // adresses are not equal
 }
 
-
-void forward(const char* path, const char* types, int argc, lo_arg** argv, lo_address to) {
+void forward(const char* path, const char* types, int argc, lo_arg** argv,
+             lo_address to) {
     lo_message m = lo_message_new();
 
-    for(int i = 0; i < argc; ++i) {
-        if(types[ i ] == 's') {
-            lo_message_add_string(m, &argv[ i ]->s);
+    for (int i = 0; i < argc; ++i) {
+        if (types[i] == 's') {
+            lo_message_add_string(m, &argv[i]->s);
         }
 
-        else if(types[ i ] == 'f') {
-            lo_message_add_float(m, argv[ i ]->f);
+        else if (types[i] == 'f') {
+            lo_message_add_float(m, argv[i]->f);
         }
 
-        else if(types[ i ] == 'i') {
-            lo_message_add_int32(m, argv[ i ]->i);
+        else if (types[i] == 'i') {
+            lo_message_add_int32(m, argv[i]->i);
         }
     }
 
@@ -67,25 +66,24 @@ void forward(const char* path, const char* types, int argc, lo_arg** argv, lo_ad
     lo_message_free(m);
 }
 
-
 void forward(const char* types, int argc, lo_arg** argv, lo_address to) {
     lo_message m = lo_message_new();
 
-    for(int i =  1; i < argc; ++i) {
-        if(types[ i ] == 's') {
-            lo_message_add_string(m, &argv[ i ]->s);
+    for (int i = 1; i < argc; ++i) {
+        if (types[i] == 's') {
+            lo_message_add_string(m, &argv[i]->s);
         }
 
-        else if(types[ i ] == 'f') {
-            lo_message_add_float(m, argv[ i ]->f);
+        else if (types[i] == 'f') {
+            lo_message_add_float(m, argv[i]->f);
         }
 
-        else if(types[ i ] == 'i') {
-            lo_message_add_int32(m, argv[ i ]->i);
+        else if (types[i] == 'i') {
+            lo_message_add_int32(m, argv[i]->i);
         }
     }
 
-    lo_send_message(to, &argv[ 0 ]->s, m);
+    lo_send_message(to, &argv[0]->s, m);
 
     lo_message_free(m);
 }

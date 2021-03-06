@@ -27,22 +27,20 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include "listener.h"
+
 #include <iostream>
 
 using std::cout;
 using std::endl;
 
-
 Listener::Listener(float x, float y) {
-    pos[ 0 ] = x;
-    pos[ 1 ] = y;
+    pos[0] = x;
+    pos[1] = y;
 }
 
 void Listener::setPos(float x, float y) {
-    pos[ 0 ] = x;
-    pos[ 1 ] = y;
+    pos[0] = x;
+    pos[1] = y;
 
-    cout << "new listener position: [ " << x << ", " << y << " ]"
-         << endl;
+    cout << "new listener position: [ " << x << ", " << y << " ]" << endl;
 }
-

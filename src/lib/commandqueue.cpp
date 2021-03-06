@@ -28,51 +28,30 @@
 
 #include "commandqueue.h"
 
-
 //---------------------------------Command------------------------------------//
 
-Command::~Command() {
-}
+Command::~Command() {}
 
+void Command::execute() {}
 
-void Command::execute() {
-}
+Command::Command() : timeStamp(0.f) {}
 
+Command::Command(TimeStamp timeStamp) : timeStamp(timeStamp) {}
 
-Command::Command() : timeStamp(0.f) {
-}
+bool Command::operator<(const Command& other) { return timeStamp < other.timeStamp; }
 
-
-Command::Command(TimeStamp timeStamp) : timeStamp(timeStamp) {
-}
-
-
-bool Command::operator < (const Command& other) {
-    return timeStamp < other.timeStamp;
-}
-
-
-TimeStamp Command::getTimeStamp() const {
-    return timeStamp;
-}
+TimeStamp Command::getTimeStamp() const { return timeStamp; }
 
 //-----------------------------end of Command---------------------------------//
 
-
-
 //-------------------------------CommandList----------------------------------//
 
-CommandList::CommandList() : std::list<Command*>() {
-}
+CommandList::CommandList() : std::list<Command*>() {}
 
-
-CommandList::CommandList(Command* cmd) : std::list<Command*>() {
-    push_back(cmd);
-}
-
+CommandList::CommandList(Command* cmd) : std::list<Command*>() { push_back(cmd); }
 
 CommandList::~CommandList() {
-    while(!empty()) {
+    while (!empty()) {
         delete front();
         pop_front();
     }
@@ -80,72 +59,51 @@ CommandList::~CommandList() {
 
 //----------------------------end of CommandList------------------------------//
 
-
-
 //------------------------------CommandQueue----------------------------------//
 
-CommandQueue::CommandQueue() {
-    pthread_mutex_init(&mutex, NULL);
-}
+CommandQueue::CommandQueue() { pthread_mutex_init(&mutex, NULL); }
 
-
-CommandQueue::~CommandQueue() {
-    pthread_mutex_destroy(&mutex);
-}
-
+CommandQueue::~CommandQueue() { pthread_mutex_destroy(&mutex); }
 
 void CommandQueue::put(Command* command) {
     CommandList* commandList = new CommandList(command);
 
     pthread_mutex_lock(&mutex);
 
-    while(!write(reinterpret_cast<void*>(commandList))) {
+    while (!write(reinterpret_cast<void*>(commandList))) {
         std::this_thread::sleep_for(std::chrono::microseconds(100));
     }
 
     pthread_mutex_unlock(&mutex);
 }
 
-
-CommandList* CommandQueue::get() {
-    return reinterpret_cast<CommandList*>(read());
-}
+CommandList* CommandQueue::get() { return reinterpret_cast<CommandList*>(read()); }
 
 //---------------------------end of CommandQueue------------------------------//
 
-
-
 //--------------------------------FreeQueue-----------------------------------//
 
-FreeQueue::FreeQueue() {
-    pthread_mutex_init(&mutex, NULL);
-}
+FreeQueue::FreeQueue() { pthread_mutex_init(&mutex, NULL); }
 
-
-FreeQueue::~FreeQueue() {
-    pthread_mutex_destroy(&mutex);
-}
-
+FreeQueue::~FreeQueue() { pthread_mutex_destroy(&mutex); }
 
 void FreeQueue::put(CommandList* commandList) {
     // This tries to put the list of commands onto the free Queue.
     // If the queue is full, then the list will not get freed producing a memory leak.
     //
     // XXX: For safety reasons it is better to free the object in that case.
-    //      An audible click is better than the whole system breaking down due to memory shortage
+    //      An audible click is better than the whole system breaking down due to memory
+    //      shortage
 
-    if(!write(reinterpret_cast<void*>(commandList))) {
-        delete commandList;
-    }
+    if (!write(reinterpret_cast<void*>(commandList))) { delete commandList; }
 }
-
 
 void FreeQueue::flush() {
     CommandList* commandListToDelete;
 
     pthread_mutex_lock(&mutex);
 
-    while((commandListToDelete = reinterpret_cast<CommandList*>(read())) != NULL) {
+    while ((commandListToDelete = reinterpret_cast<CommandList*>(read())) != NULL) {
         delete commandListToDelete;
     }
 

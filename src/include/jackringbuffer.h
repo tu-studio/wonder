@@ -30,11 +30,9 @@
 
 #include <jack/ringbuffer.h>
 
-
-
-class JackRingbuffer {
-
-public:
+class JackRingbuffer
+{
+  public:
     JackRingbuffer(int size = 256);
 
     ~JackRingbuffer();
@@ -43,6 +41,6 @@ public:
 
     bool write(void* ptr);
 
-private:
+  private:
     jack_ringbuffer_t* ringBuffer;
 };

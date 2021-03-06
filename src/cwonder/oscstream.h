@@ -28,21 +28,20 @@
 
 #pragma once
 
-#include <list>
 #include <lo/lo.h>
+
+#include <list>
 #include <string>
 
 #include "oscping.h"
 
-
-
 // A client of an OSC stream
-struct OSCStreamClient {
-
-public:
-    OSCStreamClient(std::string host, std::string port, std::string name, lo_address address) :
-        host(host), port(port), name(name), address(address) {
-    }
+struct OSCStreamClient
+{
+  public:
+    OSCStreamClient(std::string host, std::string port, std::string name,
+                    lo_address address)
+        : host(host), port(port), name(name), address(address) {}
 
     std::string host;
     std::string port;
@@ -51,28 +50,30 @@ public:
     lo_address address;
 };
 
-class OSCStream {
-public:
+class OSCStream
+{
+  public:
     OSCStream(std::string name);
 
     ~OSCStream();
 
-    int  connect(std::string host, std::string port, std::string name);
+    int connect(std::string host, std::string port, std::string name);
     void disconnect(lo_address b);
 
-    void ping(std::list< OSCStreamClient >& deadClients);
+    void ping(std::list<OSCStreamClient>& deadClients);
     void pong(int pingNum, lo_address from);
 
-    std::list< OSCStreamClient >::iterator begin();
-    std::list< OSCStreamClient >::iterator end();
+    std::list<OSCStreamClient>::iterator begin();
+    std::list<OSCStreamClient>::iterator end();
     bool hasClients();
 
-    void send(const char* path, const char* types, int argc, lo_arg** argv, lo_message msg);
+    void send(const char* path, const char* types, int argc, lo_arg** argv,
+              lo_message msg);
     void send(const char* types, int argc, lo_arg** argv, lo_message msg);
 
-private:
-    std::list< OSCStreamClient > clients;
-    std::list< OSCStreamClient >::iterator clientsIter;
+  private:
+    std::list<OSCStreamClient> clients;
+    std::list<OSCStreamClient>::iterator clientsIter;
 
     ListOSCPing* pingList;
 

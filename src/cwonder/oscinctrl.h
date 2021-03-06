@@ -33,14 +33,14 @@
 class Cwonder;
 
 // arguments of the handler functions
-#define handlerArgs const char* path, const char* types, lo_arg** argv, int argc, lo_message msg, void* user_data
-
-
+#define handlerArgs                                                               \
+    const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, \
+        void *user_data
 
 // The OSC Server for cwonder
-class OSCControl : public OSCServer {
-
-public:
+class OSCControl : public OSCServer
+{
+  public:
     OSCControl(const char* port = "58100");
 
     ~OSCControl();
@@ -52,7 +52,7 @@ public:
     // add the cwonder specific messages to the list of known messages
     void addMethods();
 
-private:
+  private:
     static Cwonder* cwonder;
 
     // the address of the timer will be set when the timer requests connection
@@ -116,4 +116,4 @@ private:
     // generic handler
     static int genericHandler(handlerArgs);
 
-}; // class OSCControl
+};  // class OSCControl

@@ -28,10 +28,8 @@
 
 #include "listener_array.h"
 
-
-
 ListenerArray::ListenerArray(int noListeners) {
-    for(int i = 0; i < noListeners; ++i) {
+    for (int i = 0; i < noListeners; ++i) {
         float default_x = 0.0;
         float default_y = 2.85625;
         Listener* temp  = new Listener(default_x, default_y);
@@ -39,16 +37,12 @@ ListenerArray::ListenerArray(int noListeners) {
     }
 }
 
-
-
 void ListenerArray::addListener(Listener* listener) {
     // not supported yet
 }
 
-
-
 ListenerArray::~ListenerArray() {
-    while(!empty()) {
+    while (!empty()) {
         delete back();
         pop_back();
     }

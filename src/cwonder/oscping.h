@@ -28,19 +28,19 @@
 
 #pragma once
 
-#include <list>
 #include <lo/lo.h>
+
+#include <list>
 #include <string>
 #include <vector>
 
 struct OSCStreamClient;
 
-
-
-class OSCPing {
-
-public:
-    OSCPing(lo_address address, std::string path, int pingSpan = 5, int allowedLostPongs = 90, std::string name = "");
+class OSCPing
+{
+  public:
+    OSCPing(lo_address address, std::string path, int pingSpan = 5,
+            int allowedLostPongs = 90, std::string name = "");
 
     /// evaluate responses received and send new ping
     /// if response evaluation indicates that the client is not responding
@@ -50,38 +50,39 @@ public:
     // gets called when a pong is received
     void pong();
 
-public:
+  public:
     lo_address address;
 
     std::string name;
 
-private:
+  private:
     int pingCount;
     int pongCount;
     int pingSpan;
-    int allowedLostPongs; // in percent
+    int allowedLostPongs;  // in percent
     std::string path;
 };
 
-
-
-// List of OSC stream clients all of which need to be pinged the check if they are still alive.
-// This class is part of the stream facilities. It sends out periodic ping commands and
-// evaluates the replies to check whether a host is still up or not. If a certain percentage
-// of pings remains unanswered the client is considered dead and removed from the list.
-class ListOSCPing : public std::list< OSCPing* > {
-public:
+// List of OSC stream clients all of which need to be pinged the check if they are still
+// alive. This class is part of the stream facilities. It sends out periodic ping commands
+// and evaluates the replies to check whether a host is still up or not. If a certain
+// percentage of pings remains unanswered the client is considered dead and removed from
+// the list.
+class ListOSCPing : public std::list<OSCPing*>
+{
+  public:
     ListOSCPing(std::string path);
 
     ~ListOSCPing();
 
-    int add(lo_address a, std::string name = "", int pingSpan = 3, int allowedLostPongs = 90);
+    int add(lo_address a, std::string name = "", int pingSpan = 3,
+            int allowedLostPongs = 90);
     int remove(lo_address b);
 
-    void ping(std::list< OSCStreamClient >& deadClients);
-    int  pong(int pingNum, lo_address from);
+    void ping(std::list<OSCStreamClient>& deadClients);
+    int pong(int pingNum, lo_address from);
 
     std::string path;
 
-    std::list< OSCPing* >::iterator clients;
+    std::list<OSCPing*>::iterator clients;
 };

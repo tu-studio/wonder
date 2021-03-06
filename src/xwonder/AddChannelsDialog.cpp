@@ -21,48 +21,45 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
 //----------------------------------includes----------------------------------//
 
 #include "AddChannelsDialog.h"
 
-#include <QWidget>
-#include <QPushButton>
 #include <QGridLayout>
 #include <QLabel>
+#include <QPushButton>
 #include <QSpinBox>
+#include <QWidget>
 
 //----------------------------------------------------------------------------//
 
-
-AddChannelsDialog::AddChannelsDialog(int noSourcesLeft, QWidget* parent) : QDialog(parent, Qt::Dialog),
-    noSources(2) {
+AddChannelsDialog::AddChannelsDialog(int noSourcesLeft, QWidget* parent)
+    : QDialog(parent, Qt::Dialog), noSources(2) {
     setWindowTitle("Add multiple Sources");
 
-    layout                  = new QGridLayout();
-    QString noSourcesString = "Number of Sources (max: " + QString::number(noSourcesLeft) + ")" ;
-    inputLabel              = new QLabel(noSourcesString);
-    noSourcesSB             = new QSpinBox();
+    layout = new QGridLayout();
+    QString noSourcesString =
+        "Number of Sources (max: " + QString::number(noSourcesLeft) + ")";
+    inputLabel  = new QLabel(noSourcesString);
+    noSourcesSB = new QSpinBox();
     noSourcesSB->setRange(1, noSourcesLeft);
 
     okButton     = new QPushButton("OK");
     cancelButton = new QPushButton("Cancel");
 
-    layout->addWidget(inputLabel,   0, 0, 1, 2);
-    layout->addWidget(noSourcesSB,  1, 0, 1, 2);
-    layout->addWidget(okButton,     2, 0);
+    layout->addWidget(inputLabel, 0, 0, 1, 2);
+    layout->addWidget(noSourcesSB, 1, 0, 1, 2);
+    layout->addWidget(okButton, 2, 0);
     layout->addWidget(cancelButton, 2, 1);
     setLayout(layout);
 
     // connect signals and slots
-    connect(noSourcesSB,  SIGNAL(valueChanged(int)), this, SLOT(changeNoSources(int)));
-    connect(okButton,     SIGNAL(clicked()),           this, SLOT(accept()));
-    connect(cancelButton, SIGNAL(clicked()),           this, SLOT(reject()));
+    connect(noSourcesSB, SIGNAL(valueChanged(int)), this, SLOT(changeNoSources(int)));
+    connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 
     // set a reasnonable default value
     noSourcesSB->setValue(noSources);
 }
 
-void AddChannelsDialog::changeNoSources(int newNoSources) {
-    noSources = newNoSources;
-}
+void AddChannelsDialog::changeNoSources(int newNoSources) { noSources = newNoSources; }

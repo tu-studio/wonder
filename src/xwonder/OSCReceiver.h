@@ -22,17 +22,15 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
 #ifndef OSCRECEIVER_H
 #define OSCRECEIVER_H
 
-
 //----------------------------------includes----------------------------------//
 
+#include <QColor>
+#include <QObject>
 #include <string>
 
-#include <QObject>
-#include <QColor>
 #include "oscin.h"
 
 class QString;
@@ -40,15 +38,15 @@ class QTimer;
 
 //----------------------------------------------------------------------------//
 
-
 //----------------------------------defines-----------------------------------//
 
 // arguments and names of arguments of the handler functions
-#define handlerArgs const char* path, const char* types, lo_arg** argv, int argc, lo_message msg, void* user_data
+#define handlerArgs                                                               \
+    const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, \
+        void *user_data
 #define argNames path, types, argv, argc, msg, user_data
 
 //----------------------------------------------------------------------------//
-
 
 //----------------------------------Doxygen-----------------------------------//
 /*!
@@ -56,13 +54,14 @@ class QTimer;
  *      Dispatcher for incoming OSC messages
  *
  *      \details
- *      Every OSC message sent to Xwonder is received by this class and dispatched to the appropriate static
- *      method, if one is registered. This static method calls a non-static method which emits a Qt signal.
- *      This multiple method approach is necessary because only static methods can be registered as handlers
- *      in the class OSCServer but only actual objects can emit signals in Qt. OSCServer encapsulates the
- *      liblo which uses funtionpointers to register callbacks, hence the need for static methods.
- *      OSCReceiver regularly checks the connection to cwonder and notifies the user if the connection
- *      is lost and tells Xwonder to exit.
+ *      Every OSC message sent to Xwonder is received by this class and dispatched to the
+ * appropriate static method, if one is registered. This static method calls a non-static
+ * method which emits a Qt signal. This multiple method approach is necessary because only
+ * static methods can be registered as handlers in the class OSCServer but only actual
+ * objects can emit signals in Qt. OSCServer encapsulates the liblo which uses
+ * funtionpointers to register callbacks, hence the need for static methods. OSCReceiver
+ * regularly checks the connection to cwonder and notifies the user if the connection is
+ * lost and tells Xwonder to exit.
  *
  *      \author
  *      Hans-Joachim Mond
@@ -72,12 +71,14 @@ class QTimer;
  */
 //----------------------------------------------------------------------------//
 
-
-class OSCReceiver : public QObject, OSCServer {
+class OSCReceiver
+    : public QObject
+    , OSCServer
+{
     Q_OBJECT
 
-public:
-    //constructors
+  public:
+    // constructors
     OSCReceiver(const char* port, QObject* parent = 0);
 
     // emitter
@@ -121,7 +122,7 @@ public:
     // try to establish connection to cwonder, starts "ping/pong" mechanism
     void connectToCwonder() const;
 
-signals:
+  signals:
     void sourceActivated(int sourceID) const;
     void sourceDeactivated(int sourceID) const;
     void sourcePositionChanged(int sourceID, float x, float y) const;
@@ -133,7 +134,8 @@ signals:
     void sourceRotationDirectionChanged(int sourceID, bool invert) const;
     void sourceScalingDirectionChanged(int sourceID, bool invert) const;
     void sourceDopplerEffectChanged(int sourceID, bool dopplerOn) const;
-    void sourceRecordModeChanged(int sourceID, bool recordEnabled, bool externalSet) const;
+    void sourceRecordModeChanged(int sourceID, bool recordEnabled,
+                                 bool externalSet) const;
     void sourceReadModeChanged(int sourceID, bool readEnabled, bool externalSet) const;
 
     void groupActivated(int groupID, bool externalSet) const;
@@ -159,10 +161,10 @@ signals:
     void streamclientConnected(QString host, QString port, QString name) const;
     void streamclientDisconnected(QString host, QString port, QString name) const;
 
-private slots:
+  private slots:
     void emitCwonderConnectionLost() const;
 
-private:
+  private:
     void addReply();
     void addMethods();
 
@@ -210,11 +212,11 @@ private:
     // for output to commandline
     static void print(std::string handlerName, handlerArgs);
 
-    QTimer* cwonderTimer; // timer runs out when cwonder doesn't ping anymore
-    bool    startup;      // flag to indicate if xwonder has just started, needed for the timer
+    QTimer* cwonderTimer;  // timer runs out when cwonder doesn't ping anymore
+    bool startup;  // flag to indicate if xwonder has just started, needed for the timer
 
-}; //class OSCReceiver
+};  // class OSCReceiver
 
 extern OSCReceiver* oscReceiver;
 
-#endif //OSCRECEIVER_H
+#endif  // OSCRECEIVER_H

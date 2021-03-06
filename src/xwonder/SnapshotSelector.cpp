@@ -23,26 +23,25 @@
 
 #include "SnapshotSelector.h"
 
-#include "SnapshotSelectorButton.h"
-#include "SnapshotNameDialog.h"
-
-#include <QApplication>
-#include <QMenu>
 #include <QAction>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QGridLayout>
-#include <QLabel>
-#include <QDoubleSpinBox>
+#include <QApplication>
 #include <QCloseEvent>
+#include <QDoubleSpinBox>
+#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QMenu>
+#include <QVBoxLayout>
 
+#include "SnapshotNameDialog.h"
+#include "SnapshotSelectorButton.h"
 
 SnapshotSelector::SnapshotSelector(QWidget* parent) : QDialog(parent) {
     newSnapshotName = "";
 
     setWindowTitle("Snapshot-Selector");
     setMinimumSize(300, 100);
-    //setSizeGripEnabled( false );
+    // setSizeGripEnabled( false );
 
     layout        = new QVBoxLayout();
     buttonsLayout = new QGridLayout();
@@ -65,30 +64,30 @@ SnapshotSelector::SnapshotSelector(QWidget* parent) : QDialog(parent) {
     phantomButton = new SnapshotSelectorButton(0, "phantom");
 }
 
-
 void SnapshotSelector::takeSnapshot(unsigned int snapshotID, QString name) {
     // creat new button, make connections and show it
 
-    //align buttons in rows of 2
+    // align buttons in rows of 2
     int row    = buttons.count() / 2;
     int column = buttons.count() % 2;
 
-    SnapshotSelectorButton* newButton = new SnapshotSelectorButton(snapshotID, name, this);
+    SnapshotSelectorButton* newButton =
+        new SnapshotSelectorButton(snapshotID, name, this);
 
     buttons.insert(snapshotID, newButton);
 
-    connect(newButton, SIGNAL(clicked(unsigned int)),
-            this,      SLOT(recallSnapshot(unsigned int)));
-    connect(newButton, SIGNAL(renameSnapshotSignal(unsigned int)),
-            this,      SLOT(renameSnapshot(unsigned int)));
-    connect(newButton, SIGNAL(copySnapshotSignal(unsigned int)),
-            this,      SLOT(copySnapshot(unsigned int)));
-    connect(newButton, SIGNAL(takeSnapshotSignal(unsigned int, QString)),
-            this,      SIGNAL(takeSnapshotSignal(unsigned int, QString)));
-    connect(newButton, SIGNAL(deleteMeSignal(unsigned int)),
-            this,      SLOT(deleteSnapshot(unsigned int)));
+    connect(newButton, SIGNAL(clicked(unsigned int)), this,
+            SLOT(recallSnapshot(unsigned int)));
+    connect(newButton, SIGNAL(renameSnapshotSignal(unsigned int)), this,
+            SLOT(renameSnapshot(unsigned int)));
+    connect(newButton, SIGNAL(copySnapshotSignal(unsigned int)), this,
+            SLOT(copySnapshot(unsigned int)));
+    connect(newButton, SIGNAL(takeSnapshotSignal(unsigned int, QString)), this,
+            SIGNAL(takeSnapshotSignal(unsigned int, QString)));
+    connect(newButton, SIGNAL(deleteMeSignal(unsigned int)), this,
+            SLOT(deleteSnapshot(unsigned int)));
 
-    if(column == 1) {
+    if (column == 1) {
         buttonsLayout->removeWidget(phantomButton);
         buttonsLayout->addWidget(newButton, row, column);
         setMinimumSize(300, sizeHint().height() + 50);
@@ -102,16 +101,12 @@ void SnapshotSelector::takeSnapshot(unsigned int snapshotID, QString name) {
     }
 }
 
-
 void SnapshotSelector::recallSnapshot(unsigned int snapshotID) {
     emit recallSnapshotSignal(snapshotID, timeSB->value());
 }
 
-
 void SnapshotSelector::renameSnapshot(unsigned int snapshotID) {
-    if(! buttons.contains(snapshotID)) {
-        return;
-    }
+    if (!buttons.contains(snapshotID)) { return; }
 
     SnapshotSelectorButton* snapshotButton = buttons.value(snapshotID);
 
@@ -122,32 +117,26 @@ void SnapshotSelector::renameSnapshot(unsigned int snapshotID) {
     connect(snapshotNameDialog, SIGNAL(accepted()), this, SLOT(getNameFromDialog()));
     snapshotNameDialog->exec();
 
-    //if user cancels the namedialog do not add a new snapshot
-    if(newSnapshotName.isEmpty()) {
-        return;
-    }
+    // if user cancels the namedialog do not add a new snapshot
+    if (newSnapshotName.isEmpty()) { return; }
 
     snapshotButton->setName(newSnapshotName);
 
     emit renameSnapshotSignal(snapshotID, newSnapshotName);
 }
 
-
 void SnapshotSelector::reorderButtons() {
-    QMap< unsigned int, SnapshotSelectorButton* >::iterator iter;
+    QMap<unsigned int, SnapshotSelectorButton*>::iterator iter;
     int i = 0;
 
-    for(iter = buttons.begin(); iter != buttons.end(); ++iter, ++i) {
+    for (iter = buttons.begin(); iter != buttons.end(); ++iter, ++i) {
         buttonsLayout->removeWidget(*iter);
         buttonsLayout->addWidget(*iter, i / 2, i % 2);
     }
 }
 
-
 void SnapshotSelector::deleteSnapshot(unsigned int snapshotID) {
-    if(! buttons.contains(snapshotID)) {
-        return;
-    }
+    if (!buttons.contains(snapshotID)) { return; }
 
     SnapshotSelectorButton* temp = buttons.value(snapshotID);
 
@@ -159,30 +148,25 @@ void SnapshotSelector::deleteSnapshot(unsigned int snapshotID) {
     emit deleteSnapshotSignal(snapshotID);
 }
 
-
 void SnapshotSelector::takeSnapshot() {
-    //getting a new name for the new Snapshot
+    // getting a new name for the new Snapshot
     newSnapshotName    = "";
     snapshotNameDialog = new SnapshotNameDialog(false, "", this);
     connect(snapshotNameDialog, SIGNAL(accepted()), this, SLOT(getNameFromDialog()));
     snapshotNameDialog->exec();
 
-    //if user cancels the namedialog do not add a new snapshot
-    if(newSnapshotName.isEmpty()) {
-        return;
-    }
+    // if user cancels the namedialog do not add a new snapshot
+    if (newSnapshotName.isEmpty()) { return; }
 
-    //setting up the id of the new snapshot
-    //use the first one that is not used
+    // setting up the id of the new snapshot
+    // use the first one that is not used
     unsigned int snapshotID = 1;
 
-    while(buttons.contains(snapshotID)) {
+    while (buttons.contains(snapshotID)) {
         ++snapshotID;
 
         // check for snapshotID wraparound
-        if(snapshotID == 0) {
-            return;
-        }
+        if (snapshotID == 0) { return; }
     }
 
     takeSnapshot(snapshotID, newSnapshotName);
@@ -190,32 +174,25 @@ void SnapshotSelector::takeSnapshot() {
     emit takeSnapshotSignal(snapshotID, newSnapshotName);
 }
 
-
 void SnapshotSelector::copySnapshot(unsigned int fromID) {
-    if(! buttons.contains(fromID)) {
-        return;
-    }
+    if (!buttons.contains(fromID)) { return; }
 
     unsigned int toID = 1;
 
-    while(buttons.contains(toID)) {
+    while (buttons.contains(toID)) {
         ++toID;
 
         // check for newSnapshotID wraparound
-        if(toID == 0) {
-            return;
-        }
+        if (toID == 0) { return; }
     }
 
     takeSnapshot(toID, buttons.value(fromID)->getName());
     emit copySnapshotSignal(fromID, toID);
 }
 
-
 void SnapshotSelector::getNameFromDialog() {
     newSnapshotName = snapshotNameDialog->newName;
 }
-
 
 void SnapshotSelector::contextMenuEvent(QContextMenuEvent* event) {
     QMenu menu(this);
@@ -224,16 +201,11 @@ void SnapshotSelector::contextMenuEvent(QContextMenuEvent* event) {
     menu.exec(event->globalPos());
 }
 
-
 void SnapshotSelector::keyPressEvent(QKeyEvent* event) {
     QApplication::sendEvent(parent(), event);
 }
 
-
-void SnapshotSelector::mousePressEvent(QMouseEvent* event) {
-    setFocus();
-}
-
+void SnapshotSelector::mousePressEvent(QMouseEvent* event) { setFocus(); }
 
 void SnapshotSelector::showEvent(QShowEvent* event) {
     setFocus();
@@ -241,18 +213,16 @@ void SnapshotSelector::showEvent(QShowEvent* event) {
     QDialog::showEvent(event);
 }
 
-
 void SnapshotSelector::reset() {
-    QList< SnapshotSelectorButton* > list = buttons.values();
+    QList<SnapshotSelectorButton*> list = buttons.values();
 
-    while(! list.empty()) {
+    while (!list.empty()) {
         buttonsLayout->removeWidget(list.last());
         list.takeLast()->deleteLater();
     }
 
     buttons.clear();
 }
-
 
 void SnapshotSelector::closeEvent(QCloseEvent* event) {
     emit closedMyself();

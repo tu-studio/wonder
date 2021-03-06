@@ -26,19 +26,19 @@
  *                                                                                   *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+#include "cwonder_config.h"
+
+#include <getopt.h>
+#include <libxml++/libxml++.h>
+
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
-#include <getopt.h>
-#include <libxml++/libxml++.h>
 #include <sstream>
 
-#include "cwonder_config.h"
 #include "wonder_path.h"
 
 CwonderConfig* cwonderConf = NULL;
-
-
 
 CwonderConfig::CwonderConfig(int argc, char* argv[]) {
     basicMode = false;
@@ -53,86 +53,78 @@ CwonderConfig::CwonderConfig(int argc, char* argv[]) {
     parseArgs(argc, argv);
 }
 
-
 void CwonderConfig::parseArgs(int argc, char* argv[]) {
     int c;
     int option_index = 0;
 
-    static struct option long_options[] = {
-        {"configfile",    required_argument,  0, 'c'},
-        {"listeningport", required_argument,  0, 'o'},
-        {"pingrate",      required_argument,  0, 'r'},
-        {"basicmode",     no_argument,        0, 'b'},
-        {"help",          no_argument,        0, 'h'},
-        {0, 0, 0, 0}
-    };
+    static struct option long_options[] = {{"configfile", required_argument, 0, 'c'},
+                                           {"listeningport", required_argument, 0, 'o'},
+                                           {"pingrate", required_argument, 0, 'r'},
+                                           {"basicmode", no_argument, 0, 'b'},
+                                           {"help", no_argument, 0, 'h'},
+                                           {0, 0, 0, 0}};
 
-    while(1) {
+    while (1) {
         c = getopt_long(argc, argv, "c:o:r:bvh", long_options, &option_index);
 
-        if(c == -1) {
-            break;
-        }
+        if (c == -1) { break; }
 
-        switch(c) {
-            case 'c':
-                cwonderConfigFile = strdup(optarg);
-                break;
-
-            case 'o':
-                listeningPort = strdup(optarg);
-                break;
-
-            case 'r': {
-                int temp = atoi(optarg);
-
-                if(temp > 0) {
-                    pingRate = temp;
-                }
-            }
+        switch (c) {
+        case 'c':
+            cwonderConfigFile = strdup(optarg);
             break;
 
-            case 'b':
-                basicMode = true;
-                break;
+        case 'o':
+            listeningPort = strdup(optarg);
+            break;
 
-            case 'h':
-                printf("\ncwonder's commandline arguments:\n"
-                       "--configfile,    -c (path to cwonder's config file)\n"
-                       "--listeningport, -o (port where cwonder listens, default is 58100)\n"
-                       "--pingrate,      -r (rate at which the pings are send to the streamlisteners (in samples))\n"
-                       "--basicmode,     -b (basicmode, no project functionality, just dispatching OSC messages, all sources active)\n"
-                       "--help,          -h \n\n");
-                exit(EXIT_SUCCESS);
+        case 'r': {
+            int temp = atoi(optarg);
 
-            case '?':
-                break;
+            if (temp > 0) { pingRate = temp; }
+        } break;
 
-            default:
-                printf("?? getopt returned character code 0%o ??\n", c);
+        case 'b':
+            basicMode = true;
+            break;
+
+        case 'h':
+            printf(
+                "\ncwonder's commandline arguments:\n"
+                "--configfile,    -c (path to cwonder's config file)\n"
+                "--listeningport, -o (port where cwonder listens, default is 58100)\n"
+                "--pingrate,      -r (rate at which the pings are send to the "
+                "streamlisteners (in samples))\n"
+                "--basicmode,     -b (basicmode, no project functionality, just "
+                "dispatching OSC messages, all sources active)\n"
+                "--help,          -h \n\n");
+            exit(EXIT_SUCCESS);
+
+        case '?':
+            break;
+
+        default:
+            printf("?? getopt returned character code 0%o ??\n", c);
         }
     }
 
     // Print any remaining command line arguments (not options).
-    if(optind < argc) {
+    if (optind < argc) {
         printf("non-option ARGV-elements: ");
 
-        while(optind < argc) {
-            printf("%s ", argv[optind++]);
-        }
+        while (optind < argc) { printf("%s ", argv[optind++]); }
 
         printf("\n");
         exit(EXIT_FAILURE);
     }
 }
 
-
 int CwonderConfig::readConfig() {
     // check if file exist
     std::ifstream fin(cwonderConfigFile.c_str(), std::ios_base::in);
 
-    if(! fin.is_open()) {
-        return 1; // file does not exist
+    if (!fin.is_open()) {
+        return 1;  // file does not exist
     }
 
     fin.close();
@@ -143,66 +135,65 @@ int CwonderConfig::readConfig() {
         parser.set_substitute_entities();
         parser.parse_file(cwonderConfigFile);
 
-        if(parser) {
+        if (parser) {
             xmlpp::Node* root = parser.get_document()->get_root_node();
 
-            if(root) {
+            if (root) {
                 // validate the current dom representation but first find the dtd
                 std::string dtdPath;
                 dtdPath = join(INSTALL_PREFIX, "configs/dtd/cwonder_config.dtd");
                 fin.open(dtdPath.c_str(), std::ios_base::in);
 
-                if(! fin.is_open()) {
-                    return 2; // dtd file does not exist
+                if (!fin.is_open()) {
+                    return 2;  // dtd file does not exist
                 }
 
                 try {
                     xmlpp::DtdValidator validator(dtdPath.c_str());
                     validator.validate(parser.get_document());
-                } catch(const xmlpp::validity_error& ex) {
-                    return 3; // dtd error
+                }
+                catch (const xmlpp::validity_error& ex) {
+                    return 3;  // dtd error
                 }
 
                 getSettings(root);
                 getRenderPolygon(root);
             }
         }
-    } catch(const std::exception& ex) {
-        return 4; // xml error
+    }
+    catch (const std::exception& ex) {
+        return 4;  // xml error
     }
 
     return 0;
 }
 
-
 void CwonderConfig::getSettings(xmlpp::Node* node) {
     auto nset = node->find("/cwonder_config/settings");
 
-    if(nset.size() > 0) {
-        if(const xmlpp::Element* nodeElement = dynamic_cast< const xmlpp::Element* >(*nset.begin())) {
-
-            for(const auto& attribute : nodeElement->get_attributes()) {
-
+    if (nset.size() > 0) {
+        if (const xmlpp::Element* nodeElement =
+                dynamic_cast<const xmlpp::Element*>(*nset.begin())) {
+            for (const auto& attribute : nodeElement->get_attributes()) {
                 Glib::ustring nodeName = attribute->get_name();
                 std::stringstream ss(attribute->get_value());
 
-                if(nodeName == "projectpath") {
+                if (nodeName == "projectpath") {
                     ss >> projectPath;
-                } else if(nodeName == "maxNoSources") {
+                } else if (nodeName == "maxNoSources") {
                     ss >> maxNoSources;
                 }
-
             }
         }
     }
 }
 
-
 void CwonderConfig::getRenderPolygon(xmlpp::Node* node) {
     auto nset = node->find("/cwonder_config/renderpolygon");
 
-    if(nset.size() > 0) {
-        if(const xmlpp::Element* nodeElement = dynamic_cast< const xmlpp::Element* >(*nset.begin())) {
+    if (nset.size() > 0) {
+        if (const xmlpp::Element* nodeElement =
+                dynamic_cast<const xmlpp::Element*>(*nset.begin())) {
             roomName = nodeElement->get_attribute("roomname")->get_value();
         }
 
@@ -211,8 +202,9 @@ void CwonderConfig::getRenderPolygon(xmlpp::Node* node) {
         // iterate over all points and add them to vector roomPoints
         // auto::iterator pointIt;
 
-        for(auto const& pointIt : pointsSet) {
-            const xmlpp::Element* pointElement = dynamic_cast< const xmlpp::Element* >(pointIt);
+        for (auto const& pointIt : pointsSet) {
+            const xmlpp::Element* pointElement =
+                dynamic_cast<const xmlpp::Element*>(pointIt);
 
             Vector3D point;
             float x;

@@ -29,26 +29,25 @@
 #include "delaycoeff.h"
 
 unsigned int DelayCoeff::getSampleDelayRounded(float preDelay) {
-    if(delay + preDelay < 0) {
+    if (delay + preDelay < 0) {
         return 0;
     } else {
-        return (unsigned int)((delay + preDelay) * (twonderConf->sampleRate / twonderConf->soundSpeed) + 0.5);
+        return (unsigned int)((delay + preDelay)
+                                  * (twonderConf->sampleRate / twonderConf->soundSpeed)
+                              + 0.5);
     }
 }
 
-
 float DelayCoeff::getSampleDelay(float preDelay) {
-    if(delay + preDelay < 0) {
+    if (delay + preDelay < 0) {
         return 0;
     } else {
         return (delay + preDelay) * (twonderConf->sampleRate / twonderConf->soundSpeed);
     }
 }
 
-
 void DelayCoeff::print() {
-    std::cout << "delay: "               << getDelay()
+    std::cout << "delay: " << getDelay()
               << " [m] | SampleDelay = " << getSampleDelay(twonderConf->negDelayInit)
-              << " | Amplitudefactor: "  << getFactor()
-              << std::endl;
+              << " | Amplitudefactor: " << getFactor() << std::endl;
 }

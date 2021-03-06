@@ -29,15 +29,15 @@
 class QContextMenuEvent;
 class QKeyEvent;
 
-//Doxygen description
+// Doxygen description
 /*!
  *      \brief
  *      A pushbutton for the SnapshotSelector
  *
  *      \details
- *      This is a extended QPushbutton with a unique snapshot-id associated with it. It has a
- *      contextmenu with which snapshots can be set, renamed, copied and deleted. It emits signals
- *      accordingly.
+ *      This is a extended QPushbutton with a unique snapshot-id associated with it. It
+ * has a contextmenu with which snapshots can be set, renamed, copied and deleted. It
+ * emits signals accordingly.
  *
  *      \author
  *      Hans-Joachim Mond
@@ -46,40 +46,41 @@ class QKeyEvent;
  *      09.04.2008
  */
 
-class SnapshotSelectorButton : public QPushButton {
+class SnapshotSelectorButton : public QPushButton
+{
     Q_OBJECT
 
-public:
-    SnapshotSelectorButton(unsigned int snapshotID, const QString& name, QWidget* parent = 0);
+  public:
+    SnapshotSelectorButton(unsigned int snapshotID, const QString& name,
+                           QWidget* parent = 0);
 
     unsigned int getSnapshotID() const;
 
     QString getName() const;
-    void    setName(QString newName);
+    void setName(QString newName);
 
-protected:
+  protected:
     void contextMenuEvent(QContextMenuEvent* event);
-    void keyPressEvent(QKeyEvent*         event);
+    void keyPressEvent(QKeyEvent* event);
 
-signals:
+  signals:
     void clicked(unsigned int snapshotID);
     void takeSnapshotSignal(unsigned int snapshotID, QString name);
     void renameSnapshotSignal(unsigned int snapshotID);
     void copySnapshotSignal(unsigned int snapshotID);
     void deleteMeSignal(unsigned int snapshotID);
 
-private slots:
+  private slots:
     void emitClicked(bool boolnotused);
     void copySnapshot();
     void renameSnapshot();
     void takeSnapshot();
     void deleteMe();
 
-private:
+  private:
     unsigned int snapshotID;
-    QString      name;
+    QString name;
 
-}; // class SnapshotSelectorButton
+};  // class SnapshotSelectorButton
 
-
-#endif // SNAPSHOTSELECTORBUTTON_H
+#endif  // SNAPSHOTSELECTORBUTTON_H

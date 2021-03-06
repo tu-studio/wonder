@@ -33,48 +33,47 @@
 #include "commandqueue.h"
 #include "types.h"
 
+template<class T>
+class Interpolat
+{
+  public:
+    Interpolat(const T& value)
+        : currentValue(value), targetValue(value), targetTime(0.f) {}
 
-
-template< class T >
-class Interpolat {
-
-public:
-    Interpolat(const T& value) : currentValue(value), targetValue(value), targetTime(0.f) {
-    }
-
-    const T& getCurrentValue() const {
-        return currentValue;
-    }
+    const T& getCurrentValue() const { return currentValue; }
 
     const T getTargetValue(wonder_frames_t blocksize) const {
-        if(targetTime == (wonder_frames_t) 0) {
+        if (targetTime == (wonder_frames_t)0) {
             return targetValue;
         } else {
-            return currentValue + (targetValue - currentValue) * ((float) blocksize / (float) targetTime.getTime());
+            return currentValue
+                   + (targetValue - currentValue)
+                         * ((float)blocksize / (float)targetTime.getTime());
         }
     }
 
     void doInterpolationStep(wonder_frames_t blocksize) {
-        if(targetTime == (wonder_frames_t) 0) {
+        if (targetTime == (wonder_frames_t)0) {
             currentValue = targetValue;
         } else {
-            currentValue = currentValue + (targetValue - currentValue) * ((float) blocksize / (float) targetTime.getTime());
+            currentValue = currentValue
+                           + (targetValue - currentValue)
+                                 * ((float)blocksize / (float)targetTime.getTime());
             targetTime -= blocksize;
         }
     }
 
     void setTargetValue(const T& value, TimeStamp transitionTime = 0.f) {
-        targetValue  = value;
-        targetTime   = transitionTime;
+        targetValue = value;
+        targetTime  = transitionTime;
     }
 
     void setCurrentValue(const T& value) {
-        currentValue     = value;
-        targetTime       = (wonder_frames_t) 0;
+        currentValue = value;
+        targetTime   = (wonder_frames_t)0;
     }
 
-
-private:
+  private:
     T currentValue;
     T targetValue;
 

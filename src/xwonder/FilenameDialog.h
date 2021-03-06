@@ -33,15 +33,14 @@ class QLabel;
 class QLineEdit;
 class QPushButton;
 
-
-//Doxygen description
+// Doxygen description
 /*!
  *      \brief
  *      Inputdialog for a filename if cwonder doesn't run on localhost
  *
  *      \details
- *      If cwonder does not run on localhost, then Xwonder can't provide filebrowsing, so the
- *      user is prompted to input a filename for loading and saving a project in cwonder.
+ *      If cwonder does not run on localhost, then Xwonder can't provide filebrowsing, so
+ * the user is prompted to input a filename for loading and saving a project in cwonder.
  *
  *      \author
  *      Hans-Joachim Mond
@@ -50,18 +49,19 @@ class QPushButton;
  *      11.10.2007
  */
 
-class FilenameDialog : public QDialog {
+class FilenameDialog : public QDialog
+{
     Q_OBJECT
 
-public:
+  public:
     FilenameDialog(QWidget* parent);
 
     QString getFilename();
 
-private slots:
+  private slots:
     void ok();
 
-private:
+  private:
     QString filename;
 
     QGridLayout* layout;
@@ -75,4 +75,4 @@ private:
     QPushButton* cancelButton;
 };
 
-#endif //FILENAMEDIALOG_H
+#endif  // FILENAMEDIALOG_H

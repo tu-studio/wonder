@@ -29,27 +29,28 @@
 #pragma once
 
 #include <lo/lo.h>
+
 #include <string>
 #include <vector>
 
 #include "config.h"
 #include "vector3d.h"
 
-namespace xmlpp {
-    class Node;
+namespace xmlpp
+{
+class Node;
 }
 
-enum InOutMode {
+enum InOutMode
+{
     IOM_NORMAL,
     IOM_ALWAYSOUT,
     IOM_ALWAYSIN
 };
 
-
-
-class TwonderConfig {
-
-public:
+class TwonderConfig
+{
+  public:
     TwonderConfig(int argc, char** argv);
 
     ~TwonderConfig();
@@ -59,18 +60,18 @@ public:
     std::string twonderConfigfile;
     std::string speakersConfigfile;
 
-    const char*  jackName;
-    std::string  name;
-    bool         verbose;
-    int          noSources;
+    const char* jackName;
+    std::string name;
+    bool verbose;
+    int noSources;
 
-    lo_address  cwonderAddr;
+    lo_address cwonderAddr;
     const char* cwonderHost;
     const char* cwonderPort;
 
     const char* listeningPort;
 
-    float planeComp; // amplitude compensation for plane waves, should be < 1
+    float planeComp;  // amplitude compensation for plane waves, should be < 1
     float soundSpeed;
     float negDelayInit;
 
@@ -93,7 +94,7 @@ public:
     float elevationZ2;
     float slope;
 
-private:
+  private:
     void parseArgs(int argc, char* argv[]);
 
     void getFocus(xmlpp::Node* node);

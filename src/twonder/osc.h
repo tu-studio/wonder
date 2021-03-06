@@ -28,24 +28,24 @@
 
 #pragma once
 
-#include <cstddef>
 #include <lo/lo.h>
 
+#include <cstddef>
 
-
-class OSCServer {
-
-public:
+class OSCServer
+{
+  public:
     OSCServer(const char* port = "58200");
 
     ~OSCServer();
 
-    void addMethod(const char* path, const char* typespec, lo_method_handler h, void* user_data = NULL);
+    void addMethod(const char* path, const char* typespec, lo_method_handler h,
+                   void* user_data = NULL);
 
     void start();
 
     void stop();
 
-private:
+  private:
     lo_server_thread serverThread;
 };

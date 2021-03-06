@@ -28,36 +28,34 @@
 
 #pragma once
 
-#include <iosfwd>
 #include <libxml++/libxml++.h>
+
+#include <iosfwd>
 #include <list>
 #include <string>
 #include <vector>
 
 #include "vector3d.h"
 
-namespace xmlpp {
-    class Document;
-    class Node;
-    class Element;
-}
-
-
+namespace xmlpp
+{
+class Document;
+class Node;
+class Element;
+}  // namespace xmlpp
 
 // A sound source belonging to a wonder scenario
-class Source {
-
-public:
+class Source
+{
+  public:
     Source();
     ~Source();
 
     // do the sources have the same id
-    bool operator == (Source const& other) const {
-        return (id == other.id);
-    }
+    bool operator==(Source const& other) const { return (id == other.id); }
 
     // assignement copies only data, not the node
-    Source& operator = (Source const& other);
+    Source& operator=(Source const& other);
 
     // unique identifier of the source ( starting at 0 )
     int id;
@@ -81,7 +79,7 @@ public:
     int groupID;
 
     // color in RGB ( values from 0 to 255 )
-    int color[ 3 ];
+    int color[3];
 
     // simulate doppler effect
     bool dopplerEffect;
@@ -94,26 +92,21 @@ public:
     // node in the DOM representation
     xmlpp::Node* node;
 
-private:
+  private:
     Glib::ustring nodename;
     Glib::ustring attribName;
 
-}; // class Source
-
-
+};  // class Source
 
 // A groupobject for sources belonging to a wonder scenario
-class SourceGroup {
-
-public:
-
+class SourceGroup
+{
+  public:
     // do the sources have the same id
-    bool operator == (SourceGroup const& other) const {
-        return (id == other.id);
-    }
+    bool operator==(SourceGroup const& other) const { return (id == other.id); }
 
     // assignement copies only data, not the node
-    SourceGroup& operator = (SourceGroup const& other);
+    SourceGroup& operator=(SourceGroup const& other);
 
     // unique identifier of the group ( starting at 1 )
     int id{-1};
@@ -125,23 +118,21 @@ public:
     Vector3D pos;
 
     // color in RGB (values from 0 to 255)
-    int color[ 3 ] = {255, 0, 0};
+    int color[3] = {255, 0, 0};
 
     // node in the DOM representation
     xmlpp::Node* node{nullptr};
 
-private:
+  private:
     Glib::ustring nodeName;
     Glib::ustring attribName;
 
-}; // class SourceGroup
-
-
+};  // class SourceGroup
 
 // A scenario ( static configuration of sound sources )
-class Scenario {
-
-public:
+class Scenario
+{
+  public:
     Scenario(int maxNoSources);
 
     Scenario(xmlpp::Node* node, int maxNoSources);
@@ -150,7 +141,8 @@ public:
 
     ~Scenario();
 
-    // (de)activate the source (make it audible and let it be written to the DOM representation)
+    // (de)activate the source (make it audible and let it be written to the DOM
+    // representation)
     void activateSource(int id);
     void deactivateSource(int id);
 
@@ -162,9 +154,7 @@ public:
     std::string show();
 
     // do the scenarios have the same id
-    bool operator==(Scenario const& other) const {
-        return (id == other.id);
-    }
+    bool operator==(Scenario const& other) const { return (id == other.id); }
 
     // write the data representation back to the DOM representation
     void writeToDOM();
@@ -184,17 +174,19 @@ public:
     // CAREFUL: This design is inherently unsafe! Every user of class Scenario must check
     //          index into sourcesVector!
     // the array of sources belonging to this scenario
-    std::vector< Source > sourcesVector;
+    std::vector<Source> sourcesVector;
 
     // CAREFUL: This design is inherently unsafe! Every user of class Scenario must check
     //          index into sourceGroupVector!
     // the array of sources belonging to this scenario
-    std::vector< SourceGroup > sourceGroupsVector;
+    std::vector<SourceGroup> sourceGroupsVector;
 
-    // internal exception class for the case when too many sources should be read from a projectfile
-    class tooManySources {};
+    // internal exception class for the case when too many sources should be read from a
+    // projectfile
+    class tooManySources
+    {};
 
-private:
+  private:
     // read the scenario from the DOM representation
     void readFromDOM();
 
@@ -202,14 +194,12 @@ private:
     Glib::ustring elementName;
     Glib::ustring attribName;
 
-}; // class Scenario
-
-
+};  // class Scenario
 
 // A wonder project that can be saved/loaded to/from a xml file
-class Project {
-
-public:
+class Project
+{
+  public:
     Project(int maxNoSources);
     ~Project();
 
@@ -220,7 +210,6 @@ public:
     // recall a previously taken snapshot
     // 0 = success, 1 = cannot get root node, -1 snapshot does not exist
     int recallSnapshot(int snapshotID);
-
 
     // delete snapshot from the project
     // 0 = success, 1 = snapshot does not exist, 2 = error on validation
@@ -234,11 +223,8 @@ public:
     // 0 = success, 1 = snapshot does not exist, 2 = error validation
     int renameSnapshot(int snapshotID, std::string name);
 
-
     // set the path to where the DTD can be found against which to valdiate projects
-    void setDtdPath(std::string dtdPath) {
-        this->dtdPath = dtdPath;
-    }
+    void setDtdPath(std::string dtdPath) { this->dtdPath = dtdPath; }
 
     // creates a new project DOM representation with the appropriate fileheader.
     //  calls createScenario()
@@ -273,7 +259,7 @@ public:
     //    lots of snapshots )
     std::string show();
 
-private:
+  private:
     // creates a clean scenario for a new project
     int createScenario();
 
@@ -292,7 +278,7 @@ private:
     // validates the DOM representation against a DTD
     int validate();
 
-public:
+  public:
     // name of the project
     std::string name;
 
@@ -304,17 +290,17 @@ public:
     // scenario is snapshot with id 0
     std::list<Scenario*> snapshots;
 
-private:
+  private:
     // pointer to the scenario, i.e. snapshots.front()
     Scenario* scenario;
 
     xmlpp::Document* doc;
-    xmlpp::Element*  rootNode;
+    xmlpp::Element* rootNode;
     xmlpp::DomParser parser;
-    std::string      dtdFile;
-    bool             fromFile;
+    std::string dtdFile;
+    bool fromFile;
 
     // just for parsing purposes
     Glib::ustring attribName;
 
-}; // class Project
+};  // class Project

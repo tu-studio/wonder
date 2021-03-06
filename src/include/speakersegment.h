@@ -29,57 +29,55 @@
 #pragma once
 
 #include <libxml++/libxml++.h>
+
 #include <vector>
 
 #include "config.h"
 #include "vector3d.h"
 
-namespace xmlpp {
-    class Node;
+namespace xmlpp
+{
+class Node;
 }
-
-
 
 //-----------------------------------Segment---------------------------------//
 
 // A segment of speakers
-class Segment {
-
-public:
+class Segment
+{
+  public:
     Segment(xmlpp::Node* node);
 
     void syncToXML();
 
-    int      id;
-    int      noSpeakers;
-    float    windowWidth;
+    int id;
+    int noSpeakers;
+    float windowWidth;
     Vector3D start;
     Vector3D end;
     Vector3D normal;
 
-private:
+  private:
     void readFromXML();
 
-    xmlpp::Node*  node;
+    xmlpp::Node* node;
     Glib::ustring nodeName;
 };
 
 //-------------------------------end of Segment------------------------------//
 
-
-
 //---------------------------------SegmentArray------------------------------//
 
 // Array of speaker segments
-class SegmentArray {
-
-public:
+class SegmentArray
+{
+  public:
     SegmentArray(std::string fileName);
     ~SegmentArray();
 
     std::vector<Segment*> segments;
 
-private:
+  private:
     void getSegments(xmlpp::Node* node, const Glib::ustring& xpath);
 
     int readFromFile(std::string fileName);
@@ -87,21 +85,20 @@ private:
 
 //-----------------------------end of SegmentArray---------------------------//
 
-
 //-------------------------------SegmentArrayIter----------------------------//
 
 // An iterator for the dom representation of the segments of speakers.
 // This iterator is used to traverse the dom tree. If a segment is found, a new object of
 // type Segment gets constructed and initialised by the attributes of the xml-element.
-class SegmentArrayIter : public xmlpp::Node::NodeSet::iterator {
-
-public:
+class SegmentArrayIter : public xmlpp::Node::NodeSet::iterator
+{
+  public:
     SegmentArrayIter() : xmlpp::Node::NodeSet::iterator() {
         // nothing
     }
 
-    SegmentArrayIter(const xmlpp::Node::NodeSet::iterator& other) : xmlpp::Node::NodeSet::iterator(other) {
-    }
+    SegmentArrayIter(const xmlpp::Node::NodeSet::iterator& other)
+        : xmlpp::Node::NodeSet::iterator(other) {}
 
     ~SegmentArrayIter() {
         // nothing
@@ -110,7 +107,6 @@ public:
     /// construct a segment when the operator* is called
     // XXX: maybe think this over... new in * is not so common...
     Segment* operator*();
-
 };
 
 //---------------------------end of SegmentArrayIter-------------------------//

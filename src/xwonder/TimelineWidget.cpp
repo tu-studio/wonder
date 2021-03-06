@@ -22,17 +22,18 @@
  */
 
 #include "TimelineWidget.h"
-#include <QGridLayout>
+
 #include <QCloseEvent>
+#include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>
 
-TimelineWidget::TimelineWidget(QWidget* parent) : QDialog(parent) { //QWidget(parent)
+TimelineWidget::TimelineWidget(QWidget* parent) : QDialog(parent) {  // QWidget(parent)
     setWindowTitle("Scoretime");
     layout = new QGridLayout();
 
     timeLabel = new QLabel("Position:");
-    timeLCD =  new TimeLCDNumber();
+    timeLCD   = new TimeLCDNumber();
 
     timeLCD->setAutoFillBackground(true);
     QPalette pal = timeLCD->palette();
@@ -42,45 +43,44 @@ TimelineWidget::TimelineWidget(QWidget* parent) : QDialog(parent) { //QWidget(pa
     layout->addWidget(timeLabel, 0, 0);
     layout->addWidget(timeLCD, 0, 1);
 
-    //gridLabel = new QLabel("Time resolution:");
-    //gridLineEdit = new QLineEdit();
+    // gridLabel = new QLabel("Time resolution:");
+    // gridLineEdit = new QLineEdit();
     ////QRegExp gridRegExp_min(
     ////QRegExp gridRegExp_s(
     ////QRegExp gridRegExp_ms(
-    //gridBox = new QComboBox();
-    //gridBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
-    //gridBox->addItem("min");
-    //gridBox->addItem("s");
-    //gridBox->addItem("ms");
-    //gridBox->addItem("Off");
+    // gridBox = new QComboBox();
+    // gridBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
+    // gridBox->addItem("min");
+    // gridBox->addItem("s");
+    // gridBox->addItem("ms");
+    // gridBox->addItem("Off");
 
-    //durationLabel = new QLabel("Duration:");
-    //durationLineEdit = new QLineEdit();
-    //QRegExp timeRegExp("[1-9][0-9]{0,2}[.][0-9]{1,3}");
-    //durationLineEdit->setValidator(new QRegExpValidator(timeRegExp,this));
-    //durationBox = new QComboBox();
-    //durationBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
-    //durationBox->addItem("h");
-    //durationBox->addItem("min");
-    //durationBox->addItem("s");
+    // durationLabel = new QLabel("Duration:");
+    // durationLineEdit = new QLineEdit();
+    // QRegExp timeRegExp("[1-9][0-9]{0,2}[.][0-9]{1,3}");
+    // durationLineEdit->setValidator(new QRegExpValidator(timeRegExp,this));
+    // durationBox = new QComboBox();
+    // durationBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
+    // durationBox->addItem("h");
+    // durationBox->addItem("min");
+    // durationBox->addItem("s");
 
-
-    //layout->addWidget(gridLabel,0,0);
-    //layout->addWidget(gridLineEdit,0,1);
-    //layout->addWidget(gridBox,0,2);
-    //layout->addWidget(durationLabel,1,0);
-    //layout->addWidget(durationLineEdit,1,1);
-    //layout->addWidget(durationBox,1,2);
+    // layout->addWidget(gridLabel,0,0);
+    // layout->addWidget(gridLineEdit,0,1);
+    // layout->addWidget(gridBox,0,2);
+    // layout->addWidget(durationLabel,1,0);
+    // layout->addWidget(durationLineEdit,1,1);
+    // layout->addWidget(durationBox,1,2);
 
     setLayout(layout);
 }
 
 void TimelineWidget::setTime(int h, int m, int s, int ms) {
-    //construct a stringrepresentation of the time for displaying
+    // construct a stringrepresentation of the time for displaying
     QString timeString;
     QString temp;
 
-    if(h < 10) {
+    if (h < 10) {
         temp = "0" + QString::number(h);
     } else {
         temp = QString::number(h);
@@ -89,7 +89,7 @@ void TimelineWidget::setTime(int h, int m, int s, int ms) {
     timeString += temp;
     timeString += ":";
 
-    if(m < 10) {
+    if (m < 10) {
         temp = "0" + QString::number(m);
     } else {
         temp = QString::number(m);
@@ -98,7 +98,7 @@ void TimelineWidget::setTime(int h, int m, int s, int ms) {
     timeString += temp;
     timeString += ":";
 
-    if(s < 10) {
+    if (s < 10) {
         temp = "0" + QString::number(s);
     } else {
         temp = QString::number(s);
@@ -107,19 +107,17 @@ void TimelineWidget::setTime(int h, int m, int s, int ms) {
     timeString += temp;
     timeString += ":";
 
-    if(ms < 100) {
+    if (ms < 100) {
         temp = "0" + QString::number(ms);
 
-        if(ms < 10) {
-            temp.prepend("0");
-        }
+        if (ms < 10) { temp.prepend("0"); }
     } else {
         temp = QString::number(ms);
     }
 
     timeString += temp;
 
-    //timeLCD->setTime(timeString);
+    // timeLCD->setTime(timeString);
 }
 
 void TimelineWidget::closeEvent(QCloseEvent* event) {
@@ -128,7 +126,7 @@ void TimelineWidget::closeEvent(QCloseEvent* event) {
 }
 
 //#include <QApplication>
-//int main(int argc, char* argv[])
+// int main(int argc, char* argv[])
 //{
 //    QApplication app(argc, argv);
 //

@@ -34,7 +34,7 @@ class QPushButton;
 
 #include "TimeLCDNumber.h"
 
-//Doxygen description
+// Doxygen description
 /*!
  *      \brief
  *      Currently not used!
@@ -49,33 +49,34 @@ class QPushButton;
  *      29.12.2007
  */
 
-class TimelineWidget : public QDialog { //QWidget
+class TimelineWidget : public QDialog
+{  // QWidget
     Q_OBJECT
 
-public:
+  public:
     TimelineWidget(QWidget* parent = 0);
 
-public slots:
-    //this will be used by the incoming time-message from scoreplayer
+  public slots:
+    // this will be used by the incoming time-message from scoreplayer
     void setTime(int h, int m, int s, int ms);
 
-protected:
+  protected:
     void closeEvent(QCloseEvent* event);
 
-signals:
+  signals:
     void closedMe();
 
-private:
+  private:
     QGridLayout* layout;
     QLabel* timeLabel;
     TimeLCDNumber* timeLCD;
-    //QLabel* gridLabel;
-    //QLineEdit* gridLineEdit;
-    //QComboBox* gridBox;
-    //QLabel* durationLabel;
-    //QLineEdit* durationLineEdit;
-    //QComboBox* durationBox;
+    // QLabel* gridLabel;
+    // QLineEdit* gridLineEdit;
+    // QComboBox* gridBox;
+    // QLabel* durationLabel;
+    // QLineEdit* durationLineEdit;
+    // QComboBox* durationBox;
     QWidget* timeInput;
 };
 
-#endif //TIMELINEWIDGET_H
+#endif  // TIMELINEWIDGET_H

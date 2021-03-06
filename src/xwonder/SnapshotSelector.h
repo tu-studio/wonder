@@ -37,16 +37,16 @@ class QCloseEvent;
 class SnapshotSelectorButton;
 class SnapshotNameDialog;
 
-//Doxygen description
+// Doxygen description
 /*!
  *      \brief
  *      Provides buttons for selecting (setting, etc.) snapshots
  *
  *      \details
- *      Dynamic collection of buttons for taking, recalling, deleting, renaming and copying snapshots.
- *      Buttons are arranged in two rows. Transition time between snapshots is set by a spinbox. Transitions are
- *      not visualized in xwonder, because the other WONDER-modules do not communicate about source positions
- *      constantly.
+ *      Dynamic collection of buttons for taking, recalling, deleting, renaming and
+ * copying snapshots. Buttons are arranged in two rows. Transition time between snapshots
+ * is set by a spinbox. Transitions are not visualized in xwonder, because the other
+ * WONDER-modules do not communicate about source positions constantly.
  *
  *      \author
  *      Hans-Joachim Mond
@@ -55,27 +55,28 @@ class SnapshotNameDialog;
  *      31.01.2008
  */
 
-class SnapshotSelector : public QDialog {
+class SnapshotSelector : public QDialog
+{
     Q_OBJECT
 
-public:
+  public:
     SnapshotSelector(QWidget* parent = 0);
 
     void takeSnapshot(unsigned int snapshotId, QString name);
     void reset();
 
-public slots:
+  public slots:
     void takeSnapshot();
     void copySnapshot(unsigned int snapshotId);
 
-protected:
-    void closeEvent(QCloseEvent*       event);
+  protected:
+    void closeEvent(QCloseEvent* event);
     void contextMenuEvent(QContextMenuEvent* event);
-    void keyPressEvent(QKeyEvent*         event);
-    void mousePressEvent(QMouseEvent*       event);
-    void showEvent(QShowEvent*        event);
+    void keyPressEvent(QKeyEvent* event);
+    void mousePressEvent(QMouseEvent* event);
+    void showEvent(QShowEvent* event);
 
-signals:
+  signals:
     void takeSnapshotSignal(unsigned int snapshotID, QString name);
     void recallSnapshotSignal(unsigned int snapshotID, double transitionTime);
     void deleteSnapshotSignal(unsigned int snapshotID);
@@ -84,30 +85,30 @@ signals:
     void closedMyself();
     void modified();
 
-private slots:
+  private slots:
     void recallSnapshot(unsigned int snapshotId);
     void renameSnapshot(unsigned int snapshotId);
     void deleteSnapshot(unsigned int snapshotId);
     void getNameFromDialog();
 
-private:
+  private:
     void reorderButtons();
 
-    QMap< unsigned int, SnapshotSelectorButton* > buttons;
+    QMap<unsigned int, SnapshotSelectorButton*> buttons;
 
     SnapshotSelectorButton* phantomButton;
 
-    QGridLayout*    buttonsLayout;
-    QVBoxLayout*    layout;
-    QHBoxLayout*    timeLayout;
-    QLabel*         timeLabel;
+    QGridLayout* buttonsLayout;
+    QVBoxLayout* layout;
+    QHBoxLayout* timeLayout;
+    QLabel* timeLabel;
     QDoubleSpinBox* timeSB;
 
     SnapshotNameDialog* snapshotNameDialog;
 
-    QString      newSnapshotName;
+    QString newSnapshotName;
     unsigned int transitionTime;
 
-}; // class SnapshotSelector
+};  // class SnapshotSelector
 
-#endif // SNAPSHOTSELECTOR_H
+#endif  // SNAPSHOTSELECTOR_H

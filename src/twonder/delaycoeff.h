@@ -33,41 +33,30 @@
 
 #include "twonder_config.h"
 
-// This is the maximum distance a Source can be in front of a speaker without letting the factor calculation explode (in meters).
+// This is the maximum distance a Source can be in front of a speaker without letting the
+// factor calculation explode (in meters).
 const float deltaR = 30.0;
 
+class DelayCoeff
+{
+  public:
+    DelayCoeff(float delay = 0.0, float factor = 0.0) : delay(delay), factor(factor) {}
 
-
-class DelayCoeff {
-
-public:
-    DelayCoeff(float delay = 0.0, float factor = 0.0) : delay(delay), factor(factor) {
-    }
-
-    float getDelay() {
-        return delay;
-    }
+    float getDelay() { return delay; }
 
     unsigned int getSampleDelayRounded(float preDelay);
 
-    float        getSampleDelay(float preDelay);
+    float getSampleDelay(float preDelay);
 
+    void setDelay(float d) { delay = d; }
 
-    void setDelay(float d) {
-        delay = d;
-    }
+    float getFactor() { return factor; }
 
-    float getFactor() {
-        return factor;
-    }
-
-    void setFactor(float c) {
-        factor = c;
-    }
+    void setFactor(float c) { factor = c; }
 
     void print();
 
-private:
-    float delay; // in meters
+  private:
+    float delay;  // in meters
     float factor;
 };

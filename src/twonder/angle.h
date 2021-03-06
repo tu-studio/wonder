@@ -30,25 +30,23 @@
 
 class Vector3D;
 
-
-
-class Angle {
-
-public:
+class Angle
+{
+  public:
     Angle(float angle);
     Angle(const Angle& other);
 
-    const Angle& operator= (float angle);
+    const Angle& operator=(float angle);
 
-    Angle operator+ (float addAngle)     const;
-    Angle operator+ (const Angle& other) const;
-    Angle operator- (const Angle& other) const;
-    Angle operator* (float factor)       const;
+    Angle operator+(float addAngle) const;
+    Angle operator+(const Angle& other) const;
+    Angle operator-(const Angle& other) const;
+    Angle operator*(float factor) const;
 
-    operator float () const;
+    operator float() const;
 
     Vector3D getNormal() const;
 
-private:
-    float angle; // value of the angle in radians (!)
+  private:
+    float angle;  // value of the angle in radians (!)
 };

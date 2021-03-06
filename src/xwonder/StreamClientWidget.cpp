@@ -24,11 +24,10 @@
 #include "StreamClientWidget.h"
 
 #include <QCloseEvent>
-#include <QTableWidget>
-#include <QSizePolicy>
-#include <QVBoxLayout>
-
 #include <QDebug>
+#include <QSizePolicy>
+#include <QTableWidget>
+#include <QVBoxLayout>
 
 StreamClientWidget::StreamClientWidget(QWidget* parent) : QDialog(parent) {
     layout = new QVBoxLayout();
@@ -39,7 +38,9 @@ StreamClientWidget::StreamClientWidget(QWidget* parent) : QDialog(parent) {
 
     table = new QTableWidget(0, 3, this);
 
-    table->setHorizontalHeaderLabels(QStringList() << "IP-Address" << "Port" << "Name");
+    table->setHorizontalHeaderLabels(QStringList() << "IP-Address"
+                                                   << "Port"
+                                                   << "Name");
     table->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     table->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -70,8 +71,9 @@ void StreamClientWidget::insert(QString host, QString port, QString name) {
 }
 
 void StreamClientWidget::remove(QString host, QString port, QString name) {
-    for(int i = 0; i < table->rowCount(); ++i) {
-        if(table->item(i, 0)->text() == host  &&  table->item(i, 1)->text()  == port &&  table->item(i, 2)->text() == name) {
+    for (int i = 0; i < table->rowCount(); ++i) {
+        if (table->item(i, 0)->text() == host && table->item(i, 1)->text() == port
+            && table->item(i, 2)->text() == name) {
             table->removeRow(i);
             break;
         }

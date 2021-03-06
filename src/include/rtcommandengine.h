@@ -31,23 +31,22 @@
 #include "commandqueue.h"
 #include "timestamp.h"
 
-
-
-class RTCommandEngine {
-
-public:
+class RTCommandEngine
+{
+  public:
     RTCommandEngine();
     ~RTCommandEngine();
 
     // enqueue a Command, in order for it to be evaluated later on.
-    // the caller must not delete the Command object. This is done automatically via the freeQueue.
+    // the caller must not delete the Command object. This is done automatically via the
+    // freeQueue.
     void put(Command* command);
 
     void evaluateCommands(TimeStamp timeStamp);
 
-private:
+  private:
     CommandQueue commandQueue;
-    FreeQueue    freeQueue;
+    FreeQueue freeQueue;
 
     CommandList accumulatedCommands;
     CommandList returnValueList;

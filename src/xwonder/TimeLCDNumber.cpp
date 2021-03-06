@@ -23,18 +23,18 @@
  */
 
 #include "TimeLCDNumber.h"
-#include "XwonderConfig.h"
 
+#include <QContextMenuEvent>
 #include <QCoreApplication>
 #include <QDialog>
 #include <QGridLayout>
-#include <QPushButton>
 #include <QLineEdit>
-#include <QContextMenuEvent>
-#include <QStringList>
+#include <QPushButton>
 #include <QRegExp>
 #include <QRegExpValidator>
+#include <QStringList>
 
+#include "XwonderConfig.h"
 
 TimeLCDNumber::TimeLCDNumber(QWidget* parent) : QLCDNumber(12, parent) {
     timeLE = new QLineEdit();
@@ -51,13 +51,14 @@ TimeLCDNumber::TimeLCDNumber(QWidget* parent) : QLCDNumber(12, parent) {
     timeLEDialog->setLayout(dialogLayout);
 
     // connect Signals and Slots
-    connect(okButton,     SIGNAL(clicked()),                    timeLEDialog, SLOT(accept()));
-    connect(timeLEDialog, SIGNAL(accepted()),                   this,         SLOT(readTimeFromDialog()));
-    connect(timeLE,       SIGNAL(textEdited(const QString&)), this,         SLOT(enableOKButton()));
-    connect(cancelButton, SIGNAL(clicked()),                    timeLEDialog, SLOT(reject()));
+    connect(okButton, SIGNAL(clicked()), timeLEDialog, SLOT(accept()));
+    connect(timeLEDialog, SIGNAL(accepted()), this, SLOT(readTimeFromDialog()));
+    connect(timeLE, SIGNAL(textEdited(const QString&)), this, SLOT(enableOKButton()));
+    connect(cancelButton, SIGNAL(clicked()), timeLEDialog, SLOT(reject()));
 
     // set validators to prevent nonsense input
-    QRegExp timeRegExp("[0-9]{0,2}[:]{1}[0-5]{0,1}[0-9]{0,1}[:]{1}[0-5]{0,1}[0-9]{0,1}[:]{1}[0-9]{0,3}");
+    QRegExp timeRegExp(
+        "[0-9]{0,2}[:]{1}[0-5]{0,1}[0-9]{0,1}[:]{1}[0-5]{0,1}[0-9]{0,1}[:]{1}[0-9]{0,3}");
     timeLE->setValidator(new QRegExpValidator(timeRegExp, this));
 
     // palettes for recording mode or not recording mode
@@ -73,9 +74,8 @@ TimeLCDNumber::TimeLCDNumber(QWidget* parent) : QLCDNumber(12, parent) {
 
     // set initial time
     parseTimeString("00:00:00:000");
-    //sendTimeByOSC();
+    // sendTimeByOSC();
 }
-
 
 void TimeLCDNumber::setTime(int h, int m, int s, int ms) {
     // set the internal time to the new values
@@ -87,13 +87,12 @@ void TimeLCDNumber::setTime(int h, int m, int s, int ms) {
     display(makeTimeString());
 }
 
-
 QString TimeLCDNumber::makeTimeString() {
-    //construct a stringrepresentation of the time for displaying
+    // construct a stringrepresentation of the time for displaying
     QString timeString;
     QString temp;
 
-    if(hours < 10) {
+    if (hours < 10) {
         temp = "0" + QString::number(hours);
     } else {
         temp = QString::number(hours);
@@ -102,7 +101,7 @@ QString TimeLCDNumber::makeTimeString() {
     timeString += temp;
     timeString += ":";
 
-    if(minutes < 10) {
+    if (minutes < 10) {
         temp = "0" + QString::number(minutes);
     } else {
         temp = QString::number(minutes);
@@ -111,7 +110,7 @@ QString TimeLCDNumber::makeTimeString() {
     timeString += temp;
     timeString += ":";
 
-    if(seconds < 10) {
+    if (seconds < 10) {
         temp = "0" + QString::number(seconds);
     } else {
         temp = QString::number(seconds);
@@ -120,12 +119,10 @@ QString TimeLCDNumber::makeTimeString() {
     timeString += temp;
     timeString += ":";
 
-    if(milliSeconds < 100) {
+    if (milliSeconds < 100) {
         temp = "0" + QString::number(milliSeconds);
 
-        if(milliSeconds < 10) {
-            temp.prepend("0");
-        }
+        if (milliSeconds < 10) { temp.prepend("0"); }
     } else {
         temp = QString::number(milliSeconds);
     }
@@ -135,19 +132,17 @@ QString TimeLCDNumber::makeTimeString() {
     return timeString;
 }
 
-
 void TimeLCDNumber::setRecordMode(bool recEnabled) {
     // if in record mode show black numbers on red background
     // if not in record mode use default colors
-    if(recEnabled) {
+    if (recEnabled) {
         setPalette(recordPalette);
-        //setSegmentStyle(QLCDNumber::Filled);
+        // setSegmentStyle(QLCDNumber::Filled);
     } else {
         setPalette(defaultPalette);
-        //setSegmentStyle(QLCDNumber::Outline);
+        // setSegmentStyle(QLCDNumber::Outline);
     }
 }
-
 
 void TimeLCDNumber::contextMenuEvent(QContextMenuEvent* event) {
     timeLE->setText(makeTimeString());
@@ -155,43 +150,41 @@ void TimeLCDNumber::contextMenuEvent(QContextMenuEvent* event) {
     timeLEDialog->exec();
 }
 
-
 void TimeLCDNumber::enableOKButton() {
-    QRegExp timeRegExp("[0-9]{2}[:]{1}[0-5]{1}[0-9]{1}[:]{1}[0-5]{1}[0-9]{1}[:]{1}[0-9]{3}");
+    QRegExp timeRegExp(
+        "[0-9]{2}[:]{1}[0-5]{1}[0-9]{1}[:]{1}[0-5]{1}[0-9]{1}[:]{1}[0-9]{3}");
     bool inputOK = timeRegExp.exactMatch(timeLE->text());
 
-    //if(timeLE->hasAcceptableInput())
-    if(inputOK) {
+    // if(timeLE->hasAcceptableInput())
+    if (inputOK) {
         okButton->setEnabled(true);
     } else {
         okButton->setEnabled(false);
     }
 }
 
-
 void TimeLCDNumber::readTimeFromDialog() {
     parseTimeString(timeLE->text());
     sendTimeByOSC();
 }
 
-
 void TimeLCDNumber::sendTimeByOSC() {
-    //construct a float containing the current time which can be send to scoreplayer
-    //RegExp made sure this is a valid stringrepresentation of time
+    // construct a float containing the current time which can be send to scoreplayer
+    // RegExp made sure this is a valid stringrepresentation of time
 
-    //float newTime = ( hours        * 3600   ) +
+    // float newTime = ( hours        * 3600   ) +
     //                ( minutes      *   60   ) +
     //                ( seconds               ) +
     //                ( milliSeconds / 1000.f );
 
-    //send OSCMessage to scoreplayer
-    if(! xwConf->runWithoutCwonder) {
-        lo_send(xwConf->cwonderAddr, "/WONDER/score/newtime", "iiii", hours, minutes, seconds, milliSeconds);
+    // send OSCMessage to scoreplayer
+    if (!xwConf->runWithoutCwonder) {
+        lo_send(xwConf->cwonderAddr, "/WONDER/score/newtime", "iiii", hours, minutes,
+                seconds, milliSeconds);
     }
 
-    //lo_send( xwConf->cwonderAddr, "/WONDER/score/newtime", "f", newTime );
+    // lo_send( xwConf->cwonderAddr, "/WONDER/score/newtime", "f", newTime );
 }
-
 
 void TimeLCDNumber::wheelEvent(QWheelEvent* event) {
     // set up variable for internal calculations regarding wrap arounds
@@ -205,55 +198,55 @@ void TimeLCDNumber::wheelEvent(QWheelEvent* event) {
     // check over which element we are and set new value with check for wrap arounds
     int x = event->position().x();
 
-    if(x <= 28) { // hours
+    if (x <= 28) {  // hours
         h += delta;
 
-        if(h < 0) {
+        if (h < 0) {
             h = 0;
-        } else if(h > 99) {
+        } else if (h > 99) {
             h = 99;
         }
-    } else if(x > 35  && x <= 55) { // minutes
+    } else if (x > 35 && x <= 55) {  // minutes
         m += delta;
 
-        if(m < 0) {
-            if(h == 0) {
+        if (m < 0) {
+            if (h == 0) {
                 m = 0;
             } else {
                 h--;
                 m += 60;
             }
-        } else if(m >= 60) {
-            if(h == 99) {
+        } else if (m >= 60) {
+            if (h == 99) {
                 m = 59;
             } else {
                 h++;
                 m %= 60;
             }
         }
-    } else if(x > 62  &&  x <= 82) { // seconds
+    } else if (x > 62 && x <= 82) {  // seconds
         s += delta;
 
-        if(s < 0) {
-            if(m == 0) {
-                if(h == 0) {
+        if (s < 0) {
+            if (m == 0) {
+                if (h == 0) {
                     s = 0;
                 } else {
                     h--;
-                    m  = 59;
+                    m = 59;
                     s += 60;
                 }
             } else {
                 m--;
                 s += 60;
             }
-        } else if(s >= 60) {
-            if(m == 59) {
-                if(h == 99) {
+        } else if (s >= 60) {
+            if (m == 59) {
+                if (h == 99) {
                     s = 59;
                 } else {
                     h++;
-                    m  = 0;
+                    m = 0;
                     s %= 60;
                 }
             } else {
@@ -261,46 +254,46 @@ void TimeLCDNumber::wheelEvent(QWheelEvent* event) {
                 s %= 60;
             }
         }
-    } else if(x > 90) { // milliseconds
-        //if( x > 107 )
+    } else if (x > 90) {  // milliseconds
+        // if( x > 107 )
         ms += (delta * 40);
-        //else
+        // else
         //   ms += ( delta * 10 );
 
-        if(ms < 0) {
-            if(s == 0) {
-                if(m == 0) {
-                    if(h == 0) {
+        if (ms < 0) {
+            if (s == 0) {
+                if (m == 0) {
+                    if (h == 0) {
                         ms = 0;
                     } else {
                         h--;
-                        m   = 59;
-                        s   = 59;
+                        m = 59;
+                        s = 59;
                         ms += 1000;
                     }
                 } else {
                     m--;
-                    s   = 59;
+                    s = 59;
                     ms += 1000;
                 }
             } else {
                 s--;
                 ms += 1000;
             }
-        } else if(ms >= 1000) {
-            if(s == 59) {
-                if(m == 59) {
-                    if(h == 99) {
+        } else if (ms >= 1000) {
+            if (s == 59) {
+                if (m == 59) {
+                    if (h == 99) {
                         ms = 999;
                     } else {
                         h++;
-                        m   = 0;
-                        s   = 0;
+                        m = 0;
+                        s = 0;
                         ms %= 1000;
                     }
                 } else {
                     m++;
-                    s   = 0;
+                    s = 0;
                     ms %= 1000;
                 }
             } else {
@@ -308,7 +301,7 @@ void TimeLCDNumber::wheelEvent(QWheelEvent* event) {
                 ms %= 1000;
             }
         }
-    } else { // do nothing
+    } else {  // do nothing
         return;
     }
 
@@ -316,18 +309,16 @@ void TimeLCDNumber::wheelEvent(QWheelEvent* event) {
     sendTimeByOSC();
 }
 
-
 void TimeLCDNumber::parseTimeString(QString time) {
-    //construct a float containing the current time which can be send to scoreplayer
-    //RegExp made sure this is a valid stringrepresentation of time
-    //QStringList timeTokens = timeLE->text().split( ":" );
+    // construct a float containing the current time which can be send to scoreplayer
+    // RegExp made sure this is a valid stringrepresentation of time
+    // QStringList timeTokens = timeLE->text().split( ":" );
     QStringList timeTokens = time.split(":");
 
-    hours        = timeTokens[ 0 ].toInt();
-    minutes      = timeTokens[ 1 ].toInt();
-    seconds      = timeTokens[ 2 ].toInt();
-    milliSeconds = timeTokens[ 3 ].toInt();
+    hours        = timeTokens[0].toInt();
+    minutes      = timeTokens[1].toInt();
+    seconds      = timeTokens[2].toInt();
+    milliSeconds = timeTokens[3].toInt();
 
     display(time);
 }
-

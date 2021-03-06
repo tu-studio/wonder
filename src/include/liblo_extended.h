@@ -28,13 +28,13 @@
 
 #pragma once
 
-#include <list>
 #include <lo/lo.h>
+
+#include <list>
 #include <string>
 
-
-
-// 1 = addresses are the same, 0 = addresses are not the same, -1 = at least one adress is invalid
+// 1 = addresses are the same, 0 = addresses are not the same, -1 = at least one adress is
+// invalid
 int issame(lo_address a, lo_address b);
 
 void forward(const char* path, const char* types, int argc, lo_arg** argv, lo_address to);

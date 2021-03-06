@@ -21,20 +21,17 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
 #ifndef SNAPSHOT_H
 #define SNAPSHOT_H
 
-
 //----------------------------------includes----------------------------------//
 
-#include <QObject>
 #include <QHash>
+#include <QObject>
 
 #include "Source.h"
 
 //----------------------------------------------------------------------------//
-
 
 //----------------------------------Doxygen-----------------------------------//
 /*!
@@ -42,10 +39,10 @@
  *      Named container for data about multiple sources
  *
  *      \details
- *      Description of multiple sources arranged in one snapshot. Snapshots are named and have a unique id.
- *      This class is needed because cwonder does not fully communicate about all aspects of the sources
- *      in the snapshots, i.e. how many sources are in the snapshot and which could be discarded in respect to
- *      the previous snapshot.
+ *      Description of multiple sources arranged in one snapshot. Snapshots are named and
+ * have a unique id. This class is needed because cwonder does not fully communicate about
+ * all aspects of the sources in the snapshots, i.e. how many sources are in the snapshot
+ * and which could be discarded in respect to the previous snapshot.
  *
  *      \author
  *      Hans-Joachim Mond
@@ -55,21 +52,22 @@
  */
 //----------------------------------------------------------------------------//
 
-class Snapshot : public QObject {
+class Snapshot : public QObject
+{
     Q_OBJECT
 
-public:
+  public:
     // constructors
     Snapshot(int snapshotID, QString name, QObject* parent = 0);
 
     // getter
-    int getSnapshotID()                         const;
-    QString getName()                           const;
-    QList< unsigned int > getXIDs()             const;
+    int getSnapshotID() const;
+    QString getName() const;
+    QList<unsigned int> getXIDs() const;
     Source& getSourceByXid(unsigned int xID);
 
     // bool getter
-    bool xIDIsUsed(unsigned int xID)  const;
+    bool xIDIsUsed(unsigned int xID) const;
     bool sourceIDIsUsed(int sourceID) const;
 
     // setter
@@ -79,13 +77,12 @@ public:
     void addSource(const Source&);
     void deleteSource(unsigned int xID);
 
-
-private:
-    int     snapshotID;
+  private:
+    int snapshotID;
     QString name;
 
-    QHash< unsigned int, Source* > sources; // keys are the xIDs
+    QHash<unsigned int, Source*> sources;  // keys are the xIDs
 
-}; // class Snapshot
+};  // class Snapshot
 
-#endif // SSNAPSHOT_H
+#endif  // SSNAPSHOT_H

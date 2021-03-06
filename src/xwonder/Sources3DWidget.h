@@ -36,11 +36,10 @@
 #endif
 #endif
 
-
 #include <QGLWidget>
 //#include <QList>
-#include <QMap>
 #include <QHash>
+#include <QMap>
 #include <QPoint>
 
 #include "SourceCoordinates.h"
@@ -56,14 +55,15 @@ class SourcePositionDialog;
 
 //--------------------------------------------------------------------------------//
 
-//Doxygen description
+// Doxygen description
 /*!
  *      \brief
  *      Interactive visualisation of sound sources in the reproduction room.
  *
  *      \details
- *      This is a three dimensional visualisation of sound sources in the reproduction room. Rotatable and
- *      scalable. It is interactive and lets the user click and drag sources intuitively. It utilizes OpenGL.
+ *      This is a three dimensional visualisation of sound sources in the reproduction
+ * room. Rotatable and scalable. It is interactive and lets the user click and drag
+ * sources intuitively. It utilizes OpenGL.
  *
  *      \author
  *      Hans-Joachim Mond
@@ -72,10 +72,11 @@ class SourcePositionDialog;
  *      29.04.2008
  */
 
-class Sources3DWidget: public QGLWidget {
+class Sources3DWidget : public QGLWidget
+{
     Q_OBJECT
 
-public:
+  public:
     Sources3DWidget(QWidget* parent = 0);
     ~Sources3DWidget();
 
@@ -83,29 +84,28 @@ public:
 
     const Source& getSource(unsigned int xID) const;
     const Source& getSource(int sourceID) const;
-    void          setSource(const Source& newSource);
-    void          setGroup(const SourceGroup& newGroup);
-    unsigned int  getCurrentXID() const;
-    bool          xIDIsUsed(unsigned int xID);
-    void          resetIDAfterIDChange(unsigned int xID, int oldID);
-    void          swapAfterIDChange(unsigned int xID, int oldID, int newID);
-    //void          setMouseSensitivity( float newSensitivity );
+    void setSource(const Source& newSource);
+    void setGroup(const SourceGroup& newGroup);
+    unsigned int getCurrentXID() const;
+    bool xIDIsUsed(unsigned int xID);
+    void resetIDAfterIDChange(unsigned int xID, int oldID);
+    void swapAfterIDChange(unsigned int xID, int oldID, int newID);
+    // void          setMouseSensitivity( float newSensitivity );
 
-public slots:
+  public slots:
     void init();
     void updateRoompolygon();
 
     void resetView();
     void lockView(bool lockIt);
     void lockClick(bool lockIt);
-    //void showTimeTics(bool showThem);
+    // void showTimeTics(bool showThem);
     void showOrigin(bool showIt);
-    //void showTimesliceConnections(bool showThem);
+    // void showTimesliceConnections(bool showThem);
     void showPerspectiveView(bool showIt);
-    //void showLighting(bool showIt);
+    // void showLighting(bool showIt);
     void showNames(bool showThem);
     void showCoordinates(bool showThem);
-
 
     void activateSource(unsigned int xID, int sourceID, bool externalActivation = false);
     void deactivateSource(unsigned int xID, bool externalDeactivation = false);
@@ -137,9 +137,9 @@ public slots:
     void selectSource(unsigned int xID);
     void changeReadMode(bool readEnabled);
 
-    //void setNoTimesclices(unsigned int noSlices, unsigned int timegridDistance);
+    // void setNoTimesclices(unsigned int noSlices, unsigned int timegridDistance);
 
-signals:
+  signals:
     void sourceTypeChanged(unsigned int xID, bool planewave);
     void sourcePositionChanged(const Source& source);
     void sourceOrientationChanged(const Source& source);
@@ -158,7 +158,7 @@ signals:
     void sliceSelected(bool haveSelection);
     void modified();
 
-protected:
+  protected:
     void initializeGL();
     void resizeGL(int width, int heigth);
     void paintGL();
@@ -168,12 +168,12 @@ protected:
     void mouseReleaseEvent(QMouseEvent* event);
     void wheelEvent(QWheelEvent* event);
 
-private slots:
+  private slots:
     void changeSourceCoordinates();
 
-private:
+  private:
     void project();
-    //void setSliceDist(GLfloat inc);
+    // void setSliceDist(GLfloat inc);
     void changeSourceLod(GLint inc);
     void changeSourceSize(GLfloat inc);
     void genRoomList();
@@ -186,13 +186,14 @@ private:
     void normalize(GLfloat* a);
 
     void genPlanewaveSourceList();
-    void update(bool sourcePositionChanged, bool sourceOrientationChanged, bool groupChange = false, bool groupPositionChanged = false);
+    void update(bool sourcePositionChanged, bool sourceOrientationChanged,
+                bool groupChange = false, bool groupPositionChanged = false);
     void displaySourceContextDialog();
     void displayGroupContexDialog(int groupID = 0);
 
     QPoint lastMousePos;
     QPoint eventStartPos;
-    //bool localCursorSetEvent;
+    // bool localCursorSetEvent;
     SourceCoordinates eventStartSourceCoords;
 
     GLUquadric* quad;
@@ -212,19 +213,19 @@ private:
     bool clickLockOn;
 
     //// light-highlights on/off
-    //bool highlightsOn;
+    // bool highlightsOn;
 
     //// connection between source on/off
-    //bool linesOn;
+    // bool linesOn;
 
     // show roomorigin on/off
     bool originOn;
 
     //// render pointsources as cubes or spheres
-    //bool drawSpheresOn;
+    // bool drawSpheresOn;
 
     //// show point in time of every timeslice
-    //bool drawTimeTics;
+    // bool drawTimeTics;
 
     // draw the names of the sources
     bool drawNames;
@@ -247,7 +248,7 @@ private:
     GLuint sphereList;
     GLuint planewaveSourceList;
 
-    //View- und projection-transformations
+    // View- und projection-transformations
     GLfloat xrotation;
     GLfloat yrotation;
     GLfloat zrotation;
@@ -262,18 +263,16 @@ private:
     GLfloat windowWidth;
     GLfloat windowHeight;
 
-    //number of (no) sources, timeslices and sourcegroups. timeslicedistance in time and visualization
-    //unsigned int noSources;
-    //unsigned int noSlices;
-    //unsigned int noGroups;
-    //GLfloat sliceDist;
-    //GLfloat minSliceDist;
-    //unsigned int timegridDistance;
+    // number of (no) sources, timeslices and sourcegroups. timeslicedistance in time and
+    // visualization unsigned int noSources; unsigned int noSlices; unsigned int noGroups;
+    // GLfloat sliceDist;
+    // GLfloat minSliceDist;
+    // unsigned int timegridDistance;
 
-    //Id of current source, current timeslice, current sourcegroup (0 = no selection)
-    unsigned int currSource; // xID
+    // Id of current source, current timeslice, current sourcegroup (0 = no selection)
+    unsigned int currSource;  // xID
     unsigned int currSlice;
-    int          currGroup;  // groupID
+    int currGroup;  // groupID
     GLfloat soSources;
     GLfloat soSourcesInc;
     GLfloat maxSoSources;
@@ -289,20 +288,20 @@ private:
     // for now take the simpler approach with only the current timeslice
     // and hash via xIDs
     ////List with pointers to lists, which contain pointers to objects of class Source
-    //typedef QList<Source*> timesliceList; //one source over time
-    //QList<timesliceList*> sources;
+    // typedef QList<Source*> timesliceList; //one source over time
+    // QList<timesliceList*> sources;
 
     // keys are the xIDs
-    QHash< unsigned int, Source* > sources;
+    QHash<unsigned int, Source*> sources;
 
-    //Map of sourcegroups (which contain lists of xIDs of sources), keys are the group IDs
-    QMap< int, SourceGroup* > groups;
+    // Map of sourcegroups (which contain lists of xIDs of sources), keys are the group
+    // IDs
+    QMap<int, SourceGroup*> groups;
 
-    //Timer for constant framerate
+    // Timer for constant framerate
     QTimer* timer;
 
     int noActiveGroups;
-
 };
 
-#endif //SOURCES3DWIDGET_H
+#endif  // SOURCES3DWIDGET_H

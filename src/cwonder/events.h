@@ -28,8 +28,9 @@
 
 #pragma once
 
-#include <list>
 #include <lo/lo.h>
+
+#include <list>
 #include <string>
 
 #include "timestamp.h"
@@ -38,44 +39,34 @@
 using std::list;
 using std::string;
 
-
-
-class Event {
-
-public:
+class Event
+{
+  public:
     Event();
     ~Event();
 
-    bool operator== (const Event& other) const {
-        return timestamp == other.timestamp;
-    }
+    bool operator==(const Event& other) const { return timestamp == other.timestamp; }
 
-    bool operator< (const Event& other) const {
-        return timestamp < other.timestamp;
-    }
+    bool operator<(const Event& other) const { return timestamp < other.timestamp; }
 
-    bool operator< (const TimeStamp& other) const {
-        return timestamp < other;
-    }
+    bool operator<(const TimeStamp& other) const { return timestamp < other; }
 
     lo_address from;
     string oscpath;
     int id;
-    int type; /// 0 = plane source, 1 = point source
+    int type;  /// 0 = plane source, 1 = point source
     string name;
     bool active;
     Vector3D pos;
     float angle;
     TimeStamp timestamp;
     float duration;
-}; // class Event
+};  // class Event
 
-
-
-class Timeline {
-public:
-    Timeline() : found(false) {
-    }
+class Timeline
+{
+  public:
+    Timeline() : found(false) {}
 
     ~Timeline();
 
@@ -83,14 +74,12 @@ public:
 
     Event* getevent(TimeStamp now);
 
-    int getsize() {
-        return timeline.size();
-    }
+    int getsize() { return timeline.size(); }
 
     void print();
 
-private:
+  private:
     list<Event*> timeline;
     list<Event*>::iterator it, last;
     bool found;
-}; // class Timeline
+};  // class Timeline

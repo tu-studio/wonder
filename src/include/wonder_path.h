@@ -28,22 +28,19 @@
 
 #pragma once
 
-#include <string>
 #include <sys/stat.h>
 #include <sys/types.h>
 
-
+#include <string>
 
 // Some global convenience functions for file path manipulations.
 
 // check if path is an absolute path, i.e starts with a '/'
 bool isabs(std::string s);
 
-
 // concatenate two paths
 // Insert a '/' if a does not already end with it
 std::string join(std::string a, std::string b);
-
 
 // split a path at the last occurrence of "/"
 // part determines if the first part (head) of last part (tail)
@@ -51,9 +48,7 @@ std::string join(std::string a, std::string b);
 // 0 = head, 1 = tail
 std::string pathsplit(std::string name, int part);
 
-
 bool pathexists(std::string name);
-
 
 // Super-mkdir - translated from python's os.path.makedirs()
 // create a leaf directory and all intermediate ones.

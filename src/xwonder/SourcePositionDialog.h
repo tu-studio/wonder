@@ -36,15 +36,15 @@ class QPushButton;
 
 class Source;
 
-//Doxygen description
+// Doxygen description
 /*!
  *      \brief
  *      Contextdialog for explicitly setting a source position
  *
  *      \details
- *      If the user does not want to click and drag a source but instead set the position (and orientation)
- *      explicitly, this contextdialog is used. It matches the type of source and displays its current position
- *      (and orientation). Validation of inputdata is done.
+ *      If the user does not want to click and drag a source but instead set the position
+ * (and orientation) explicitly, this contextdialog is used. It matches the type of source
+ * and displays its current position (and orientation). Validation of inputdata is done.
  *
  *
  *      \author
@@ -54,19 +54,20 @@ class Source;
  *      28.01.2008
  */
 
-class SourcePositionDialog : public QDialog {
+class SourcePositionDialog : public QDialog
+{
     Q_OBJECT
 
-public:
+  public:
     SourcePositionDialog(const Source& source, QWidget* parent = 0);
 
     SourceCoordinates newCoordinates;
 
-private slots:
+  private slots:
     void readLEs();
     void enableOKButton();
 
-private:
+  private:
     QGridLayout* layout;
 
     QLabel* xposLabel;
@@ -80,6 +81,6 @@ private:
     QHBoxLayout* buttonsLayout;
     QPushButton* okButton;
     QPushButton* cancelButton;
-}; // class SourcePositionDialog
+};  // class SourcePositionDialog
 
-#endif //SOURCEPOSITIONDIALOG_H
+#endif  // SOURCEPOSITIONDIALOG_H

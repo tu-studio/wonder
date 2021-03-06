@@ -30,25 +30,17 @@
 
 #include <cmath>
 
-
-
-class Vector3D {
-
-public:
+class Vector3D
+{
+  public:
     Vector3D();
     Vector3D(const Vector3D& initValues);
     Vector3D(float x, float y, float z);
-    float& operator[](int i) {
-        return (i == 0) ? v0 : ((i == 1) ? v1 : v2);
-    }
+    float& operator[](int i) { return (i == 0) ? v0 : ((i == 1) ? v1 : v2); }
 
-    float operator[](int i) const {
-        return (i == 0) ? v0 : ((i == 1) ? v1 : v2);
-    }
+    float operator[](int i) const { return (i == 0) ? v0 : ((i == 1) ? v1 : v2); }
 
-    float length() const {
-        return std::sqrt(v0 * v0 + v1 * v1 + v2 * v2);
-    }
+    float length() const { return std::sqrt(v0 * v0 + v1 * v1 + v2 * v2); }
 
     void set(const float x, const float y, const float z) {
         v0 = x;
@@ -56,22 +48,15 @@ public:
         v2 = z;
     }
 
-    float x() {
-        return v0;
-    }
+    float x() { return v0; }
 
-    float y() {
-        return v1;
-    }
+    float y() { return v1; }
 
-    float z() {
-        return v2;
-    }
+    float z() { return v2; }
 
-private:
+  private:
     float v0, v1, v2;
 };
-
 
 inline Vector3D::Vector3D() {
     v0 = 0.0;
@@ -91,40 +76,40 @@ inline Vector3D::Vector3D(const Vector3D& src) {
     v2 = src.v2;
 }
 
-inline float operator * (const Vector3D& a, const Vector3D& b) {
-    return a[ 0 ] * b[ 0 ] + a[ 1 ] * b[ 1 ] + a[ 2 ] * b[ 2 ];
+inline float operator*(const Vector3D& a, const Vector3D& b) {
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
 
-inline Vector3D operator * (const float f, const Vector3D& b) {
-    return Vector3D(f * b[ 0 ], f * b[ 1 ], f * b[ 2 ]);
+inline Vector3D operator*(const float f, const Vector3D& b) {
+    return Vector3D(f * b[0], f * b[1], f * b[2]);
 }
 
-inline Vector3D operator * (const Vector3D& b, const float f) {
-    return Vector3D(f * b[ 0 ], f * b[ 1 ], f * b[ 2 ]);
+inline Vector3D operator*(const Vector3D& b, const float f) {
+    return Vector3D(f * b[0], f * b[1], f * b[2]);
 }
 
-inline Vector3D operator + (const Vector3D& a, const Vector3D& b) {
+inline Vector3D operator+(const Vector3D& a, const Vector3D& b) {
     Vector3D res;
-    res[ 0 ] = a[ 0 ] + b[ 0 ];
-    res[ 1 ] = a[ 1 ] + b[ 1 ];
-    res[ 2 ] = a[ 2 ] + b[ 2 ];
+    res[0] = a[0] + b[0];
+    res[1] = a[1] + b[1];
+    res[2] = a[2] + b[2];
 
     return res;
 }
 
-inline Vector3D& operator += (Vector3D& a, const Vector3D& b) {
-    a[ 0 ] += b[ 0 ];
-    a[ 1 ] += b[ 1 ];
-    a[ 2 ] += b[ 2 ];
+inline Vector3D& operator+=(Vector3D& a, const Vector3D& b) {
+    a[0] += b[0];
+    a[1] += b[1];
+    a[2] += b[2];
 
     return a;
 }
 
-inline Vector3D operator - (const Vector3D& a, const Vector3D& b) {
+inline Vector3D operator-(const Vector3D& a, const Vector3D& b) {
     Vector3D res;
-    res[ 0 ] = a[ 0 ] - b[ 0 ];
-    res[ 1 ] = a[ 1 ] - b[ 1 ];
-    res[ 2 ] = a[ 2 ] - b[ 2 ];
+    res[0] = a[0] - b[0];
+    res[1] = a[1] - b[1];
+    res[2] = a[2] - b[2];
 
     return res;
 }

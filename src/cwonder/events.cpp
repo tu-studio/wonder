@@ -27,12 +27,12 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include "events.h"
-#include "cwonder_config.h"
 
 #include <iostream>
+
+#include "cwonder_config.h"
 using std::cout;
 using std::endl;
-
 
 Event::Event() {
     from     = NULL;
@@ -41,51 +41,41 @@ Event::Event() {
     active   = false;
     name     = "";
     oscpath  = "";
-    pos[ 0 ] = 0.0;
-    pos[ 1 ] = 0.0;
-    pos[ 2 ] = 0.0;
+    pos[0]   = 0.0;
+    pos[1]   = 0.0;
+    pos[2]   = 0.0;
     angle    = 0.0;
     duration = 0;
 }
 
-
 Event::~Event() {
-    if(from) {
-        lo_address_free(from);
-    }
+    if (from) { lo_address_free(from); }
 }
-
 
 Timeline::~Timeline() {
-    for(it = timeline.begin(); it != timeline.end(); ++it) {
-        delete(*it);
-    }
+    for (it = timeline.begin(); it != timeline.end(); ++it) { delete (*it); }
 }
-
 
 void Timeline::addevent(Event* event) {
     found = false;
 
-    for(it = timeline.begin(); it != timeline.end(); ++it) {
-        if(event->timestamp < (*it)->timestamp) {
-            last = timeline.insert(it, event);
+    for (it = timeline.begin(); it != timeline.end(); ++it) {
+        if (event->timestamp < (*it)->timestamp) {
+            last  = timeline.insert(it, event);
             found = true;
             break;
         }
     }
 
-    if(found == false) {
-        timeline.push_back(event);
-    }
+    if (found == false) { timeline.push_back(event); }
 }
-
 
 Event* Timeline::getevent(TimeStamp now) {
     Event* ev;
 
     it = timeline.begin();
 
-    if((*it)->timestamp < now) {
+    if ((*it)->timestamp < now) {
         ev = (*it);
         timeline.erase(it);
     } else {
@@ -95,15 +85,11 @@ Event* Timeline::getevent(TimeStamp now) {
     return ev;
 }
 
-
 void Timeline::print() {
-    cout << endl
-         << "[Timeline::print] On the event stack:"
-         << endl;
+    cout << endl << "[Timeline::print] On the event stack:" << endl;
 
-    for(it = timeline.begin(); it != timeline.end(); ++it) {
-        cout << "   Type: "
-             << (*it)->oscpath;
+    for (it = timeline.begin(); it != timeline.end(); ++it) {
+        cout << "   Type: " << (*it)->oscpath;
         (*it)->timestamp.show(" ");
     }
 

@@ -28,26 +28,25 @@
 
 #pragma once
 
+#include <sys/stat.h>
+#include <sys/types.h>
+
 #include <algorithm>
 #include <fstream>
 #include <functional>
 #include <sstream>
 #include <string>
-#include <sys/stat.h>
-#include <sys/types.h>
 #include <utility>
 #include <vector>
 
 #include "listener.h"
 
-
-
-class ListenerArray : public std::vector<Listener*> {
-
-public:
+class ListenerArray : public std::vector<Listener*>
+{
+  public:
     ListenerArray(int noListeners);
     ~ListenerArray();
 
-private:
+  private:
     void addListener(Listener* listener);
 };

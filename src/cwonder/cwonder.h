@@ -28,8 +28,9 @@
 
 #pragma once
 
-#include <list>
 #include <lo/lo.h>
+
+#include <list>
 #include <string>
 #include <vector>
 
@@ -44,11 +45,9 @@ class Project;
 class Scenario;
 class ListOSCPing;
 
-
-
-class Cwonder {
-
-public:
+class Cwonder
+{
+  public:
     Cwonder();
 
     ~Cwonder();
@@ -67,9 +66,12 @@ public:
     int setSourceActive(lo_address from, int sourceID, bool active);
     int setSourceName(lo_address from, int sourceID, std::string name);
     int setSourceType(lo_address from, int sourceID, int type, float timetag);
-    int setSourcePosition(lo_address from, int sourceID, float x, float y, float duration, float timetag);
-    int setSourcePosition3D(lo_address from, int sourceID, float x, float y, float z, float duration, float timetag);
-    int setSourceAngle(lo_address from, int sourceID, float angle, float duration, float timetag);
+    int setSourcePosition(lo_address from, int sourceID, float x, float y, float duration,
+                          float timetag);
+    int setSourcePosition3D(lo_address from, int sourceID, float x, float y, float z,
+                            float duration, float timetag);
+    int setSourceAngle(lo_address from, int sourceID, float angle, float duration,
+                       float timetag);
     int setSourceGroupID(lo_address from, int sourceID, int groupID);
     int setSourceColor(lo_address from, int sourceID, int red, int green, int blue);
     int setSourceRotationDirection(lo_address from, int sourceID, bool invert);
@@ -86,11 +88,12 @@ public:
     int visualStreamConnect(std::string host, std::string port, std::string name = "");
     int timerStreamConnect(std::string host, std::string port, std::string name = "");
 
-    void notifyVisualStreamOfNewStreamClient(std::string host, std::string port, std::string name);
-    void notifyVisualStreamOfDeadStreamClients(std::list< OSCStreamClient >& deadStreamClients);
+    void notifyVisualStreamOfNewStreamClient(std::string host, std::string port,
+                                             std::string name);
+    void notifyVisualStreamOfDeadStreamClients(
+        std::list<OSCStreamClient>& deadStreamClients);
 
     void sendStreamClientDataTo(lo_address targetAdress, OSCStreamClient& clientData);
-
 
     void scheduler(int currtime);
     TimeStamp nowTime;
@@ -105,7 +108,7 @@ public:
 
     TimeStamp recordTime;
 
-    Project*  project;
+    Project* project;
     Scenario* scenario;
 
     std::string projectFileName;
@@ -128,4 +131,4 @@ public:
     std::list<OSCStreamClient>::iterator streamIter;
 
     std::string returnString;
-}; // class Cwonder
+};  // class Cwonder

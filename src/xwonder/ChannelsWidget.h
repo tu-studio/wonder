@@ -26,10 +26,9 @@
 
 //----------------------------------includes----------------------------------//
 
-#include <QWidget>
 #include <QList>
 #include <QMap>
-
+#include <QWidget>
 
 class QVBoxLayout;
 class QContextMenuEvent;
@@ -39,14 +38,15 @@ class SourceWidget;
 
 //----------------------------------------------------------------------------//
 
-//Doxygen description
+// Doxygen description
 /*!
  *      \brief
  *      Containerwidget for SourceWidgets
  *
  *      \details
- *      This is a containerwidget for the SourceWidgets. It dispatches the messages to and from the SourceWidgets.
- *      Furthermore it prevents the assignment of sourceIDentical ID-numbers to different SourceWidgets.
+ *      This is a containerwidget for the SourceWidgets. It dispatches the messages to and
+ * from the SourceWidgets. Furthermore it prevents the assignment of sourceIDentical
+ * ID-numbers to different SourceWidgets.
  *
  *      \author
  *      Hans-Joachim Mond
@@ -55,27 +55,29 @@ class SourceWidget;
  *      20.07.2008
  *
  *      \bug
- *      Flicker when a sourcewidget is expandend, added, or deleted. May be solved with double buffering.
+ *      Flicker when a sourcewidget is expandend, added, or deleted. May be solved with
+ * double buffering.
  */
 
-class ChannelsWidget : public QWidget {
+class ChannelsWidget : public QWidget
+{
     Q_OBJECT
-public:
+  public:
     ChannelsWidget(QWidget* parent = 0);
 
     void reset();
 
-    void  setMode(bool projectOnlyMode);
+    void setMode(bool projectOnlyMode);
     QSize sizeHint() const override;
-    void  setChannel(Source& source);
-    int   getNoSources() const;
-    int   sourceIDIsActive(int sourceID);
-    void  resetIDAfterIDChange(unsigned int xID, int oldID);
-    void  swapAfterIDChange(unsigned int xID, int oldID, int newID);
+    void setChannel(Source& source);
+    int getNoSources() const;
+    int sourceIDIsActive(int sourceID);
+    void resetIDAfterIDChange(unsigned int xID, int oldID);
+    void swapAfterIDChange(unsigned int xID, int oldID, int newID);
 
-public slots:
+  public slots:
     void init();
-    int  activateChannel(int sourceID = -1, bool external = false);
+    int activateChannel(int sourceID = -1, bool external = false);
     void activateChannels();
     void deactivateChannel(int sourceID);
     void deactivateChannel(unsigned int xID);
@@ -98,7 +100,7 @@ public slots:
 
     void updateWrapped(int notUsed);
 
-signals:
+  signals:
     void sourceActivated(int sourceID);
     void sourceDeactivated(int sourceID);
     void colorChanged(unsigned int xID, const QColor& newColor);
@@ -121,20 +123,20 @@ signals:
     // to dispatch use of source related keys
     void viewRelatedKeyPressed(QKeyEvent* event);
 
-protected:
+  protected:
     void contextMenuEvent(QContextMenuEvent* event) override;
     void keyPressEvent(QKeyEvent* event) override;
 
-private slots:
-    //void changeID( unsigned int xID, int oldID, int sourceID );
+  private slots:
+    // void changeID( unsigned int xID, int oldID, int sourceID );
     void modified(unsigned int, int, int);
     void modified(unsigned int, bool);
     void modified(unsigned int, const QColor&);
     void modified(unsigned int, const QString&);
 
-private:
+  private:
     bool projectOnlyMode;
-    QMap< unsigned int, SourceWidget* > sourceWidgets; // keys are xIDs
+    QMap<unsigned int, SourceWidget*> sourceWidgets;  // keys are xIDs
     QVBoxLayout* vLayout;
 };
-#endif //CHANNELSWIDGET_H
+#endif  // CHANNELSWIDGET_H

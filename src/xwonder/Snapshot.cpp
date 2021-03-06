@@ -21,41 +21,27 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
 #include "Snapshot.h"
-
 
 //--------------------------------constructors--------------------------------//
 
-Snapshot::Snapshot(int snapshotID, QString name, QObject* parent) : QObject(parent),
-    snapshotID(snapshotID),
-    name(name) {
-}
+Snapshot::Snapshot(int snapshotID, QString name, QObject* parent)
+    : QObject(parent), snapshotID(snapshotID), name(name) {}
 
 //----------------------------end of constructors-----------------------------//
 
-
 //-----------------------------------getter-----------------------------------//
 
-int Snapshot::getSnapshotID() const {
-    return snapshotID;
-}
+int Snapshot::getSnapshotID() const { return snapshotID; }
 
+QString Snapshot::getName() const { return name; }
 
-QString Snapshot::getName() const {
-    return name;
-}
-
-
-QList<unsigned int> Snapshot::getXIDs() const {
-    return sources.keys();
-}
-
+QList<unsigned int> Snapshot::getXIDs() const { return sources.keys(); }
 
 Source& Snapshot::getSourceByXid(unsigned int xID) {
     // if no source with that xID does exist an invalid one (i.e. xID 0)
     // is inserted and returned
-    if(sources.contains(xID)) {
+    if (sources.contains(xID)) {
         return *(sources.value(xID));
     } else {
         Source* invalidSource = new Source(0, 0, this);
@@ -64,23 +50,19 @@ Source& Snapshot::getSourceByXid(unsigned int xID) {
     }
 }
 
-
 bool Snapshot::xIDIsUsed(unsigned int xID) const {
-    if(sources.contains(xID)) {
+    if (sources.contains(xID)) {
         return true;
     } else {
         return false;
     }
 }
 
-
 bool Snapshot::sourceIDIsUsed(int sourceID) const {
     QHash<unsigned int, Source*>::const_iterator it;
 
-    for(it = sources.constBegin(); it != sources.constEnd(); ++it) {
-        if(it.value()->getID() == sourceID) {
-            return true;
-        }
+    for (it = sources.constBegin(); it != sources.constEnd(); ++it) {
+        if (it.value()->getID() == sourceID) { return true; }
     }
 
     return false;
@@ -88,12 +70,11 @@ bool Snapshot::sourceIDIsUsed(int sourceID) const {
 
 //-------------------------------end of getter--------------------------------//
 
-
 //-----------------------------------setter-----------------------------------//
 
 void Snapshot::setSnapshot(Snapshot& snapshot) {
     // delete all sources, we want a fresh start
-    while(! sources.empty()) {
+    while (!sources.empty()) {
         QHash<unsigned int, Source*>::iterator it = sources.begin();
         delete sources.take(it.key());
     }
@@ -102,26 +83,19 @@ void Snapshot::setSnapshot(Snapshot& snapshot) {
     QList<unsigned int> xIDs = snapshot.getXIDs();
     QList<unsigned int>::const_iterator it;
 
-    for(it = xIDs.constBegin(); it != xIDs.constEnd(); ++it) {
+    for (it = xIDs.constBegin(); it != xIDs.constEnd(); ++it) {
         sources.insert(*it, new Source(snapshot.getSourceByXid(*it), this));
     }
 }
 
-
-void Snapshot::setName(QString newName) {
-    name = newName;
-}
+void Snapshot::setName(QString newName) { name = newName; }
 
 //-------------------------------end of setter--------------------------------//
-
 
 void Snapshot::addSource(const Source& source) {
     sources.insert(source.getXID(), new Source(source, this));
 }
 
-
 void Snapshot::deleteSource(unsigned int xID) {
-    if(sources.contains(xID)) {
-        delete sources.take(xID);
-    }
+    if (sources.contains(xID)) { delete sources.take(xID); }
 }

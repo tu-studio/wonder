@@ -21,10 +21,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
 #ifndef ADDCHANNELSDIALOG_H
 #define ADDCHANNELSDIALOG_H
-
 
 //----------------------------------includes----------------------------------//
 
@@ -38,15 +36,14 @@ class QSpinBox;
 
 //----------------------------------------------------------------------------//
 
-
 //----------------------------------Doxygen-----------------------------------//
 /*!
  *      \brief
  *      Convenience dialog for adding multiple channels at once.
  *
  *      \details
- *      This dialog uses a rangelimited SpinBox to set the public member noSources which should be read
- *      by the widget executing this dialog if accepted.
+ *      This dialog uses a rangelimited SpinBox to set the public member noSources which
+ * should be read by the widget executing this dialog if accepted.
  *
  *      \author
  *      Hans-Joachim Mond
@@ -56,26 +53,26 @@ class QSpinBox;
  */
 //----------------------------------------------------------------------------//
 
-
-class AddChannelsDialog : public QDialog {
+class AddChannelsDialog : public QDialog
+{
     Q_OBJECT
 
-public:
+  public:
     // constructors
     AddChannelsDialog(int noSourcesLeft, QWidget* parent = 0);
 
     int noSources;
 
-private slots:
+  private slots:
     void changeNoSources(int newNoSources);
 
-private:
+  private:
     QGridLayout* layout;
-    QLabel*      inputLabel;
-    QSpinBox*    noSourcesSB;
+    QLabel* inputLabel;
+    QSpinBox* noSourcesSB;
     QPushButton* okButton;
     QPushButton* cancelButton;
 
-}; // class AddChannelsDialog
+};  // class AddChannelsDialog
 
-#endif //ADDCHANNELSDIALOG_H
+#endif  // ADDCHANNELSDIALOG_H

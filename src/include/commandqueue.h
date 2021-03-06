@@ -36,10 +36,9 @@
 #include "pthread.h"
 #include "timestamp.h"
 
-
-
-class Command {
-public:
+class Command
+{
+  public:
     Command();
     Command(TimeStamp timeStamp);
 
@@ -47,28 +46,26 @@ public:
 
     virtual void execute();
 
-    bool operator < (const Command& other);
+    bool operator<(const Command& other);
 
     TimeStamp getTimeStamp() const;
 
-private:
+  private:
     TimeStamp timeStamp;
 };
 
-
-
-class CommandList : public std::list<Command*> {
-public:
+class CommandList : public std::list<Command*>
+{
+  public:
     CommandList();
     CommandList(Command* commandd);
 
     ~CommandList();
 };
 
-
-
-class CommandQueue : private JackRingbuffer {
-public:
+class CommandQueue : private JackRingbuffer
+{
+  public:
     CommandQueue();
 
     ~CommandQueue();
@@ -77,14 +74,13 @@ public:
 
     CommandList* get();
 
-private:
+  private:
     pthread_mutex_t mutex;
 };
 
-
-
-class FreeQueue : private JackRingbuffer {
-public:
+class FreeQueue : private JackRingbuffer
+{
+  public:
     FreeQueue();
 
     ~FreeQueue();
@@ -93,6 +89,6 @@ public:
 
     void flush();
 
-private:
+  private:
     pthread_mutex_t mutex;
 };

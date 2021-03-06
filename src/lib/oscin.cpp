@@ -30,57 +30,45 @@
 
 #include <sstream>
 
-
 OSCServer::OSCServer(const char* port) {
     serverThread = lo_server_thread_new(port, NULL);
 
-    if(serverThread == NULL) {
-        throw EServ();
-    }
+    if (serverThread == NULL) { throw EServ(); }
 }
-
 
 OSCServer::~OSCServer() {
-    if(serverThread) {
-        lo_server_thread_free(serverThread);
-    }
+    if (serverThread) { lo_server_thread_free(serverThread); }
 }
 
+void OSCServer::start() { lo_server_thread_start(serverThread); }
 
-void OSCServer::start() {
-    lo_server_thread_start(serverThread);
-}
+void OSCServer::stop() { lo_server_thread_stop(serverThread); }
 
-
-void OSCServer::stop() {
-    lo_server_thread_stop(serverThread);
-}
-
-
-void OSCServer::addMethod(const char* path, const char* types, lo_method_handler h, void* user_data) {
+void OSCServer::addMethod(const char* path, const char* types, lo_method_handler h,
+                          void* user_data) {
     lo_server_thread_add_method(serverThread, path, types, h, user_data);
 }
 
-
-std::string OSCServer::getContent(const char* path, const char* types, lo_arg** argv, int argc) {
+std::string OSCServer::getContent(const char* path, const char* types, lo_arg** argv,
+                                  int argc) {
     std::ostringstream contents;
 
     contents << "[OSCServer::" << path << "]   ";
 
-    for(int i = 0; i < argc; ++i) {
-        contents << types[ i ] << "=";
+    for (int i = 0; i < argc; ++i) {
+        contents << types[i] << "=";
 
-        switch(types[ i ]) {
-            case 's':
-                contents << &argv[ i ]->s;
-                break;
+        switch (types[i]) {
+        case 's':
+            contents << &argv[i]->s;
+            break;
 
-            case 'f':
-                contents << argv[ i ]->f;
-                break;
+        case 'f':
+            contents << argv[i]->f;
+            break;
 
-            case 'i':
-                contents << argv[ i ]->i;
+        case 'i':
+            contents << argv[i]->i;
         }
 
         contents << "   ";

@@ -29,11 +29,12 @@
 #pragma once
 
 #include <jack/jack.h>
+
 #include <vector>
 
 #include "angle.h"
-#include "delayline.h"
 #include "delaycoeff.h"
+#include "delayline.h"
 #include "interpolat.h"
 #include "listener_array.h"
 #include "vector2d.h"
@@ -42,46 +43,37 @@
 class Speaker;
 class DelayCoeff;
 
-
-
-class Source {
-
-public:
+class Source
+{
+  public:
     virtual ~Source();
 
     virtual DelayCoeff getDelayCoeff(const Speaker& spk, ListenerArray& listeners) = 0;
 
-    virtual DelayCoeff getTargetDelayCoeff(const Speaker& spk, wonder_frames_t blocksize, ListenerArray& listeners) = 0;
+    virtual DelayCoeff getTargetDelayCoeff(const Speaker& spk, wonder_frames_t blocksize,
+                                           ListenerArray& listeners) = 0;
 
     virtual void doInterpolationStep(wonder_frames_t blocksize) = 0;
 
-    int getType() {
-        return type;
-    }
+    int getType() { return type; }
 
-    bool hasDopplerEffect() {
-        return dopplerEffect;
-    }
+    bool hasDopplerEffect() { return dopplerEffect; }
 
-    void setDopplerEffect(bool useDoppler) {
-        dopplerEffect = useDoppler;
-    }
+    void setDopplerEffect(bool useDoppler) { dopplerEffect = useDoppler; }
 
     virtual void reset() {
-        type = 1;
+        type          = 1;
         dopplerEffect = true;
     }
 
-protected:
-    int type; // 0 = planewave, 1 = point source
+  protected:
+    int type;  // 0 = planewave, 1 = point source
     bool dopplerEffect;
 };
 
-
-
-class PositionSource : public Source {
-
-public:
+class PositionSource : public Source
+{
+  public:
     Interpolat<Vector3D> position;
 
     PositionSource(const Vector3D& position);
@@ -93,11 +85,9 @@ public:
     }
 };
 
-
-
-class PointSource : public PositionSource {
-
-public:
+class PointSource : public PositionSource
+{
+  public:
     PointSource(const Vector3D& p) : PositionSource(p) {
         type          = 1;
         dopplerEffect = true;
@@ -107,25 +97,27 @@ public:
 
     DelayCoeff getDelayCoeff(const Speaker& spk, ListenerArray& listeners);
 
-    DelayCoeff getTargetDelayCoeff(const Speaker& spk, wonder_frames_t blocksize, ListenerArray& listeners);
+    DelayCoeff getTargetDelayCoeff(const Speaker& spk, wonder_frames_t blocksize,
+                                   ListenerArray& listeners);
 
     void doInterpolationStep(wonder_frames_t blocksize);
 
-private:
-    DelayCoeff calcDelayCoeff(const Speaker& spk, const Vector3D& vec, ListenerArray& listeners);
+  private:
+    DelayCoeff calcDelayCoeff(const Speaker& spk, const Vector3D& vec,
+                              ListenerArray& listeners);
 
     bool isFocused(const Vector3D& src) const;
 };
 
-
-
-class PlaneWave : public PositionSource {
-
-public:
-    // A plane wave has an originating Position and a direction. The position is inherited from PositionSource.
+class PlaneWave : public PositionSource
+{
+  public:
+    // A plane wave has an originating Position and a direction. The position is inherited
+    // from PositionSource.
     Interpolat<Angle> angle;
 
-    PlaneWave(const Vector3D& position, float angle) : PositionSource(position), angle(angle) {
+    PlaneWave(const Vector3D& position, float angle)
+        : PositionSource(position), angle(angle) {
         type          = 0;
         dopplerEffect = true;
     }
@@ -134,7 +126,8 @@ public:
 
     DelayCoeff getDelayCoeff(const Speaker& spk, ListenerArray& listeners);
 
-    DelayCoeff getTargetDelayCoeff(const Speaker& spk, wonder_frames_t blocksize, ListenerArray& listeners);
+    DelayCoeff getTargetDelayCoeff(const Speaker& spk, wonder_frames_t blocksize,
+                                   ListenerArray& listeners);
 
     void doInterpolationStep(wonder_frames_t blocksize);
 
@@ -144,15 +137,13 @@ public:
         PositionSource::reset();
     }
 
-private:
+  private:
     DelayCoeff calcDelayCoeff(const Speaker& spk, const Angle& angle);
 };
 
-
-
-class SourceAggregate {
-
-public:
+class SourceAggregate
+{
+  public:
     SourceAggregate(Vector3D initialPos, float negDelay);
 
     ~SourceAggregate();
@@ -160,16 +151,14 @@ public:
     void reset();
 
     DelayLine* inputline;
-    Source*    source;
-    bool       active;
-    float      angle; // for preserving angle when type of source is changed back and forth
+    Source* source;
+    bool active;
+    float angle;  // for preserving angle when type of source is changed back and forth
 };
 
-
-
-class SourceArray : public std::vector<SourceAggregate*> {
-
-public:
+class SourceArray : public std::vector<SourceAggregate*>
+{
+  public:
     SourceArray(int noSources, float negDelay);
 
     ~SourceArray();

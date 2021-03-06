@@ -28,33 +28,25 @@
 
 #include "jackringbuffer.h"
 
+JackRingbuffer::JackRingbuffer(int size) { ringBuffer = jack_ringbuffer_create(size); }
 
-JackRingbuffer::JackRingbuffer(int size) {
-    ringBuffer = jack_ringbuffer_create(size);
-}
-
-
-JackRingbuffer::~JackRingbuffer() {
-    jack_ringbuffer_free(ringBuffer);
-}
-
+JackRingbuffer::~JackRingbuffer() { jack_ringbuffer_free(ringBuffer); }
 
 // write a void pointer. dont write NULL;
 bool JackRingbuffer::write(void* ptr) {
-    if(jack_ringbuffer_write_space(ringBuffer) >= sizeof(void*)) {
-        jack_ringbuffer_write(ringBuffer, (char*) &ptr, sizeof(void*));
+    if (jack_ringbuffer_write_space(ringBuffer) >= sizeof(void*)) {
+        jack_ringbuffer_write(ringBuffer, (char*)&ptr, sizeof(void*));
         return true;
     }
 
     return false;
 }
 
-
 void* JackRingbuffer::read() {
     void* readData;
 
-    if(jack_ringbuffer_read_space(ringBuffer) >= sizeof(void*)) {
-        jack_ringbuffer_read(ringBuffer, (char*) &readData, sizeof(void*));
+    if (jack_ringbuffer_read_space(ringBuffer) >= sizeof(void*)) {
+        jack_ringbuffer_read(ringBuffer, (char*)&readData, sizeof(void*));
         return readData;
     }
 

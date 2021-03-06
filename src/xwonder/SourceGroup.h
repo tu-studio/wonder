@@ -32,14 +32,14 @@
 
 //----------------------------------------------------------------------------//
 
-//Doxygen description
+// Doxygen description
 /*!
  *      \brief
  *      List of sources for grouping.
  *
  *      \details
- *      Sources can be group to coordinate movement. Groups are identified by their unique group ID.
- *      Membership of sources is noted via their xids in a list.
+ *      Sources can be group to coordinate movement. Groups are identified by their unique
+ * group ID. Membership of sources is noted via their xids in a list.
  *
  *      \author
  *      Hans-Joachim Mond
@@ -48,23 +48,24 @@
  *      29.04.2008
  */
 
-class SourceGroup: public QObject {
+class SourceGroup : public QObject
+{
     Q_OBJECT
-public:
+  public:
     SourceGroup(int groupID, QObject* parent = 0);
 
     void reset();
 
     bool isActive() const;
     int getGroupID() const;
-    SourceCoordinates getCoordinates()        const;
+    SourceCoordinates getCoordinates() const;
     SourceCoordinates getCoordinatesRounded() const;
     GLfloat getx() const;
     GLfloat gety() const;
-    qreal   getxRounded() const;
-    qreal   getyRounded() const;
+    qreal getxRounded() const;
+    qreal getyRounded() const;
     GLfloat getOrientation() const;
-    qreal   getOrientationRounded() const;
+    qreal getOrientationRounded() const;
     void setGroupID(int groupID);
     void setCoordinates(GLfloat x, GLfloat y, GLfloat orientation);
     void setCoordinates(SourceCoordinates coords);
@@ -76,24 +77,24 @@ public:
     void setColor(const GLfloat* const newColor);
     void setColor(const QColor newColor);
     bool containsXID(unsigned int xID);
-    QList< unsigned int > getXIDs() const;
-    //QString getName() const;
-    //void setName(QString newName);
+    QList<unsigned int> getXIDs() const;
+    // QString getName() const;
+    // void setName(QString newName);
 
-public slots:
+  public slots:
     void activate();
     void deactivate();
     void addSource(unsigned int xID);
     void deleteSource(unsigned int xID);
 
-private:
+  private:
     bool active;
-    int  groupID;
+    int groupID;
     SourceCoordinates coordinates;
-    GLfloat color[ 4 ];
-    //QString name;
-    QList< unsigned int > sourceXIDs;
+    GLfloat color[4];
+    // QString name;
+    QList<unsigned int> sourceXIDs;
 
-}; // class SourceGroup
+};  // class SourceGroup
 
-#endif //SOURCEGROUP_H
+#endif  // SOURCEGROUP_H

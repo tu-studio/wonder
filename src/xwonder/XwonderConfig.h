@@ -22,23 +22,20 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
 #ifndef XWONDERCONFIG_H
 #define XWONDERCONFIG_H
 
-
 //----------------------------------includes----------------------------------//
 
+#include <lo/lo.h>
+
 #include <QObject>
+#include <QPointF>
 #include <QString>
 #include <QVector>
-#include <QPointF>
-
-#include <lo/lo.h>
 #include <string>
 
 //----------------------------------------------------------------------------//
-
 
 //----------------------------------Doxygen-----------------------------------//
 /*!
@@ -46,9 +43,9 @@
  *      Global configuration for xwonder
  *
  *      \details
- *      Global configuration data used in Xwonder, most important cwonders IP address and port.<br>
- *      If given it parses the commandline arguments, otherwise it uses default values.<br>
- *      Argument names and values are checked and validated.<br>
+ *      Global configuration data used in Xwonder, most important cwonders IP address and
+ * port.<br> If given it parses the commandline arguments, otherwise it uses default
+ * values.<br> Argument names and values are checked and validated.<br>
  *
  *      \author
  *      Hans-Joachim Mond
@@ -58,24 +55,24 @@
  */
 //----------------------------------------------------------------------------//
 
-
-class XwonderConfig : public QObject {
+class XwonderConfig : public QObject
+{
     Q_OBJECT
 
-public:
+  public:
     // constructors
     XwonderConfig(int argc, char* argv[], QObject* parent = 0);
 
-    lo_address  cwonderAddr;
+    lo_address cwonderAddr;
     std::string cwonderHost;
     std::string cwonderPort;
     std::string xwonderPort;
-    int  maxNoSources;
+    int maxNoSources;
     bool verbose;
     bool runWithoutCwonder;
     bool projectOnlyMode;
 
-    int cwonderPingTimeout; // in milliseconds
+    int cwonderPingTimeout;  // in milliseconds
 
     QString roomName;
 
@@ -83,11 +80,10 @@ public:
     // used when connecting to cwonder
     QString name;
 
-    //Roompolygon stored as 2D-vertices
-    QVector< QPointF > roomPoints;
+    // Roompolygon stored as 2D-vertices
+    QVector<QPointF> roomPoints;
 
-
-private:
+  private:
     void parseArgs(int argc, char* argv[]);
     void abort(QString message);
 
@@ -97,8 +93,8 @@ private:
     std::string cwonderPortTempString;
     std::string xwonderPortTempString;
 
-}; // class XwonderGlobalConfig
+};  // class XwonderGlobalConfig
 
 extern XwonderConfig* xwConf;
 
-#endif //XWONDERCONFIG_H
+#endif  // XWONDERCONFIG_H

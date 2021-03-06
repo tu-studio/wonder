@@ -23,12 +23,12 @@
 
 #include "FilenameDialog.h"
 
-#include <QLabel>
-#include <QString>
 #include <QGridLayout>
 #include <QHBoxLayout>
+#include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QString>
 
 FilenameDialog::FilenameDialog(QWidget* parent) : QDialog(parent) {
     filename = "";
@@ -37,33 +37,30 @@ FilenameDialog::FilenameDialog(QWidget* parent) : QDialog(parent) {
     setWindowTitle("Distributed Application!");
 
     layout           = new QGridLayout();
-    explanationLabel = new QLabel("Not all parts of WONDER are running on the same computer.\nUnfortunately we can't provide filebrowsing because of this.\nPlease enter a filename:");
-    filenameLE       = new QLineEdit();
-    buttonsLayout    = new QHBoxLayout();
-    okButton         = new QPushButton("Ok");
-    cancelButton     = new QPushButton("Cancel");
+    explanationLabel = new QLabel(
+        "Not all parts of WONDER are running on the same computer.\nUnfortunately we "
+        "can't provide filebrowsing because of this.\nPlease enter a filename:");
+    filenameLE    = new QLineEdit();
+    buttonsLayout = new QHBoxLayout();
+    okButton      = new QPushButton("Ok");
+    cancelButton  = new QPushButton("Cancel");
 
     buttonsLayout->addWidget(okButton);
     buttonsLayout->addWidget(cancelButton);
 
     layout->addWidget(explanationLabel, 0, 0);
-    layout->addWidget(filenameLE,       1, 0);
-    layout->addLayout(buttonsLayout,    2, 0);
+    layout->addWidget(filenameLE, 1, 0);
+    layout->addLayout(buttonsLayout, 2, 0);
 
     setLayout(layout);
 
-    connect(okButton,     SIGNAL(clicked()), this, SLOT(ok()));
+    connect(okButton, SIGNAL(clicked()), this, SLOT(ok()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 };
-
 
 void FilenameDialog::ok() {
     filename = filenameLE->text();
     accept();
 }
 
-
-QString FilenameDialog::getFilename() {
-    return filename;
-}
-
+QString FilenameDialog::getFilename() { return filename; }

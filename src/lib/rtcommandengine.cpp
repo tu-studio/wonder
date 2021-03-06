@@ -27,41 +27,32 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include "rtcommandengine.h"
+
 #include <algorithm>
-
-
 
 RTCommandEngine::RTCommandEngine() : commandQueue(), freeQueue(), accumulatedCommands() {
     commandsToBeFreed = NULL;
 }
 
-
-
 RTCommandEngine::~RTCommandEngine() {
-    if(commandsToBeFreed) {
-        delete commandsToBeFreed;
-    }
+    if (commandsToBeFreed) { delete commandsToBeFreed; }
 }
-
-
 
 void RTCommandEngine::put(Command* cmd) {
     commandQueue.put(cmd);
     freeQueue.flush();
 }
 
-
-
 void RTCommandEngine::mergeIncomingCommands() {
     CommandList* queuedCommandList;
 
-    while((queuedCommandList = commandQueue.get()) != NULL) {
+    while ((queuedCommandList = commandQueue.get()) != NULL) {
         accumulatedCommands.merge(*queuedCommandList);
 
-        if(commandsToBeFreed == NULL) {
+        if (commandsToBeFreed == NULL) {
             commandsToBeFreed = queuedCommandList;
         } else {
-            if(commandsToBeFreed->empty()) {
+            if (commandsToBeFreed->empty()) {
                 freeQueue.put(queuedCommandList);
             } else {
                 freeQueue.put(commandsToBeFreed);
@@ -71,18 +62,17 @@ void RTCommandEngine::mergeIncomingCommands() {
     }
 }
 
-
-
 CommandList* RTCommandEngine::getDueCommands(TimeStamp timeStamp) {
-    if((!accumulatedCommands.empty()) && (commandsToBeFreed != NULL)) {
+    if ((!accumulatedCommands.empty()) && (commandsToBeFreed != NULL)) {
         CommandList::iterator it = accumulatedCommands.begin();
 
-        while(it != accumulatedCommands.end() && ((*it)->getTimeStamp() < timeStamp)) {
+        while (it != accumulatedCommands.end() && ((*it)->getTimeStamp() < timeStamp)) {
             ++it;
         }
 
-        if(it != accumulatedCommands.begin()) {
-            returnValueList.splice(returnValueList.end(), accumulatedCommands, accumulatedCommands.begin(), it);
+        if (it != accumulatedCommands.begin()) {
+            returnValueList.splice(returnValueList.end(), accumulatedCommands,
+                                   accumulatedCommands.begin(), it);
             return &returnValueList;
         } else {
             return NULL;
@@ -92,29 +82,23 @@ CommandList* RTCommandEngine::getDueCommands(TimeStamp timeStamp) {
     }
 }
 
-
-
 void RTCommandEngine::scheduleCommandListForDeletion(CommandList* commandList) {
-    commandsToBeFreed->splice(commandsToBeFreed->end(), *commandList, commandList->begin(), commandList->end());
+    commandsToBeFreed->splice(commandsToBeFreed->end(), *commandList,
+                              commandList->begin(), commandList->end());
 }
 
-
-
-void RTCommandEngine::processCommand(Command* command) {
-    command->execute();
-}
-
-
+void RTCommandEngine::processCommand(Command* command) { command->execute(); }
 
 void RTCommandEngine::evaluateCommands(TimeStamp timeStamp) {
     mergeIncomingCommands();
 
     CommandList* commandList = getDueCommands(timeStamp);
 
-    if(commandList) {
-        // XXX: evaluate commands that came in first first, basically what a queue should do,
-        //      but the queue used here is actually a LIFO ringbuffer, so we have to reverse
-        //      the list of commands -> ugly
+    if (commandList) {
+        // XXX: evaluate commands that came in first first, basically what a queue should
+        // do,
+        //      but the queue used here is actually a LIFO ringbuffer, so we have to
+        //      reverse the list of commands -> ugly
         commandList->reverse();
         std::for_each(commandList->begin(), commandList->end(), processCommand);
         scheduleCommandListForDeletion(commandList);

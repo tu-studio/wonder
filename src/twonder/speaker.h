@@ -29,40 +29,30 @@
 #pragma once
 
 #include <jack/jack.h>
+
 #include <vector>
 
 #include "speakersegment.h"
 #include "vector2d.h"
 #include "vector3d.h"
 
+class Speaker
+{
+  public:
+    Speaker(float x, float y, float z, float normalx, float normaly, float normalz,
+            float cosAlpha);
 
+    const Vector2D& getPos() const { return pos; }
 
-class Speaker {
+    const Vector3D& get3DPos() const { return pos3D; }
 
-public:
-    Speaker(float x, float y, float z, float normalx, float normaly, float normalz, float cosAlpha);
+    const Vector2D& getNormal() const { return normal; }
 
-    const Vector2D& getPos() const {
-        return pos;
-    }
+    const Vector3D& get3DNormal() const { return normal3D; }
 
-    const Vector3D& get3DPos() const {
-        return pos3D;
-    }
+    const float getCosAlpha() const { return cosAlpha; }
 
-    const Vector2D& getNormal() const {
-        return normal;
-    }
-
-    const Vector3D& get3DNormal() const {
-        return normal3D;
-    }
-
-    const float getCosAlpha() const {
-        return cosAlpha;
-    }
-
-private:
+  private:
     Vector2D pos;
     Vector3D pos3D;
     Vector2D normal;
@@ -70,15 +60,13 @@ private:
     float cosAlpha;
 };
 
-
-
-class SpkArray : public std::vector<Speaker*> {
-
-public:
+class SpkArray : public std::vector<Speaker*>
+{
+  public:
     SpkArray(std::string filename);
 
     ~SpkArray();
 
-private:
+  private:
     void addSpeakers(Segment* segment);
 };

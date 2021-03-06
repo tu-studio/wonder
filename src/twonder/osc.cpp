@@ -27,6 +27,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include "osc.h"
+
 #include <iostream>
 
 using std::cerr;
@@ -36,28 +37,19 @@ using std::exception;
 OSCServer::OSCServer(const char* port) {
     serverThread = lo_server_thread_new(port, NULL);
 
-    if(! serverThread) {
+    if (!serverThread) {
         cerr << "Warning !!! Could not create OSC Server thread " << endl;
         throw exception();
     }
 }
 
+OSCServer::~OSCServer() { lo_server_thread_free(serverThread); }
 
-OSCServer::~OSCServer() {
-    lo_server_thread_free(serverThread);
-}
+void OSCServer::start() { lo_server_thread_start(serverThread); }
 
+void OSCServer::stop() { lo_server_thread_stop(serverThread); }
 
-void OSCServer::start() {
-    lo_server_thread_start(serverThread);
-}
-
-
-void OSCServer::stop() {
-    lo_server_thread_stop(serverThread);
-}
-
-
-void OSCServer::addMethod(const char* path, const char* typespec, lo_method_handler h, void* user_data) {
+void OSCServer::addMethod(const char* path, const char* typespec, lo_method_handler h,
+                          void* user_data) {
     lo_server_thread_add_method(serverThread, path, typespec, h, user_data);
 }

@@ -21,78 +21,54 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
 #include "SnapshotSelectorButton.h"
 
-#include <QMenu>
+#include <QAction>
 #include <QContextMenuEvent>
 #include <QKeyEvent>
-#include <QAction>
+#include <QMenu>
 
-
-SnapshotSelectorButton::SnapshotSelectorButton(unsigned int snapshotID, const QString& name, QWidget* parent) : QPushButton(name, parent) {
+SnapshotSelectorButton::SnapshotSelectorButton(unsigned int snapshotID,
+                                               const QString& name, QWidget* parent)
+    : QPushButton(name, parent) {
     this->name       = name;
     this->snapshotID = snapshotID;
     connect(this, SIGNAL(clicked(bool)), this, SLOT(emitClicked(bool)));
 }
 
+unsigned int SnapshotSelectorButton::getSnapshotID() const { return snapshotID; }
 
-unsigned int SnapshotSelectorButton::getSnapshotID() const {
-    return snapshotID;
-}
-
-
-QString SnapshotSelectorButton::getName() const {
-    return name;
-}
-
+QString SnapshotSelectorButton::getName() const { return name; }
 
 void SnapshotSelectorButton::setName(QString newName) {
     name = newName;
     setText(name);
 }
 
-
 void SnapshotSelectorButton::contextMenuEvent(QContextMenuEvent* event) {
     QMenu menu(this);
-    QAction* takeSnapshotAct  = menu.addAction("Take Snapshot");
-    QAction* deleteMeAct      = menu.addAction("Delete this Snapshot");
-    menu.addSeparator();//visually separate the destructive actions above
-    QAction* renameAct        = menu.addAction("Rename this Snapshot");
-    QAction* copySnapshotAct  = menu.addAction("Copy this Snapshot");
+    QAction* takeSnapshotAct = menu.addAction("Take Snapshot");
+    QAction* deleteMeAct     = menu.addAction("Delete this Snapshot");
+    menu.addSeparator();  // visually separate the destructive actions above
+    QAction* renameAct       = menu.addAction("Rename this Snapshot");
+    QAction* copySnapshotAct = menu.addAction("Copy this Snapshot");
 
     connect(takeSnapshotAct, SIGNAL(triggered()), this, SLOT(takeSnapshot()));
-    connect(deleteMeAct,     SIGNAL(triggered()), this, SLOT(deleteMe()));
-    connect(renameAct,       SIGNAL(triggered()), this, SLOT(renameSnapshot()));
+    connect(deleteMeAct, SIGNAL(triggered()), this, SLOT(deleteMe()));
+    connect(renameAct, SIGNAL(triggered()), this, SLOT(renameSnapshot()));
     connect(copySnapshotAct, SIGNAL(triggered()), this, SLOT(copySnapshot()));
 
     menu.exec(event->globalPos());
 }
 
-void SnapshotSelectorButton::keyPressEvent(QKeyEvent* event) {
-    event->ignore();
-}
+void SnapshotSelectorButton::keyPressEvent(QKeyEvent* event) { event->ignore(); }
 
-void SnapshotSelectorButton::takeSnapshot() {
-    emit takeSnapshotSignal(snapshotID, name);
-}
+void SnapshotSelectorButton::takeSnapshot() { emit takeSnapshotSignal(snapshotID, name); }
 
+void SnapshotSelectorButton::copySnapshot() { emit copySnapshotSignal(snapshotID); }
 
-void SnapshotSelectorButton::copySnapshot() {
-    emit copySnapshotSignal(snapshotID);
-}
+void SnapshotSelectorButton::renameSnapshot() { emit renameSnapshotSignal(snapshotID); }
 
+void SnapshotSelectorButton::deleteMe() { emit deleteMeSignal(snapshotID); }
 
-void SnapshotSelectorButton::renameSnapshot() {
-    emit renameSnapshotSignal(snapshotID);
-}
-
-
-void SnapshotSelectorButton::deleteMe() {
-    emit deleteMeSignal(snapshotID);
-}
-
-
-void SnapshotSelectorButton::emitClicked(bool boolnotused) {
-    emit clicked(snapshotID);
-}
+void SnapshotSelectorButton::emitClicked(bool boolnotused) { emit clicked(snapshotID); }

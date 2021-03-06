@@ -30,19 +30,15 @@
 
 #include "vector2d.h"
 
-
-
-class Listener {
-
-public:
+class Listener
+{
+  public:
     Listener(float x, float y);
 
-    const Vector2D& getPos() const {
-        return pos;
-    }
+    const Vector2D& getPos() const { return pos; }
 
     void setPos(float x, float y);
 
-private:
+  private:
     Vector2D pos;
 };

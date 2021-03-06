@@ -34,15 +34,14 @@
 #include "config.h"
 #include "vector3d.h"
 
-namespace xmlpp {
-    class Node;
+namespace xmlpp
+{
+class Node;
 }
 
-
-
-class CwonderConfig {
-
-public:
+class CwonderConfig
+{
+  public:
     CwonderConfig(int argc, char* argv[]);
 
     int readConfig();
@@ -61,7 +60,7 @@ public:
     std::string roomName;
     std::vector<Vector3D> renderPolygonPoints;
 
-private:
+  private:
     void parseArgs(int argc, char** argv);
     void getSettings(xmlpp::Node* node);
     void getRenderPolygon(xmlpp::Node* node);

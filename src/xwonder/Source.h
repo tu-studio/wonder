@@ -21,10 +21,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
 #ifndef SOURCE_H
 #define SOURCE_H
-
 
 //----------------------------------includes----------------------------------//
 
@@ -34,16 +32,15 @@
 
 //----------------------------------------------------------------------------//
 
-
 //----------------------------------Doxygen-----------------------------------//
 /*!
  *      \brief
  *      Encapsulation of a soundsource
  *
  *      \details
- *      A single soundsource, described by name, id, xid, groupId, type, position, color, visibility and
- *      record status. Xwonder uses its own id-system with xid, because the id of a source can change
- *      and thus a unique unchangeable identifier is needed.
+ *      A single soundsource, described by name, id, xid, groupId, type, position, color,
+ * visibility and record status. Xwonder uses its own id-system with xid, because the id
+ * of a source can change and thus a unique unchangeable identifier is needed.
  *
  *      \author
  *      Hans-Joachim Mond
@@ -53,50 +50,50 @@
  */
 //----------------------------------------------------------------------------//
 
-
-class Source: public QObject {
+class Source : public QObject
+{
     Q_OBJECT
 
-public:
+  public:
     // constructors
     Source(unsigned int xID, int sourceID, QObject* parent = 0);
     Source(unsigned int xID, int sourceID, bool planewave, QString name, float x, float y,
            float orientation, QObject* parent = 0);
-    Source(unsigned int xID, int sourceID, bool planewave, QString name, SourceCoordinates coords,
-           QObject* parent = 0);
+    Source(unsigned int xID, int sourceID, bool planewave, QString name,
+           SourceCoordinates coords, QObject* parent = 0);
     Source(const Source& source, QObject* parent = 0);
 
     void reset();
 
     // getter
-    int getID()                               const;
-    int getGroupID()                          const;
-    unsigned int getXID()                     const;
-    GLfloat getx()                            const;
-    GLfloat gety()                            const;
-    GLfloat getOrientation()                  const;
-    qreal getxRounded()                       const;
-    qreal getyRounded()                       const;
-    qreal getOrientationRounded()             const;
-    SourceCoordinates getCoordinates()        const;
+    int getID() const;
+    int getGroupID() const;
+    unsigned int getXID() const;
+    GLfloat getx() const;
+    GLfloat gety() const;
+    GLfloat getOrientation() const;
+    qreal getxRounded() const;
+    qreal getyRounded() const;
+    qreal getOrientationRounded() const;
+    SourceCoordinates getCoordinates() const;
     SourceCoordinates getCoordinatesRounded() const;
-    QString getName()                         const;
-    const GLfloat* const getColor()           const;
+    QString getName() const;
+    const GLfloat* const getColor() const;
 
     static int getNoActiveSources();
 
     // bool getter
-    bool isActive()            const;
-    bool isVisible()           const;
-    bool isPlanewave()         const;
-    bool isRecordEnabled()     const;
-    bool isReadEnabled()       const;
+    bool isActive() const;
+    bool isVisible() const;
+    bool isPlanewave() const;
+    bool isRecordEnabled() const;
+    bool isReadEnabled() const;
     bool hasInvertedRotation() const;
-    bool hasInvertedScaling()  const;
-    bool hasDopplerEffect()    const;
+    bool hasInvertedScaling() const;
+    bool hasDopplerEffect() const;
 
     // setter
-    void set(const Source& sourceWithData);   // copy all data except xID
+    void set(const Source& sourceWithData);  // copy all data except xID
     void setXID(unsigned int newXID);
     void setx(GLfloat x);
     void sety(GLfloat y);
@@ -108,8 +105,7 @@ public:
     void setColor(QColor newColor);
     void setName(QString newName);
 
-
-public slots:
+  public slots:
     // setter slots
     void activate();
     void deactivate();
@@ -126,15 +122,14 @@ public slots:
     void toggleVisible();
     void toggleRecordMode();
 
-
-private:
+  private:
     // IDs
-    int sourceID;         // wonder channel id
-    unsigned int xID;     // xwonder internal id, unchangeable
-    int groupID;          // group id of the group to which this source belongs, 0 = no group
+    int sourceID;      // wonder channel id
+    unsigned int xID;  // xwonder internal id, unchangeable
+    int groupID;       // group id of the group to which this source belongs, 0 = no group
 
     SourceCoordinates coordinates;
-    GLfloat color[ 4 ];
+    GLfloat color[4];
     QString name;
     bool active;
     bool visible;
@@ -147,6 +142,6 @@ private:
 
     static int noActiveSources;
 
-}; // class Source
+};  // class Source
 
-#endif // SOURCE_H
+#endif  // SOURCE_H

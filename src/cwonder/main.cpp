@@ -38,26 +38,23 @@
 #include "cwonder_config.h"
 #include "oscinctrl.h"
 
-
-
 void signalHandler(int signal) {
-    std::cout << "[SIGNAL-HANDLER]: Received interrupt signal number " << signal << " - exiting now!" << std::endl;
+    std::cout << "[SIGNAL-HANDLER]: Received interrupt signal number " << signal
+              << " - exiting now!" << std::endl;
     std::exit(EXIT_FAILURE);
 }
-
 
 int main(int argc, char* argv[]) {
     cwonderConf = new CwonderConfig(argc, argv);
 
     int ret = cwonderConf->readConfig();
 
-    if(ret != 0) {
-        std::exit(EXIT_FAILURE);
-    }
+    if (ret != 0) { std::exit(EXIT_FAILURE); }
 
     // make default project path
-    if(makedirs(cwonderConf->projectPath.c_str(), mode_t(0700)) != 0) {
-        std::cout << "[OSCServer][WARNING]: Could not create default project path!" << std::endl;
+    if (makedirs(cwonderConf->projectPath.c_str(), mode_t(0700)) != 0) {
+        std::cout << "[OSCServer][WARNING]: Could not create default project path!"
+                  << std::endl;
     }
 
     // create the control application
@@ -69,8 +66,11 @@ int main(int argc, char* argv[]) {
 
     try {
         oscctrl = new OSCControl(cwonderConf->listeningPort);
-    } catch(OSCServer::EServ) {
-        std::cerr << "[OSCServer][ERROR]: Could not create server! Maybe the server (using the same port) is already running?" << std::endl;
+    }
+    catch (OSCServer::EServ) {
+        std::cerr << "[OSCServer][ERROR]: Could not create server! Maybe the server "
+                     "(using the same port) is already running?"
+                  << std::endl;
         return 0;
     }
 
@@ -94,9 +94,7 @@ int main(int argc, char* argv[]) {
 #endif
 
     // now wait for incoming OSC messages
-    while(1) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    }
+    while (1) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
 
     delete cwonder;
     delete oscctrl;

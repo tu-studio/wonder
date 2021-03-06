@@ -33,12 +33,11 @@
 #endif
 
 #include <QApplication>
-#include <QGroupBox>
-#include <QComboBox>
 #include <QCheckBox>
-#include <QWheelEvent>
 #include <QColor>
-
+#include <QComboBox>
+#include <QGroupBox>
+#include <QWheelEvent>
 
 class QLineEdit;
 class QToolButton;
@@ -52,16 +51,15 @@ class QContextMenuEvent;
 class QCustomComboBox;
 class QCustomCheckBox;
 
-
-//Doxygen description
+// Doxygen description
 /*!
  *      \brief
  *      Visualise and edit sourceproperties (not position)
  *
  *      \details
- *      The name, color, id-number, recordmode (on/off), readmode (on/off) and sourcetype of a single source are shown
- *      and can be edited. According to the current working mode (project with/without score) properties
- *      will vary.
+ *      The name, color, id-number, recordmode (on/off), readmode (on/off) and sourcetype
+ * of a single source are shown and can be edited. According to the current working mode
+ * (project with/without score) properties will vary.
  *
  *      \author
  *      Hans-Joachim Mond
@@ -70,22 +68,23 @@ class QCustomCheckBox;
  *      20.07.2008
  */
 
-class SourceWidget : public QGroupBox {
+class SourceWidget : public QGroupBox
+{
     Q_OBJECT
 
-public:
-    //According to Scene- or Scoremode this Widget offers different options
+  public:
+    // According to Scene- or Scoremode this Widget offers different options
     SourceWidget(QString name, unsigned int xID, int id, QWidget* parent = 0);
     ~SourceWidget();
 
     void reset();
 
-    bool           isActive()    const;
-    unsigned int   getXID()      const;
-    int            getID()       const;
-    QColor         getColor()    const;
-    bool           isPlanewave() const;
-    const QString& getName()     const;
+    bool isActive() const;
+    unsigned int getXID() const;
+    int getID() const;
+    QColor getColor() const;
+    bool isPlanewave() const;
+    const QString& getName() const;
 
     void setMode(bool projectOnlyMode);
     void setXID(unsigned int xID);
@@ -98,18 +97,18 @@ public:
     void setScalingDirection(bool inverted);
     void setDopplerEffect(bool dopplerOn);
 
-public slots:
+  public slots:
     void activate();
     void deactivate();
     void changeRecordMode(bool recEnabled, bool externalSet = false);
     void changeReadMode(bool readEnabled, bool externalSet = false);
 
-protected:
+  protected:
     void contextMenuEvent(QContextMenuEvent* event);
-    void keyPressEvent(QKeyEvent*         event);
-    void mousePressEvent(QMouseEvent*       event);
+    void keyPressEvent(QKeyEvent* event);
+    void mousePressEvent(QMouseEvent* event);
 
-signals:
+  signals:
     void deactivateMeSignal(unsigned int xID);
     void nameChanged(unsigned int xID, const QString& name);
     void sourceIDChanged(unsigned int xID, int oldId, int id);
@@ -123,8 +122,9 @@ signals:
     void scalingDirectionChanged(unsigned int xID, bool inverted);
     void dopplerEffectChanged(unsigned int xID, bool dopplerOn);
 
-    //signals are caught by each individual SourceWidget, tagged with an xID and forwarded to the Channelwidget
-private slots:
+    // signals are caught by each individual SourceWidget, tagged with an xID and
+    // forwarded to the Channelwidget
+  private slots:
     void changeName();
     void changeID(int id);
     void changeColor();
@@ -135,37 +135,37 @@ private slots:
     void changeDopplerEffect(bool dopplerOn);
     void changeType(const QString& type);
 
-private:
-    //this is the id which is used in OSC-Messages
+  private:
+    // this is the id which is used in OSC-Messages
     int sourceID;
 
     bool active;
     bool projectOnlyMode;
 
-    //this is the xwonder-id used, this one is fixed for every SourceWidget
+    // this is the xwonder-id used, this one is fixed for every SourceWidget
     unsigned int xID;
 
     QString name;
 
-    QLineEdit*   nameLE;
+    QLineEdit* nameLE;
     QToolButton* colorButton;
     QToolButton* moreButton;
     QToolButton* recordButton;
     QToolButton* readButton;
 
-    QWidget*         extraOptionsWidget;
-    QVBoxLayout*     extraOptionsLayout;
+    QWidget* extraOptionsWidget;
+    QVBoxLayout* extraOptionsLayout;
     QCustomCheckBox* dopplerButton;
     QCustomCheckBox* invertRotationButton;
     QCustomCheckBox* invertScalingButton;
     QCustomCheckBox* showButton;
-    QWidget*         sourcetypeWidget;
-    QHBoxLayout*     sourcetypeLayout;
-    QLabel*          sourcetypeLabel;
+    QWidget* sourcetypeWidget;
+    QHBoxLayout* sourcetypeLayout;
+    QLabel* sourcetypeLabel;
     QCustomComboBox* sourcetypeBox;
-    QWidget*         idWidget;
-    QHBoxLayout*     idLayout;
-    QLabel*          idLabel;
+    QWidget* idWidget;
+    QHBoxLayout* idLayout;
+    QLabel* idLabel;
     QCustomComboBox* idBox;
 
     QGridLayout* gridLayout;
@@ -175,48 +175,46 @@ private:
 };
 
 // a custom combobox which does not accept wheel events to prevent accidental switching
-class QCustomComboBox : public QComboBox {
+class QCustomComboBox : public QComboBox
+{
     Q_OBJECT
 
-protected:
-    void wheelEvent(QWheelEvent* event) {
-        event->ignore();
-    };
-
+  protected:
+    void wheelEvent(QWheelEvent* event) { event->ignore(); };
 };
 
-// a custom checkbox which does not accept arrow keys as input to prevent accidental focusshift
-// to other widgets and to keep arrow keys available for movement of sources
-class QCustomCheckBox: public QCheckBox {
+// a custom checkbox which does not accept arrow keys as input to prevent accidental
+// focusshift to other widgets and to keep arrow keys available for movement of sources
+class QCustomCheckBox : public QCheckBox
+{
     Q_OBJECT
 
-public:
-    QCustomCheckBox(const QString& text, QWidget* parent = 0) : QCheckBox(text, parent) {
-    };
+  public:
+    QCustomCheckBox(const QString& text, QWidget* parent = 0) : QCheckBox(text, parent){};
 
-protected:
+  protected:
     void keyPressEvent(QKeyEvent* event) {
-        switch(event->key()) {
-            case Qt::Key_Up:
-            case Qt::Key_Down:
-            case Qt::Key_Left:
-            case Qt::Key_Right:
-            case Qt::Key_W:
-            case Qt::Key_R:
-            case Qt::Key_Delete:
-            case Qt::Key_Backspace:
-            case Qt::Key_G:
-            case Qt::Key_H:
-            case Qt::Key_X:
-            case Qt::Key_Y:
-            case Qt::Key_Z:
-            case Qt::Key_B:
-                QApplication::sendEvent(parent(), event);
-                break;
+        switch (event->key()) {
+        case Qt::Key_Up:
+        case Qt::Key_Down:
+        case Qt::Key_Left:
+        case Qt::Key_Right:
+        case Qt::Key_W:
+        case Qt::Key_R:
+        case Qt::Key_Delete:
+        case Qt::Key_Backspace:
+        case Qt::Key_G:
+        case Qt::Key_H:
+        case Qt::Key_X:
+        case Qt::Key_Y:
+        case Qt::Key_Z:
+        case Qt::Key_B:
+            QApplication::sendEvent(parent(), event);
+            break;
 
-            default:
-                QCheckBox::keyPressEvent(event);
+        default:
+            QCheckBox::keyPressEvent(event);
         }
     };
 };
-#endif // SOURCEWIDGET_H
+#endif  // SOURCEWIDGET_H

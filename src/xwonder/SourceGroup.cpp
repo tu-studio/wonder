@@ -21,100 +21,62 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QGLWidget>
 #include "SourceGroup.h"
+
+#include <QGLWidget>
+
 #include "Colors.h"
 
-
-SourceGroup::SourceGroup(int groupID, QObject* parent) : QObject(parent), active(false), groupID(groupID), coordinates(0.0, 0.0, 0.0) {
+SourceGroup::SourceGroup(int groupID, QObject* parent)
+    : QObject(parent), active(false), groupID(groupID), coordinates(0.0, 0.0, 0.0) {
     // defaultcolor is red
-    setColor(colors[ red ]);
+    setColor(colors[red]);
 }
 
-void SourceGroup::reset() {
-    deactivate();
-}
+void SourceGroup::reset() { deactivate(); }
 
-void SourceGroup::setGroupID(int groupID) {
-    this->groupID = groupID;
-}
+void SourceGroup::setGroupID(int groupID) { this->groupID = groupID; }
 
+bool SourceGroup::isActive() const { return active; }
 
-bool SourceGroup::isActive() const {
-    return active;
-}
-
-
-void SourceGroup::activate() {
-    active = true;
-}
-
+void SourceGroup::activate() { active = true; }
 
 void SourceGroup::deactivate() {
     active = false;
 
     // reset to default values
     coordinates = SourceCoordinates(0.0, 0.0, 0.0);
-    setColor(colors[ red ]);
+    setColor(colors[red]);
     sourceXIDs.clear();
 }
 
+int SourceGroup::getGroupID() const { return groupID; }
 
-int SourceGroup::getGroupID() const {
-    return groupID;
-}
+GLfloat SourceGroup::getx() const { return coordinates.x; }
 
+qreal SourceGroup::getxRounded() const { return qRound(coordinates.x * 100.0) / 100.0; }
 
-GLfloat SourceGroup::getx() const {
-    return coordinates.x;
-}
+void SourceGroup::setx(GLfloat x) { coordinates.x = x; }
 
-qreal SourceGroup::getxRounded() const {
-    return qRound(coordinates.x * 100.0) / 100.0 ;
-}
+GLfloat SourceGroup::gety() const { return coordinates.y; }
 
+qreal SourceGroup::getyRounded() const { return qRound(coordinates.y * 100.0) / 100.0; }
 
-void SourceGroup::setx(GLfloat x) {
-    coordinates.x = x;
-}
+void SourceGroup::sety(GLfloat y) { coordinates.y = y; }
 
-
-GLfloat SourceGroup::gety() const {
-    return coordinates.y;
-}
-
-
-qreal SourceGroup::getyRounded() const {
-    return qRound(coordinates.y * 100.0) / 100.0 ;
-}
-
-
-void SourceGroup::sety(GLfloat y) {
-    coordinates.y = y;
-}
-
-
-GLfloat SourceGroup::getOrientation() const {
-    return coordinates.orientation;
-}
-
+GLfloat SourceGroup::getOrientation() const { return coordinates.orientation; }
 
 qreal SourceGroup::getOrientationRounded() const {
-    return qRound(coordinates.orientation * 100.0) / 100.0 ;
+    return qRound(coordinates.orientation * 100.0) / 100.0;
 }
 
-
 void SourceGroup::setOrientation(GLfloat o) {
-    if(o > 180.0) {
-        while(o > 180.0) {
-            o -= 360.0;
-        }
+    if (o > 180.0) {
+        while (o > 180.0) { o -= 360.0; }
 
         coordinates.orientation = o;
-    } else if(o < - 180.0) {
-        while(o < -180.0) {
-            o += 360.0;
-        }
+    } else if (o < -180.0) {
+        while (o < -180.0) { o += 360.0; }
 
         coordinates.orientation = o;
     } else {
@@ -122,12 +84,10 @@ void SourceGroup::setOrientation(GLfloat o) {
     }
 }
 
-
 void SourceGroup::setPosition(GLfloat x, GLfloat y) {
     setx(x);
     sety(y);
 }
-
 
 SourceCoordinates SourceGroup::getCoordinates() const {
     return SourceCoordinates(getx(), gety(), getOrientation());
@@ -140,65 +100,45 @@ SourceCoordinates SourceGroup::getCoordinatesRounded() const {
     return SourceCoordinates(x, y, orientation);
 }
 
-
 void SourceGroup::setCoordinates(GLfloat x, GLfloat y, GLfloat orientation) {
     setx(x);
     sety(y);
     setOrientation(orientation);
 }
 
-
 void SourceGroup::setCoordinates(SourceCoordinates coords) {
     setCoordinates(coords.x, coords.y, coords.orientation);
 }
 
+const GLfloat* const SourceGroup::getColor() const { return (const GLfloat* const)color; }
 
-const GLfloat* const SourceGroup::getColor() const {
-    return (const GLfloat * const) color;
-}
-
-
-void SourceGroup::setColor(const GLfloat newColor[ 4 ]) {
-    for(int i = 0; i < 4; ++i) {
-        if(newColor[ i ] < 0.0  ||  newColor[ i ] > 1.0) {
-            color[ i ] = 0.0;
+void SourceGroup::setColor(const GLfloat newColor[4]) {
+    for (int i = 0; i < 4; ++i) {
+        if (newColor[i] < 0.0 || newColor[i] > 1.0) {
+            color[i] = 0.0;
         } else {
-            color[ i ] = newColor[ i ];
+            color[i] = newColor[i];
         }
     }
 }
 
-
 void SourceGroup::setColor(const QColor newColor) {
-    color[ 0 ] = newColor.redF();
-    color[ 1 ] = newColor.greenF();
-    color[ 2 ] = newColor.blueF();
-    color[ 3 ] = newColor.alphaF();
+    color[0] = newColor.redF();
+    color[1] = newColor.greenF();
+    color[2] = newColor.blueF();
+    color[3] = newColor.alphaF();
 }
 
+bool SourceGroup::containsXID(unsigned int xID) { return sourceXIDs.contains(xID); }
 
-bool SourceGroup::containsXID(unsigned int xID) {
-    return sourceXIDs.contains(xID);
-}
-
-
-QList< unsigned int > SourceGroup::getXIDs() const {
-    return sourceXIDs;
-}
-
+QList<unsigned int> SourceGroup::getXIDs() const { return sourceXIDs; }
 
 void SourceGroup::addSource(unsigned int xID) {
-    if(! sourceXIDs.contains(xID)) {
-        sourceXIDs.append(xID);
-    }
+    if (!sourceXIDs.contains(xID)) { sourceXIDs.append(xID); }
 }
-
 
 void SourceGroup::deleteSource(unsigned int xID) {
     int i = sourceXIDs.indexOf(xID);
 
-    if(i != - 1) {
-        sourceXIDs.removeAt(i);
-    }
+    if (i != -1) { sourceXIDs.removeAt(i); }
 }
-

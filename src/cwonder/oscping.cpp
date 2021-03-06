@@ -26,41 +26,43 @@
  *                                                                                   *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+#include "oscping.h"
+
 #include <iostream>
 
-#include "oscping.h"
-#include "liblo_extended.h"
 #include "cwonder_config.h"
+#include "liblo_extended.h"
 #include "oscstream.h"
 
-
+using std::list;
 using std::string;
 using std::vector;
-using std::list;
 
-
-OSCPing::OSCPing(lo_address address, string path, int pingSpan, int allowedLostPongs, string name) {
-    this->address          = address;
+OSCPing::OSCPing(lo_address address, string path, int pingSpan, int allowedLostPongs,
+                 string name) {
+    this->address = address;
 
     this->pingSpan         = pingSpan;
     this->allowedLostPongs = allowedLostPongs;
 
-    pingCount  = pingSpan;
-    pongCount  = 0;
+    pingCount = pingSpan;
+    pongCount = 0;
 
     this->path = path;
     this->name = name;
 }
 
-
 bool OSCPing::ping() {
     // check the responses
-    if(pingCount == 0) {
-        // if more then the allowed percentage of pings remains unanswered, remove client from stream
-        if((100 - (100.0 * pongCount / pingSpan)) > allowedLostPongs) {
-            //wonderlog->print(LOG_INFO, "[V-ping] path=" + path + " host=" + (string) lo_address_get_hostname(address) + " port=" + (string) lo_address_get_port(address) + " is down.");
+    if (pingCount == 0) {
+        // if more then the allowed percentage of pings remains unanswered, remove client
+        // from stream
+        if ((100 - (100.0 * pongCount / pingSpan)) > allowedLostPongs) {
+            // wonderlog->print(LOG_INFO, "[V-ping] path=" + path + " host=" + (string)
+            // lo_address_get_hostname(address) + " port=" + (string)
+            // lo_address_get_port(address) + " is down.");
 
-            return false; // host is down
+            return false;  // host is down
         }
 
         pongCount = 0;
@@ -70,7 +72,7 @@ bool OSCPing::ping() {
     lo_send(address, path.c_str(), "i", pingCount);
 
     // decrement the ping counter and reset if necessary
-    if(pingCount > 0) {
+    if (pingCount > 0) {
         pingCount -= 1;
     } else {
         pingCount = pingSpan;
@@ -79,33 +81,20 @@ bool OSCPing::ping() {
     return true;
 }
 
+void OSCPing::pong() { ++pongCount; }
 
-void OSCPing::pong() {
-    ++pongCount;
-}
-
-
-
-ListOSCPing::ListOSCPing(string path) {
-    this->path = path;
-}
-
+ListOSCPing::ListOSCPing(string path) { this->path = path; }
 
 ListOSCPing::~ListOSCPing() {
-    for(clients = begin(); clients != end(); ++clients) {
-        delete(*clients);
-    }
+    for (clients = begin(); clients != end(); ++clients) { delete (*clients); }
 
     clear();
 }
 
-
 int ListOSCPing::add(lo_address a, string name, int pingSpan, int allowedLostPongs) {
     // check whether client is already on the list
-    for(clients = begin(); clients != end(); ++clients)
-        if(issame((*clients)->address, a)) {
-            return 1;
-        }
+    for (clients = begin(); clients != end(); ++clients)
+        if (issame((*clients)->address, a)) { return 1; }
 
     // add new client to list
     push_back(new OSCPing(a, path, pingSpan, allowedLostPongs, name));
@@ -113,11 +102,10 @@ int ListOSCPing::add(lo_address a, string name, int pingSpan, int allowedLostPon
     return 0;
 }
 
-
 int ListOSCPing::remove(lo_address b) {
-    for(clients = begin(); clients != end(); ++clients) {
-        if(issame((*clients)->address, b)) {
-            delete(*clients);
+    for (clients = begin(); clients != end(); ++clients) {
+        if (issame((*clients)->address, b)) {
+            delete (*clients);
             erase(clients);
             return 0;
         }
@@ -126,10 +114,9 @@ int ListOSCPing::remove(lo_address b) {
     return 1;
 }
 
-
 int ListOSCPing::pong(int seq, lo_address from) {
-    for(clients = begin(); clients != end(); ++clients) {
-        if(issame((*clients)->address, from)) {
+    for (clients = begin(); clients != end(); ++clients) {
+        if (issame((*clients)->address, from)) {
             (*clients)->pong();
             return 0;
         }
@@ -138,19 +125,18 @@ int ListOSCPing::pong(int seq, lo_address from) {
     return 1;
 }
 
+void ListOSCPing::ping(list<OSCStreamClient>& deadClients) {
+    std::list<OSCPing*>::iterator next;
 
-void ListOSCPing::ping(list< OSCStreamClient >& deadClients) {
-    std::list< OSCPing* >::iterator next;
-
-    for(clients = begin(); clients != end(); ++clients) {
+    for (clients = begin(); clients != end(); ++clients) {
         bool clientAlive = (*clients)->ping();
 
-        if(! clientAlive) {
-            deadClients.push_back(OSCStreamClient(lo_address_get_hostname((*clients)->address),
-                                                  lo_address_get_port((*clients)->address),
-                                                  (*clients)->name,
-                                                  (*clients)->address));
-            delete(*clients);
+        if (!clientAlive) {
+            deadClients.push_back(
+                OSCStreamClient(lo_address_get_hostname((*clients)->address),
+                                lo_address_get_port((*clients)->address),
+                                (*clients)->name, (*clients)->address));
+            delete (*clients);
             clients = --(erase(clients));
         }
     }

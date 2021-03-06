@@ -21,9 +21,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
 #include "SourcePositionDialog.h"
-#include "Source.h"
 
 #include <QGridLayout>
 #include <QHBoxLayout>
@@ -33,6 +31,7 @@
 #include <QRegExp>
 #include <QRegExpValidator>
 
+#include "Source.h"
 
 SourcePositionDialog::SourcePositionDialog(const Source& source, QWidget* parent)
     : QDialog(parent, Qt::Dialog) {
@@ -42,30 +41,31 @@ SourcePositionDialog::SourcePositionDialog(const Source& source, QWidget* parent
     xposLabel        = new QLabel("x [m]:");
     yposLabel        = new QLabel("y [m]:");
     orientationLabel = new QLabel("Orientation [deg]:");
-    xposLabel->       setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    yposLabel->       setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    xposLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    yposLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     orientationLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
-    //initialize LineEdits with values of current source
-    newCoordinates                 = source.getCoordinatesRounded();
-    SourceCoordinates mappedCoords = SourceCoordinates::mapGLCoordToWonderCoord(newCoordinates);
+    // initialize LineEdits with values of current source
+    newCoordinates = source.getCoordinatesRounded();
+    SourceCoordinates mappedCoords =
+        SourceCoordinates::mapGLCoordToWonderCoord(newCoordinates);
 
     // round to two decimals ( thus accuracy is cm )
-    //qreal xRounded = qRound( mappedCoords.x * 100.0 ) / 100.0 ;
-    //qreal yRounded = qRound( mappedCoords.y * 100.0 ) / 100.0 ;
+    // qreal xRounded = qRound( mappedCoords.x * 100.0 ) / 100.0 ;
+    // qreal yRounded = qRound( mappedCoords.y * 100.0 ) / 100.0 ;
     xposLE        = new QLineEdit(QString::number(mappedCoords.x));
     yposLE        = new QLineEdit(QString::number(mappedCoords.y));
     orientationLE = new QLineEdit(QString::number(mappedCoords.orientation));
 
     layout = new QGridLayout();
-    layout->addWidget(xposLabel,  0, 0);
-    layout->addWidget(xposLE,    0, 1);
+    layout->addWidget(xposLabel, 0, 0);
+    layout->addWidget(xposLE, 0, 1);
     layout->addWidget(yposLabel, 1, 0);
-    layout->addWidget(yposLE,    1, 1);
+    layout->addWidget(yposLE, 1, 1);
 
-    if(source.isPlanewave()) {
+    if (source.isPlanewave()) {
         layout->addWidget(orientationLabel, 2, 0);
-        layout->addWidget(orientationLE,    2, 1);
+        layout->addWidget(orientationLE, 2, 1);
     }
 
     buttonsLayout = new QHBoxLayout();
@@ -78,15 +78,16 @@ SourcePositionDialog::SourcePositionDialog(const Source& source, QWidget* parent
 
     setLayout(layout);
 
-    //Connect Signals and Slots
+    // Connect Signals and Slots
     connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
     connect(xposLE, SIGNAL(textEdited(const QString&)), this, SLOT(enableOKButton()));
     connect(yposLE, SIGNAL(textEdited(const QString&)), this, SLOT(enableOKButton()));
     connect(this, SIGNAL(accepted()), this, SLOT(readLEs()));
-    connect(orientationLE, SIGNAL(textEdited(const QString&)), this, SLOT(enableOKButton()));
+    connect(orientationLE, SIGNAL(textEdited(const QString&)), this,
+            SLOT(enableOKButton()));
 
-    //Set Validators to prevent nonsense input
+    // Set Validators to prevent nonsense input
     QRegExp xyPosRegExp("[-]{0,1}[0-9]{1,3}([.][0-9]{1,2}){0,1}");
     xposLE->setValidator(new QRegExpValidator(xyPosRegExp, this));
     yposLE->setValidator(new QRegExpValidator(xyPosRegExp, this));
@@ -95,9 +96,9 @@ SourcePositionDialog::SourcePositionDialog(const Source& source, QWidget* parent
     orientationLE->setValidator(new QRegExpValidator(orientationRegExp, this));
 }
 
-
 void SourcePositionDialog::enableOKButton() {
-    if(xposLE->hasAcceptableInput() && yposLE->hasAcceptableInput() && orientationLE->hasAcceptableInput()) {
+    if (xposLE->hasAcceptableInput() && yposLE->hasAcceptableInput()
+        && orientationLE->hasAcceptableInput()) {
         okButton->setEnabled(true);
     } else {
         okButton->setDisabled(true);
@@ -105,5 +106,7 @@ void SourcePositionDialog::enableOKButton() {
 }
 
 void SourcePositionDialog::readLEs() {
-    newCoordinates = SourceCoordinates::mapWonderCoordToGLCoord(SourceCoordinates(xposLE->text().toFloat(), yposLE->text().toFloat(), orientationLE->text().toFloat()));
+    newCoordinates = SourceCoordinates::mapWonderCoordToGLCoord(
+        SourceCoordinates(xposLE->text().toFloat(), yposLE->text().toFloat(),
+                          orientationLE->text().toFloat()));
 }

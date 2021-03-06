@@ -30,13 +30,11 @@
 
 #include "types.h"
 
-
-
 //----------------------------------TimeStamp--------------------------------//
 
-class TimeStamp {
-
-public:
+class TimeStamp
+{
+  public:
     static void initSampleRate(int newSampleRate);
 
     TimeStamp();
@@ -52,41 +50,38 @@ public:
 
     void addsec(float sec);
 
-    wonder_frames_t operator - (TimeStamp const& other) const;
-    TimeStamp&      operator -= (TimeStamp const& other);
-    TimeStamp&      operator = (TimeStamp const& other);
-    bool            operator < (TimeStamp const& other) const;
-    bool            operator >= (TimeStamp const& other) const;
-    bool            operator == (TimeStamp const& other) const;
+    wonder_frames_t operator-(TimeStamp const& other) const;
+    TimeStamp& operator-=(TimeStamp const& other);
+    TimeStamp& operator=(TimeStamp const& other);
+    bool operator<(TimeStamp const& other) const;
+    bool operator>=(TimeStamp const& other) const;
+    bool operator==(TimeStamp const& other) const;
 
     void show(const char* name);
 
-protected:
+  protected:
     // the value of the timestamp in samples
     wonder_frames_t time;
 
     static int sampleRate;
-
 };
 
 //-------------------------------end of TimeStamp----------------------------//
 
-
-
 //---------------------------------TimeStampSc-------------------------------//
-
 
 // special timestamp class for the scoreplayer
 
-class TimeStampSc : public TimeStamp {
-public:
+class TimeStampSc : public TimeStamp
+{
+  public:
     TimeStampSc(int period);
     TimeStampSc(wonder_frames_t time, int period);
     TimeStampSc(float sec, int period, float scaleFact = 1.0);
 
-    bool operator < (TimeStampSc const& other) const;
-    bool operator >= (TimeStampSc const& other) const;
-    bool operator == (TimeStampSc const& other) const;
+    bool operator<(TimeStampSc const& other) const;
+    bool operator>=(TimeStampSc const& other) const;
+    bool operator==(TimeStampSc const& other) const;
 
     void setTime(wonder_frames_t time, int wraps);
 
@@ -103,16 +98,16 @@ public:
 
     void show(char* name);
 
-private:
-    // since a uint_32 wraps at (4294967295U), only 27 hours (when using a sampling rate of 44100)
-    // can be recorded. To record longer scores the timestamp wraps are stored in wraps
+  private:
+    // since a uint_32 wraps at (4294967295U), only 27 hours (when using a sampling rate
+    // of 44100) can be recorded. To record longer scores the timestamp wraps are stored
+    // in wraps
     int wraps;
 
     int period;
 
     // used in update
     wonder_frames_t lastTime;
-
 };
 
 //-----------------------------end of TimeStampSc----------------------------//

@@ -33,14 +33,15 @@ class QPushButton;
 class QLineEdit;
 class QContextMenuEvent;
 
-//Doxygen description
+// Doxygen description
 /*!
  *      \brief
  *      Timedisplay synchronized to connected sequencer via scoreplayer
  *
  *      \details
- *      To navigate a score in the scoreplayer module this display shows the current positione in time
- *      in format h:m:s:frames. It is editable via a context menu, by mousewheel or by click'n'drag.
+ *      To navigate a score in the scoreplayer module this display shows the current
+ * positione in time in format h:m:s:frames. It is editable via a context menu, by
+ * mousewheel or by click'n'drag.
  *
  *      \author
  *      Hans-Joachim Mond
@@ -49,28 +50,29 @@ class QContextMenuEvent;
  *      16.07.2000
  */
 
-class TimeLCDNumber : public QLCDNumber {
+class TimeLCDNumber : public QLCDNumber
+{
     Q_OBJECT
-public:
+  public:
     TimeLCDNumber(QWidget* parent = 0);
     void setRecordMode(bool recEnabled);
 
-public slots:
+  public slots:
     void setTime(int h, int m, int s, int ms);
 
-protected:
+  protected:
     void contextMenuEvent(QContextMenuEvent* event);
 
-private slots:
+  private slots:
     void readTimeFromDialog();
     void sendTimeByOSC();
     void enableOKButton();
 
-protected:
+  protected:
     void wheelEvent(QWheelEvent* event);
 
-private:
-    void    parseTimeString(QString time);
+  private:
+    void parseTimeString(QString time);
     QString makeTimeString();
 
     QLineEdit* timeLE;
@@ -78,7 +80,7 @@ private:
     // palettes for recording mode or not recording mode
     QPalette defaultPalette;
     QPalette recordPalette;
-    //editing dialog
+    // editing dialog
     QDialog* timeLEDialog;
     QGridLayout* dialogLayout;
     QPushButton* okButton;
@@ -91,4 +93,4 @@ private:
     int milliSeconds;
 };
 
-#endif //TIMELCDNUMBER_H
+#endif  // TIMELCDNUMBER_H

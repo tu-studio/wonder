@@ -26,30 +26,21 @@
  *                                                                                   *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+#include "source.h"
+
 #include "delaycoeff.h"
 #include "listener.h"
 #include "listener_array.h"
-#include "source.h"
 #include "speaker.h"
 #include "twonder_config.h"
-
-
 
 Source::~Source() {
     // nothing
 }
 
-
-
-
-
 PositionSource::PositionSource(const Vector3D& p) : position(p) {
     // nothing
 }
-
-
-
-
 
 PointSource::~PointSource() {
     // nothing
@@ -59,7 +50,9 @@ DelayCoeff PointSource::getDelayCoeff(const Speaker& speaker, ListenerArray& lis
     return calcDelayCoeff(speaker, position.getCurrentValue(), listeners);
 }
 
-DelayCoeff PointSource::getTargetDelayCoeff(const Speaker& speaker, wonder_frames_t blocksize, ListenerArray& listeners) {
+DelayCoeff PointSource::getTargetDelayCoeff(const Speaker& speaker,
+                                            wonder_frames_t blocksize,
+                                            ListenerArray& listeners) {
     return calcDelayCoeff(speaker, position.getTargetValue(blocksize), listeners);
 }
 
@@ -67,14 +60,15 @@ void PointSource::doInterpolationStep(wonder_frames_t blocksize) {
     position.doInterpolationStep(blocksize);
 }
 
-DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker, const Vector3D& sourcePos, ListenerArray& listeners) {
+DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker, const Vector3D& sourcePos,
+                                       ListenerArray& listeners) {
     // rendering currently depends on the position of only one listener (listenerID = 0)
     Listener* listener   = dynamic_cast<Listener*>(listeners.at(0));
     Vector2D listenerPos = listener->getPos();
 
     // calculate the distance between listener and speaker
-    Vector2D lisToSpkVec   = speaker.getPos() - listenerPos;
-    float spkFocusLimit    = lisToSpkVec.length();
+    Vector2D lisToSpkVec = speaker.getPos() - listenerPos;
+    float spkFocusLimit  = lisToSpkVec.length();
 
     Vector3D srcToSpkVec   = speaker.get3DPos() - sourcePos;
     float normalProjection = srcToSpkVec * speaker.get3DNormal();
@@ -82,22 +76,20 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker, const Vector3D& s
     float delay            = srcToSpkDistance;
     float cosphi           = normalProjection / srcToSpkDistance;
 
-    // define a circular area around the speakers in which we adjust the amplitude factor to get a smooth
-    // transition when moving through the speakers ( e.g. from focussed to non-focussed sources )
-    float transitionRadius = twonderConf->speakerDistance * 1.5; // XXX: empirical value
+    // define a circular area around the speakers in which we adjust the amplitude factor
+    // to get a smooth transition when moving through the speakers ( e.g. from focussed to
+    // non-focussed sources )
+    float transitionRadius = twonderConf->speakerDistance * 1.5;  // XXX: empirical value
 
     // if source is in front of speaker
-    if(normalProjection < 0.0) {
-
-        // don't render this source if the distance between source and speaker is bigger than
-        // the distance between listener and speaker
-        if(srcToSpkDistance > spkFocusLimit) {
-            return DelayCoeff(0.0, 0.0);
-        }
+    if (normalProjection < 0.0) {
+        // don't render this source if the distance between source and speaker is bigger
+        // than the distance between listener and speaker
+        if (srcToSpkDistance > spkFocusLimit) { return DelayCoeff(0.0, 0.0); }
 
         // don't render this source if it in front of a this speaker
         // but is not a focussed source
-        if((! isFocused(sourcePos)) && (srcToSpkDistance > transitionRadius)) {
+        if ((!isFocused(sourcePos)) && (srcToSpkDistance > transitionRadius)) {
             return DelayCoeff(0.0, 0.0);
         }
 
@@ -112,32 +104,36 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker, const Vector3D& s
 
     float amplitudeFactor = 0.0;
 
-    // calculate amplitudefactor according to being in- or outside the transition area around the speakers
-    if(srcToSpkDistance > transitionRadius) {
-        amplitudeFactor = (sqrtf(twonderConf->reference / (twonderConf->reference + normalProjection))) * (cosphi / sqrtf(srcToSpkDistance));
+    // calculate amplitudefactor according to being in- or outside the transition area
+    // around the speakers
+    if (srcToSpkDistance > transitionRadius) {
+        amplitudeFactor =
+            (sqrtf(twonderConf->reference / (twonderConf->reference + normalProjection)))
+            * (cosphi / sqrtf(srcToSpkDistance));
     } else {
+        float behind =
+            sqrtf(twonderConf->reference / (twonderConf->reference + transitionRadius))
+            / sqrtf(transitionRadius);
+        float focuss =
+            sqrtf(twonderConf->reference / (twonderConf->reference - transitionRadius))
+            / sqrtf(transitionRadius);
 
-        float behind = sqrtf(twonderConf->reference / (twonderConf->reference + transitionRadius)) / sqrtf(transitionRadius);
-        float focuss = sqrtf(twonderConf->reference / (twonderConf->reference - transitionRadius)) / sqrtf(transitionRadius);
-
-        amplitudeFactor = behind + (transitionRadius - normalProjection) / (2 * transitionRadius) * (focuss - behind);
+        amplitudeFactor = behind
+                          + (transitionRadius - normalProjection) / (2 * transitionRadius)
+                                * (focuss - behind);
     }
 
     return DelayCoeff(delay, amplitudeFactor * speaker.getCosAlpha());
 }
 
 bool PointSource::isFocused(const Vector3D& sourcePos) const {
-    if(twonderConf->ioMode == IOM_ALWAYSOUT) {
-        return false;
-    }
+    if (twonderConf->ioMode == IOM_ALWAYSOUT) { return false; }
 
-    if(twonderConf->ioMode == IOM_ALWAYSIN) {
-        return true;
-    }
+    if (twonderConf->ioMode == IOM_ALWAYSIN) { return true; }
 
     int noPoints = twonderConf->renderPolygon.size();
-    float xSrc = sourcePos[ 0 ];
-    float ySrc = sourcePos[ 1 ];
+    float xSrc   = sourcePos[0];
+    float ySrc   = sourcePos[1];
     float xnew;
     float ynew;
     float xold;
@@ -151,11 +147,11 @@ bool PointSource::isFocused(const Vector3D& sourcePos) const {
     xold = twonderConf->renderPolygon[noPoints - 1][0];
     yold = twonderConf->renderPolygon[noPoints - 1][1];
 
-    for(int i = 0 ; i < noPoints ; ++i) {
+    for (int i = 0; i < noPoints; ++i) {
         xnew = twonderConf->renderPolygon[i][0];
         ynew = twonderConf->renderPolygon[i][1];
 
-        if(xnew > xold) {
+        if (xnew > xold) {
             x1 = xold;
             y1 = yold;
             x2 = xnew;
@@ -167,7 +163,8 @@ bool PointSource::isFocused(const Vector3D& sourcePos) const {
             y2 = yold;
         }
 
-        if((xSrc > xnew) == (xSrc <= xold) && ((ySrc - y1) * (x2 - x1) < (y2 - y1) * (xSrc - x1))) {
+        if ((xSrc > xnew) == (xSrc <= xold)
+            && ((ySrc - y1) * (x2 - x1) < (y2 - y1) * (xSrc - x1))) {
             inside = !inside;
         }
 
@@ -178,10 +175,6 @@ bool PointSource::isFocused(const Vector3D& sourcePos) const {
     return inside;
 }
 
-
-
-
-
 PlaneWave::~PlaneWave() {
     // nothing
 }
@@ -190,7 +183,9 @@ DelayCoeff PlaneWave::getDelayCoeff(const Speaker& speaker, ListenerArray& liste
     return calcDelayCoeff(speaker, angle.getCurrentValue());
 }
 
-DelayCoeff PlaneWave::getTargetDelayCoeff(const Speaker& speaker, wonder_frames_t blocksize, ListenerArray& listeners) {
+DelayCoeff PlaneWave::getTargetDelayCoeff(const Speaker& speaker,
+                                          wonder_frames_t blocksize,
+                                          ListenerArray& listeners) {
     return calcDelayCoeff(speaker, angle.getTargetValue(blocksize));
 }
 
@@ -203,19 +198,16 @@ DelayCoeff PlaneWave::calcDelayCoeff(const Speaker& speaker, const Angle& ang) {
     float cospsi  = (ang.getNormal() * diff) / diff.length();
     float delay   = diff.length() * cospsi;
 
-    // factor is determined by angle between speaker normal and direction of the plane wave
+    // factor is determined by angle between speaker normal and direction of the plane
+    // wave
     float factor = speaker.get3DNormal() * ang.getNormal();
 
-    if(factor <= 0.0) {
+    if (factor <= 0.0) {
         return DelayCoeff(0.0, 0.0);
     } else {
         return DelayCoeff(delay, factor * speaker.getCosAlpha() * twonderConf->planeComp);
     }
 }
-
-
-
-
 
 SourceAggregate::SourceAggregate(Vector3D initialPos, float negDelay) {
     source    = new PointSource(initialPos);
@@ -234,12 +226,8 @@ void SourceAggregate::reset() {
     angle = 0.0f;
 }
 
-
-
-
-
 SourceArray::SourceArray(int noSources, float negDelay) {
-    for(int i = 0; i < noSources; ++i) {
+    for (int i = 0; i < noSources; ++i) {
         Vector3D defaultSourcePos(0.0f, 1.0f, 2.0f);
         SourceAggregate* temp = new SourceAggregate(defaultSourcePos, negDelay);
         push_back(temp);
@@ -247,7 +235,7 @@ SourceArray::SourceArray(int noSources, float negDelay) {
 }
 
 SourceArray::~SourceArray() {
-    while(!empty()) {
+    while (!empty()) {
         delete back();
         pop_back();
     }

@@ -21,70 +21,75 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
 #include "Source.h"
-#include "Colors.h"
-
-#include <QGLWidget>
 
 #include <QDebug>
+#include <QGLWidget>
+
+#include "Colors.h"
 
 int Source::noActiveSources = 0;
 
 //--------------------------------constructors--------------------------------//
 
-Source::Source(unsigned int xID, int sourceID, QObject* parent) : QObject(parent),
-    sourceID(sourceID), xID(xID), groupID(0),
-    coordinates(0.0, 0.0, 0.0),
-    name(""),
-    active(false),
-    visible(true),
-    planewave(false),
-    recordEnabled(false),
-    readEnabled(true),
-    invertedRotation(false),
-    invertedScaling(false),
-    dopplerEffect(true) {
+Source::Source(unsigned int xID, int sourceID, QObject* parent)
+    : QObject(parent)
+    , sourceID(sourceID)
+    , xID(xID)
+    , groupID(0)
+    , coordinates(0.0, 0.0, 0.0)
+    , name("")
+    , active(false)
+    , visible(true)
+    , planewave(false)
+    , recordEnabled(false)
+    , readEnabled(true)
+    , invertedRotation(false)
+    , invertedScaling(false)
+    , dopplerEffect(true) {
     // defaultcolor is green
-    setColor(colors[ green ]);
+    setColor(colors[green]);
 }
 
-
-Source::Source(unsigned int xID, int sourceID, bool planewave, QString name, float x, float y, float orientation,
-               QObject* parent) : QObject(parent),
-    sourceID(sourceID), xID(xID), groupID(0),
-    coordinates(x, y, orientation),
-    name(name),
-    active(false),
-    visible(true),
-    planewave(planewave),
-    recordEnabled(false),
-    readEnabled(true),
-    invertedRotation(false),
-    invertedScaling(false),
-    dopplerEffect(true) {
+Source::Source(unsigned int xID, int sourceID, bool planewave, QString name, float x,
+               float y, float orientation, QObject* parent)
+    : QObject(parent)
+    , sourceID(sourceID)
+    , xID(xID)
+    , groupID(0)
+    , coordinates(x, y, orientation)
+    , name(name)
+    , active(false)
+    , visible(true)
+    , planewave(planewave)
+    , recordEnabled(false)
+    , readEnabled(true)
+    , invertedRotation(false)
+    , invertedScaling(false)
+    , dopplerEffect(true) {
     // defaultcolor is green
-    setColor(colors[ green ]);
+    setColor(colors[green]);
 }
 
-
-Source::Source(unsigned int xID, int sourceID, bool planewave, QString name, SourceCoordinates coords,
-               QObject* parent) : QObject(parent),
-    sourceID(sourceID), xID(xID), groupID(0),
-    coordinates(coords),
-    name(name),
-    active(false),
-    visible(true),
-    planewave(planewave),
-    recordEnabled(false),
-    readEnabled(true),
-    invertedRotation(false),
-    invertedScaling(false),
-    dopplerEffect(true) {
+Source::Source(unsigned int xID, int sourceID, bool planewave, QString name,
+               SourceCoordinates coords, QObject* parent)
+    : QObject(parent)
+    , sourceID(sourceID)
+    , xID(xID)
+    , groupID(0)
+    , coordinates(coords)
+    , name(name)
+    , active(false)
+    , visible(true)
+    , planewave(planewave)
+    , recordEnabled(false)
+    , readEnabled(true)
+    , invertedRotation(false)
+    , invertedScaling(false)
+    , dopplerEffect(true) {
     // defaultcolor is green
-    setColor(colors[ green ]);
+    setColor(colors[green]);
 }
-
 
 Source::Source(const Source& source, QObject* parent) : QObject(parent) {
     sourceID = source.getID();
@@ -109,62 +114,33 @@ Source::Source(const Source& source, QObject* parent) : QObject(parent) {
 
 //----------------------------end of constructors-----------------------------//
 
-
 //-----------------------------------getter-----------------------------------//
 
-int Source::getNoActiveSources() {
-    return noActiveSources;
-}
+int Source::getNoActiveSources() { return noActiveSources; }
 
+int Source::getID() const { return sourceID; }
 
-int Source::getID() const {
-    return sourceID;
-}
+unsigned int Source::getXID() const { return xID; }
 
+int Source::getGroupID() const { return groupID; }
 
-unsigned int Source::getXID() const {
-    return xID;
-}
+GLfloat Source::getx() const { return coordinates.x; }
 
+GLfloat Source::gety() const { return coordinates.y; }
 
-int Source::getGroupID() const {
-    return groupID;
-}
+qreal Source::getxRounded() const { return qRound(coordinates.x * 100.0) / 100.0; }
 
+qreal Source::getyRounded() const { return qRound(coordinates.y * 100.0) / 100.0; }
 
-GLfloat Source::getx() const {
-    return coordinates.x;
-}
-
-
-GLfloat Source::gety() const {
-    return coordinates.y;
-}
-
-qreal Source::getxRounded() const {
-    return qRound(coordinates.x * 100.0) / 100.0 ;
-}
-
-
-qreal Source::getyRounded() const {
-    return qRound(coordinates.y * 100.0) / 100.0 ;
-}
-
-
-GLfloat Source::getOrientation() const {
-    return coordinates.orientation;
-}
-
+GLfloat Source::getOrientation() const { return coordinates.orientation; }
 
 qreal Source::getOrientationRounded() const {
-    return qRound(coordinates.orientation * 100.0) / 100.0 ;
+    return qRound(coordinates.orientation * 100.0) / 100.0;
 }
-
 
 SourceCoordinates Source::getCoordinates() const {
     return SourceCoordinates(getx(), gety(), getOrientation());
 }
-
 
 SourceCoordinates Source::getCoordinatesRounded() const {
     qreal x           = getxRounded();
@@ -173,77 +149,47 @@ SourceCoordinates Source::getCoordinatesRounded() const {
     return SourceCoordinates(x, y, orientation);
 }
 
+QString Source::getName() const { return name; }
 
-QString Source::getName() const {
-    return name;
-}
+const GLfloat* const Source::getColor() const { return (const GLfloat* const)color; }
 
+bool Source::hasDopplerEffect() const { return dopplerEffect; }
 
-const GLfloat* const Source::getColor() const {
-    return (const GLfloat * const) color;
-}
+bool Source::hasInvertedRotation() const { return invertedRotation; }
 
+bool Source::hasInvertedScaling() const { return invertedScaling; }
 
-bool Source::hasDopplerEffect() const {
-    return dopplerEffect;
-}
+bool Source::isActive() const { return active; }
 
+bool Source::isVisible() const { return visible; }
 
-bool Source::hasInvertedRotation() const {
-    return invertedRotation;
-}
+bool Source::isPlanewave() const { return planewave; }
 
+bool Source::isRecordEnabled() const { return recordEnabled; }
 
-bool Source::hasInvertedScaling() const {
-    return invertedScaling;
-}
-
-
-bool Source::isActive() const {
-    return active;
-}
-
-
-bool Source::isVisible() const {
-    return visible;
-}
-
-
-bool Source::isPlanewave() const {
-    return planewave;
-}
-
-
-bool Source::isRecordEnabled() const {
-    return recordEnabled;
-}
-
-bool Source::isReadEnabled() const {
-    return readEnabled;
-}
+bool Source::isReadEnabled() const { return readEnabled; }
 
 //-------------------------------end of getter--------------------------------//
-
 
 //-----------------------------------setter-----------------------------------//
 
 void Source::reset() {
     sourceID = xID - 1;
-    groupID  = 0 ;
+    groupID  = 0;
 
-    coordinates = SourceCoordinates(0.0, 0.0, 0.0) ;
+    coordinates = SourceCoordinates(0.0, 0.0, 0.0);
 
-    name             = "" ;
-    active           = false ;
-    visible          = true ;
-    planewave        = false ;
-    recordEnabled    = false ;
-    readEnabled      = true ;
-    invertedRotation = false ;
-    invertedScaling  = false ;
+    name             = "";
+    active           = false;
+    visible          = true;
+    planewave        = false;
+    recordEnabled    = false;
+    readEnabled      = true;
+    invertedRotation = false;
+    invertedScaling  = false;
     dopplerEffect    = true;
 
-    setColor(colors[ green ]);
+    setColor(colors[green]);
 }
 
 void Source::set(const Source& sourceWithData) {
@@ -266,39 +212,24 @@ void Source::set(const Source& sourceWithData) {
     setColor(sourceWithData.getColor());
 }
 
+void Source::setXID(unsigned int newXID) { xID = newXID; }
 
-void Source::setXID(unsigned int newXID) {
-    xID = newXID;
-}
+void Source::setx(GLfloat x) { coordinates.x = x; }
 
-
-void Source::setx(GLfloat x) {
-    coordinates.x = x;
-}
-
-
-void Source::sety(GLfloat y) {
-    coordinates.y = y;
-}
-
+void Source::sety(GLfloat y) { coordinates.y = y; }
 
 void Source::setPosition(GLfloat x, GLfloat y) {
     setx(x);
     sety(y);
 }
 
-
 void Source::setOrientation(GLfloat o) {
-    if(o > 180.0) {
-        while(o > 180.0) {
-            o -= 360.0;
-        }
+    if (o > 180.0) {
+        while (o > 180.0) { o -= 360.0; }
 
         coordinates.orientation = o;
-    } else if(o < -180.0) {
-        while(o < -180.0) {
-            o += 360.0;
-        }
+    } else if (o < -180.0) {
+        while (o < -180.0) { o += 360.0; }
 
         coordinates.orientation = o;
     } else {
@@ -306,63 +237,45 @@ void Source::setOrientation(GLfloat o) {
     }
 }
 
-
 void Source::setCoordinates(GLfloat x, GLfloat y, GLfloat orientation) {
     setx(x);
     sety(y);
     setOrientation(orientation);
 }
 
-
 void Source::setCoordinates(SourceCoordinates coords) {
     setCoordinates(coords.x, coords.y, coords.orientation);
 }
 
-
-void Source::setColor(const GLfloat newColor[ 4 ]) {
-    for(int i = 0; i < 4; ++i) {
-        if(newColor[ i ] < 0.0  ||  newColor[ i ] > 1.0) {
-            color[ i ] = 0.5;
+void Source::setColor(const GLfloat newColor[4]) {
+    for (int i = 0; i < 4; ++i) {
+        if (newColor[i] < 0.0 || newColor[i] > 1.0) {
+            color[i] = 0.5;
         } else {
-            color[ i ] = newColor[ i ];
+            color[i] = newColor[i];
         }
     }
 }
 
 void Source::setColor(QColor newColor) {
-
-    color[ 0 ] = newColor.redF();
-    color[ 1 ] = newColor.greenF();
-    color[ 2 ] = newColor.blueF();
-    color[ 3 ] = newColor.alphaF();
+    color[0] = newColor.redF();
+    color[1] = newColor.greenF();
+    color[2] = newColor.blueF();
+    color[3] = newColor.alphaF();
 }
 
+void Source::setName(QString newName) { name = newName; }
 
-void Source::setName(QString newName) {
-    name = newName;
-}
+void Source::setID(int newID) { sourceID = newID; }
 
+void Source::setGroupID(unsigned int newGroupID) { groupID = newGroupID; }
 
-void Source::setID(int newID) {
-    sourceID = newID;
-}
-
-
-void Source::setGroupID(unsigned int newGroupID) {
-    groupID = newGroupID;
-}
-
-
-void Source::setType(bool planewave) {
-    this->planewave = planewave;
-}
-
+void Source::setType(bool planewave) { this->planewave = planewave; }
 
 void Source::activate() {
     active = true;
     noActiveSources++;
 }
-
 
 void Source::deactivate() {
     active = false;
@@ -370,42 +283,20 @@ void Source::deactivate() {
     noActiveSources--;
 }
 
+void Source::setVisible(bool visible) { this->visible = visible; }
 
-void Source::setVisible(bool visible) {
-    this->visible = visible;
-}
+void Source::setRecordMode(bool enabled) { recordEnabled = enabled; }
 
-void Source::setRecordMode(bool enabled) {
-    recordEnabled = enabled;
-}
+void Source::toggleRecordMode() { recordEnabled = !recordEnabled; }
 
+void Source::setReadMode(bool enabled) { readEnabled = enabled; }
 
-void Source::toggleRecordMode() {
-    recordEnabled = ! recordEnabled;
-}
+void Source::setRotationDirection(bool inverted) { invertedRotation = inverted; }
 
+void Source::setScalingDirection(bool inverted) { invertedScaling = inverted; }
 
-void Source::setReadMode(bool enabled) {
-    readEnabled = enabled;
-}
-
-
-void Source::setRotationDirection(bool inverted) {
-    invertedRotation =  inverted;
-}
-
-
-void Source::setScalingDirection(bool inverted) {
-    invertedScaling =  inverted;
-}
-
-void Source::setDopplerEffect(bool dopplerOn) {
-    dopplerEffect = dopplerOn;
-}
+void Source::setDopplerEffect(bool dopplerOn) { dopplerEffect = dopplerOn; }
 
 //-------------------------------end of setter--------------------------------//
 
-
-void Source::toggleVisible() {
-    visible = ! visible;
-}
+void Source::toggleVisible() { visible = !visible; }
