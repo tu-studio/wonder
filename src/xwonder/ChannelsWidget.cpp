@@ -236,7 +236,7 @@ void ChannelsWidget::deactivateChannel(int sourceID) {
     if (!sourceIDIsActive(sourceID)) {
         return;
     } else {
-        SourceWidget* temp = NULL;
+        SourceWidget* temp = nullptr;
         QMap<unsigned int, SourceWidget*>::iterator iter;
 
         for (iter = sourceWidgets.begin(); iter != sourceWidgets.end(); ++iter) {

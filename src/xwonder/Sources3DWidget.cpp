@@ -116,7 +116,7 @@ Sources3DWidget::Sources3DWidget(QWidget* parent)
 Sources3DWidget::~Sources3DWidget() {
     if (quad) {
         gluDeleteQuadric(quad);
-        quad = NULL;
+        quad = nullptr;
     }
 
     // TODO:check if this is really nescessary since Sources are children of "this"
@@ -1627,8 +1627,8 @@ void Sources3DWidget::mouseMoveEvent(QMouseEvent* event) {
         switch (delegateEvent->buttons()) {
         case Qt::LeftButton: {
             // move sources and/or sourcegroup
-            Source* temp1          = NULL;
-            SourceGroup* tempGroup = NULL;
+            Source* temp1          = nullptr;
+            SourceGroup* tempGroup = nullptr;
 
             if (currSource != 0 && sources.contains(currSource)
                 && sources.value(currSource)->isActive()) {
@@ -1683,7 +1683,7 @@ void Sources3DWidget::mouseMoveEvent(QMouseEvent* event) {
                     SourceCoordinates groupCoords = tempGroup->getCoordinates();
                     SourceCoordinates newCoords;
 
-                    Source* sourceToSet = NULL;
+                    Source* sourceToSet = nullptr;
 
                     // angle of movement
                     double alpha    = dy / mouseGranularity * 0.5;
@@ -1740,7 +1740,7 @@ void Sources3DWidget::mouseMoveEvent(QMouseEvent* event) {
                     SourceCoordinates groupCoords = tempGroup->getCoordinates();
                     SourceCoordinates newCoords;
 
-                    Source* sourceToSet = NULL;
+                    Source* sourceToSet = nullptr;
 
                     double scale    = 1 - (dy / mouseGranularity * 0.5);
                     double negScale = 1 - (-dy / mouseGranularity * 0.5);

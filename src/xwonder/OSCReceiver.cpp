@@ -107,10 +107,11 @@ void OSCReceiver::addMethods() {
               this);
     addMethod("/WONDER/score/enableMMC", "i", OSCReceiver::mmcChangedHandler, this);
     addMethod("/WONDER/score/enableMSRC", "i", OSCReceiver::msrcChangedHandler, this);
-    addMethod("/WONDER/score/status", NULL, OSCReceiver::scoreplayerStatusHandler, this);
+    addMethod("/WONDER/score/status", nullptr, OSCReceiver::scoreplayerStatusHandler,
+              this);
 
     addMethod("/WONDER/global/maxNoSources", "i", OSCReceiver::maxNoSourcesHandler, this);
-    addMethod("/WONDER/global/renderPolygon", NULL, OSCReceiver::renderPolygonHandler,
+    addMethod("/WONDER/global/renderPolygon", nullptr, OSCReceiver::renderPolygonHandler,
               this);
     addMethod("/WONDER/project/xmlDump", "is", OSCReceiver::projectXMLDumpHandler, this);
 
@@ -120,7 +121,7 @@ void OSCReceiver::addMethods() {
               OSCReceiver::streamclientDisconnectedHandler, this);
 
     addMethod("/WONDER/stream/visual/ping", "i", OSCReceiver::visualpingHandler, this);
-    addMethod(NULL, NULL, OSCReceiver::genericHandler, this);
+    addMethod(nullptr, nullptr, OSCReceiver::genericHandler, this);
 }
 
 void OSCReceiver::connectToCwonder() const {
@@ -150,8 +151,8 @@ void OSCReceiver::emitCwonderConnectionLost() const {
         aboutToQuitMessage += "\n\nXwonder will exit now!";
     }
 
-    QMessageBox::critical(0, "XWonder - cwonder connection error", aboutToQuitMessage,
-                          QMessageBox::Ok);
+    QMessageBox::critical(nullptr, "XWonder - cwonder connection error",
+                          aboutToQuitMessage, QMessageBox::Ok);
 
     QApplication::instance()->quit();
 }
@@ -643,4 +644,4 @@ void OSCReceiver::print(string handlerName, handlerArgs) {
          << ((OSCReceiver*)user_data)->getContent(path, types, argv, argc) << endl;
 }
 
-OSCReceiver* oscReceiver = NULL;
+OSCReceiver* oscReceiver = nullptr;

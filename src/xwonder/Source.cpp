@@ -151,7 +151,7 @@ SourceCoordinates Source::getCoordinatesRounded() const {
 
 QString Source::getName() const { return name; }
 
-const GLfloat* const Source::getColor() const { return (const GLfloat* const)color; }
+const GLfloat* Source::getColor() const { return (const GLfloat* const)color; }
 
 bool Source::hasDopplerEffect() const { return dopplerEffect; }
 

@@ -1318,7 +1318,7 @@ void XwonderMainWindow::fetchOSCProjectXMLDump(QString xmlProject) {
 }
 
 void XwonderMainWindow::fetchOSCErrorMessage(QString errorMsg) {
-    QMessageBox::warning(0, "Error received!",
+    QMessageBox::warning(nullptr, "Error received!",
                          "Another part of WONDER generated an error.\n"
                          "Here is the errormessage xwonder received:\n\n"
                              + errorMsg);
@@ -1569,7 +1569,7 @@ void XwonderMainWindow::enableMSRC(bool enableIt, bool externalSet) {
 void XwonderMainWindow::fetchClearScoreRequest() {
     // just make sure the user really wants to delete the whole score
     int answer = QMessageBox::warning(
-        0, "XWonder - Clear Score",
+        nullptr, "XWonder - Clear Score",
         "Do you really want to delete\n"
         "all recorded score data?",
         QMessageBox::Yes,
@@ -1589,7 +1589,7 @@ bool XwonderMainWindow::fetchUnsavedChanges() {
 
     if (wasModified) {
         int answer = QMessageBox::warning(
-            0, "XWonder - File edited",
+            nullptr, "XWonder - File edited",
             "This file has been edited!\n"
             "Do you want to save your changes?",
             QMessageBox::Yes, QMessageBox::No,
@@ -1834,7 +1834,7 @@ void XwonderMainWindow::parseLoadedProjectXMLDump(QString xmlProject) {
 
     // parse all sources, add each source and setup it's attributes
     for (; !groups.isNull(); groups = groups.nextSiblingElement("group")) {
-        SourceGroup temp(0, 0);
+        SourceGroup temp(0, nullptr);
         QColor color(255, 0, 0);
         QDomNamedNodeMap attributes = groups.attributes();
 

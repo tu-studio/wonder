@@ -110,7 +110,7 @@ void SourceGroup::setCoordinates(SourceCoordinates coords) {
     setCoordinates(coords.x, coords.y, coords.orientation);
 }
 
-const GLfloat* const SourceGroup::getColor() const { return (const GLfloat* const)color; }
+const GLfloat* SourceGroup::getColor() const { return (const GLfloat* const)color; }
 
 void SourceGroup::setColor(const GLfloat newColor[4]) {
     for (int i = 0; i < 4; ++i) {

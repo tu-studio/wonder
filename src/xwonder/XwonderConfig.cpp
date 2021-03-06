@@ -35,7 +35,7 @@ using std::cout;
 using std::endl;
 using std::string;
 
-XwonderConfig* xwConf = NULL;
+XwonderConfig* xwConf = nullptr;
 
 //--------------------------------constructors--------------------------------//
 
@@ -72,15 +72,15 @@ void XwonderConfig::parseArgs(int argc, char* argv[]) {
         int option_index = 0;
 
         static struct option long_options[] = {
-            {"cwonderhost", required_argument, 0, 'i'},
-            {"cwonderport", required_argument, 0, 'p'},
-            {"listeningport", required_argument, 0, 'o'},
-            {"timeout", required_argument, 0, 't'},
-            {"name", required_argument, 0, 'n'},
-            {"demomode", no_argument, 0, 'd'},
-            {"verbose", no_argument, 0, 'v'},
-            {"help", no_argument, 0, 'h'},
-            {0, 0, 0, 0}};
+            {"cwonderhost", required_argument, nullptr, 'i'},
+            {"cwonderport", required_argument, nullptr, 'p'},
+            {"listeningport", required_argument, nullptr, 'o'},
+            {"timeout", required_argument, nullptr, 't'},
+            {"name", required_argument, nullptr, 'n'},
+            {"demomode", no_argument, nullptr, 'd'},
+            {"verbose", no_argument, nullptr, 'v'},
+            {"help", no_argument, nullptr, 'h'},
+            {nullptr, 0, nullptr, 0}};
 
         c = getopt_long(argc, argv, "i:p:o:t:n:dvh", long_options, &option_index);
 

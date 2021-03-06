@@ -58,7 +58,7 @@ SnapshotSelector::SnapshotSelector(QWidget* parent) : QDialog(parent) {
     layout->addLayout(timeLayout, 1);
     layout->addLayout(buttonsLayout, 3);
 
-    snapshotNameDialog = NULL;
+    snapshotNameDialog = nullptr;
     setLayout(layout);
 
     phantomButton = new SnapshotSelectorButton(0, "phantom");
