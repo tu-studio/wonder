@@ -1350,15 +1350,15 @@ void Cwonder::scheduler(int currtime) {
         } else {
             if (ev->oscpath == "/WONDER/source/position") {
                 // send to stream receivers (render)
-                for (streamIter = renderStream.begin();
-                     streamIter != renderStream.end(); ++streamIter) {
+                for (streamIter = renderStream.begin(); streamIter != renderStream.end();
+                     ++streamIter) {
                     lo_send(streamIter->address, "/WONDER/source/position", "ifff",
                             ev->id, ev->pos[0], ev->pos[1], ev->duration);
                 }
 
                 // send to stream receivers (visual)
-                for (streamIter = visualStream.begin();
-                     streamIter != visualStream.end(); ++streamIter) {
+                for (streamIter = visualStream.begin(); streamIter != visualStream.end();
+                     ++streamIter) {
                     if (!issame(ev->from, streamIter->address)) {
                         lo_send(streamIter->address, "/WONDER/source/position", "iff",
                                 ev->id, ev->pos[0], ev->pos[1]);
@@ -1371,15 +1371,15 @@ void Cwonder::scheduler(int currtime) {
                 scenario->sourcesVector[ev->id].pos[2] = z_default;
             } else if (ev->oscpath == "/WONDER/source/position3D") {
                 // send to stream receivers (render)
-                for (streamIter = renderStream.begin();
-                     streamIter != renderStream.end(); ++streamIter) {
+                for (streamIter = renderStream.begin(); streamIter != renderStream.end();
+                     ++streamIter) {
                     lo_send(streamIter->address, "/WONDER/source/position3D", "iffff",
                             ev->id, ev->pos[0], ev->pos[1], ev->pos[2], ev->duration);
                 }
 
                 // send to stream receivers (visual)
-                for (streamIter = visualStream.begin();
-                     streamIter != visualStream.end(); ++streamIter) {
+                for (streamIter = visualStream.begin(); streamIter != visualStream.end();
+                     ++streamIter) {
                     if (!issame(ev->from, streamIter->address)) {
                         lo_send(streamIter->address, "/WONDER/source/position", "iff",
                                 ev->id, ev->pos[0], ev->pos[1]);
@@ -1392,15 +1392,15 @@ void Cwonder::scheduler(int currtime) {
                 scenario->sourcesVector[ev->id].pos[2] = ev->pos[2];
             } else if (ev->oscpath == "/WONDER/source/type") {
                 // send to stream receivers (render)
-                for (streamIter = renderStream.begin();
-                     streamIter != renderStream.end(); ++streamIter) {
+                for (streamIter = renderStream.begin(); streamIter != renderStream.end();
+                     ++streamIter) {
                     lo_send(streamIter->address, "/WONDER/source/type", "ii", ev->id,
                             ev->type);
                 }
 
                 // send to stream receivers (visual)
-                for (streamIter = visualStream.begin();
-                     streamIter != visualStream.end(); ++streamIter) {
+                for (streamIter = visualStream.begin(); streamIter != visualStream.end();
+                     ++streamIter) {
                     if (!issame(ev->from, streamIter->address)) {
                         lo_send(streamIter->address, "/WONDER/source/type", "ii", ev->id,
                                 ev->type);
@@ -1411,15 +1411,15 @@ void Cwonder::scheduler(int currtime) {
                 scenario->sourcesVector[ev->id].type = ev->type;
             } else if (ev->oscpath == "/WONDER/source/angle") {
                 // send to stream receivers (render)
-                for (streamIter = renderStream.begin();
-                     streamIter != renderStream.end(); ++streamIter) {
+                for (streamIter = renderStream.begin(); streamIter != renderStream.end();
+                     ++streamIter) {
                     lo_send(streamIter->address, "/WONDER/source/angle", "iff", ev->id,
                             ev->angle, ev->duration);
                 }
 
                 // send to stream receivers (visual)
-                for (streamIter = visualStream.begin();
-                     streamIter != visualStream.end(); ++streamIter) {
+                for (streamIter = visualStream.begin(); streamIter != visualStream.end();
+                     ++streamIter) {
                     if (!issame(ev->from, streamIter->address)) {
                         lo_send(streamIter->address, "/WONDER/source/angle", "if", ev->id,
                                 ev->angle);

@@ -57,7 +57,7 @@ class Event
     int type{1};  /// 0 = plane source, 1 = point source
     string name;
     bool active;
-    Vector3D pos{0.,0.,0.};
+    Vector3D pos{0., 0., 0.};
     float angle{0.f};
     TimeStamp timestamp;
     float duration{0.f};
@@ -66,7 +66,7 @@ class Event
 class Timeline
 {
   public:
-    Timeline()  = default;
+    Timeline() = default;
 
     ~Timeline();
 
