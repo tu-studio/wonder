@@ -23,3 +23,4 @@ subdir('src/xwonder')
 
 install_subdir('configs/.', install_dir : '/etc/wonder')
 install_subdir('scripts', install_dir: get_option('datadir') / 'wonder')
+install_subdir('dtd', install_dir: get_option('datadir') / 'wonder')
