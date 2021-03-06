@@ -193,7 +193,7 @@ SourceWidget::SourceWidget(QString name, unsigned int xID, int sourceID, QWidget
     connect(readButton, SIGNAL(clicked(bool)), this, SLOT(changeReadMode(bool)));
 }
 
-SourceWidget::~SourceWidget() {}
+SourceWidget::~SourceWidget() = default;
 
 void SourceWidget::reset() {
     noActiveSources = 0;

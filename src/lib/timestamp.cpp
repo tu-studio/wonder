@@ -98,10 +98,7 @@ TimeStamp& TimeStamp::operator-=(TimeStamp const& other) {
     return *this;
 }
 
-TimeStamp& TimeStamp::operator=(TimeStamp const& other) {
-    time = other.time;
-    return *this;
-}
+TimeStamp& TimeStamp::operator=(TimeStamp const& other) = default;
 
 bool TimeStamp::operator>=(TimeStamp const& other) const { return (!(*this < other)); }
 

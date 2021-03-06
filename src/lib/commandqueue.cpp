@@ -30,7 +30,7 @@
 
 //---------------------------------Command------------------------------------//
 
-Command::~Command() {}
+Command::~Command() = default;
 
 void Command::execute() {}
 
