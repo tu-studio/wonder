@@ -235,9 +235,8 @@ int TwonderConfig::readConfig() {
 
             if (root) {
                 // validate the current dom representation but first find the dtd
-                std::string dtdPath;
-                dtdPath = join(DATA_DIR, "dtd/twonder_config.dtd");
-                fin.open(dtdPath.c_str(), std::ios_base::in);
+                const std::string dtdPath = join(DATA_DIR, "dtd/twonder_config.dtd");
+                fin.open(dtdPath, std::ios_base::in);
 
                 if (!fin.is_open()) {
                     return 2;  // dtd file does not exist
