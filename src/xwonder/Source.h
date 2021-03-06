@@ -78,7 +78,7 @@ class Source : public QObject
     SourceCoordinates getCoordinates() const;
     SourceCoordinates getCoordinatesRounded() const;
     QString getName() const;
-    const GLfloat* const getColor() const;
+    const GLfloat* getColor() const;
 
     static int getNoActiveSources();
 

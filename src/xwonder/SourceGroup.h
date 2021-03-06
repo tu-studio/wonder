@@ -73,7 +73,7 @@ class SourceGroup : public QObject
     void setx(GLfloat x);
     void sety(GLfloat y);
     void setOrientation(GLfloat o);
-    const GLfloat* const getColor() const;
+    const GLfloat* getColor() const;
     void setColor(const GLfloat* const newColor);
     void setColor(const QColor newColor);
     bool containsXID(unsigned int xID);
