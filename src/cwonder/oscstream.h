@@ -75,7 +75,6 @@ class OSCStream
     std::list<OSCStreamClient> clients;
     std::list<OSCStreamClient>::iterator clientsIter;
 
-    ListOSCPing* pingList;
-
     std::string name;
+    ListOSCPing* pingList;
 };

@@ -36,10 +36,8 @@
 using std::list;
 using std::string;
 
-OSCStream::OSCStream(string name) {
-    this->name = name;
-    pingList   = new ListOSCPing("/WONDER/stream/" + name + "/ping");
-}
+OSCStream::OSCStream(string name)
+    : name(name), pingList(new ListOSCPing("/WONDER/stream/" + name + "/ping")) {}
 
 OSCStream::~OSCStream() {
     for (clientsIter = begin(); clientsIter != end(); ++clientsIter) {
