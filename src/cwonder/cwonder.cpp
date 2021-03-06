@@ -1599,27 +1599,25 @@ void Cwonder::sendScenario() {
         }
     }
 
-    for (auto& i : scenario->sourceGroupsVector) {
-        SourceGroup* group = &i;
-
+    for (auto& group : scenario->sourceGroupsVector) {
         // send to stream receivers (visual)
         for (streamIter = visualStream->begin(); streamIter != visualStream->end();
              ++streamIter) {
             lo_address address = streamIter->address;
-            int id             = group->id;
+            int id             = group.id;
 
             // (de)activate group
-            if (group->active) {
+            if (group.active) {
                 // activate if
                 lo_send(address, "/WONDER/group/activate", "i", id);
 
                 // send position
-                lo_send(address, "/WONDER/group/position", "iff", id, group->pos[0],
-                        group->pos[1]);
+                lo_send(address, "/WONDER/group/position", "iff", id, group.pos[0],
+                        group.pos[1]);
 
                 // send color
-                lo_send(address, "/WONDER/group/color", "iiii", id, group->color[0],
-                        group->color[1], group->color[2]);
+                lo_send(address, "/WONDER/group/color", "iiii", id, group.color[0],
+                        group.color[1], group.color[2]);
             } else {
                 lo_send(address, "/WONDER/group/deactivate", "i", id);
             }
