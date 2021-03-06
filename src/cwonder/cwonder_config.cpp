@@ -43,7 +43,7 @@ CwonderConfig* cwonderConf = NULL;
 CwonderConfig::CwonderConfig(int argc, char* argv[]) {
     basicMode = false;
 
-    cwonderConfigFile = join(INSTALL_PREFIX, "configs/cwonder_config.xml");
+    cwonderConfigFile = join(CONFIG_DIR, "cwonder_config.xml");
 
     listeningPort = "58100";
     pingRate      = 44100;
@@ -141,7 +141,7 @@ int CwonderConfig::readConfig() {
             if (root) {
                 // validate the current dom representation but first find the dtd
                 std::string dtdPath;
-                dtdPath = join(INSTALL_PREFIX, "configs/dtd/cwonder_config.dtd");
+                dtdPath = join(DATA_DIR, "dtd/cwonder_config.dtd");
                 fin.open(dtdPath.c_str(), std::ios_base::in);
 
                 if (!fin.is_open()) {
