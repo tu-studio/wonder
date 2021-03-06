@@ -87,7 +87,7 @@ XwonderMainWindow::XwonderMainWindow(QWidget* parent) : QMainWindow(parent) {
     streamClientWidget = new StreamClientWidget(this);
     timeLCD            = new TimeLCDNumber(this);
     // timeSelector     = new TimelineWidget(this);
-    connect(filenameDialog, SIGNAL(accepted()), this, SLOT(setFilename()));
+    connect(filenameDialog, &FilenameDialog::accepted, this, &XwonderMainWindow::setFilename);
 
     // setup the scrollarea which will contain the ChannelsWidget. The Channelswidget
     // should extend to the edge of the window so that mouseactions are accepted there
@@ -243,95 +243,95 @@ XwonderMainWindow::XwonderMainWindow(QWidget* parent) : QMainWindow(parent) {
     // timeSelector, SLOT ( setTime    ( int, int, int, int ) ) );
 
     // Connections between ChannelsWidget and Source3DWidget (and XwonderMainwindow)
-    connect(channelsView, SIGNAL(channelActivated(unsigned int, int, bool)),
-            sources3DView, SLOT(activateSource(unsigned int, int, bool)));
-    connect(channelsView, SIGNAL(sourceActivated(int)), this,
-            SLOT(sendOSCSourceActivate(int)));
-    connect(channelsView, SIGNAL(channelDeactivated(unsigned int)), sources3DView,
-            SLOT(deactivateSource(unsigned int)));
-    connect(channelsView, SIGNAL(sourceDeactivated(int)), this,
-            SLOT(sendOSCSourceDeactivate(int)));
-    connect(channelsView, SIGNAL(colorChanged(unsigned int, const QColor&)),
-            sources3DView, SLOT(changeSourceColor(unsigned int, const QColor&)));
-    connect(channelsView, SIGNAL(colorChanged(unsigned int, const QColor&)), this,
-            SLOT(sendOSCSourceColor(unsigned int, const QColor&)));
-    connect(sources3DView, SIGNAL(sourceTypeChanged(unsigned int, bool)), channelsView,
-            SLOT(changeType(unsigned int, bool)));
-    connect(sources3DView, SIGNAL(sourceColorChanged(unsigned int, QColor)), channelsView,
-            SLOT(changeColor(unsigned int, QColor)));
-    connect(sources3DView, SIGNAL(sourceRecordModeChanged(unsigned int, bool)),
-            channelsView, SLOT(changeSourceRecordMode(unsigned int, bool)));
-    connect(channelsView, SIGNAL(visibleChanged(unsigned int)), sources3DView,
-            SLOT(changeSourceVisible(unsigned int)));
-    connect(channelsView, SIGNAL(rotationDirectionChanged(unsigned int, bool)),
-            sources3DView, SLOT(changeSourceRotationDirection(unsigned int, bool)));
-    connect(channelsView, SIGNAL(scalingDirectionChanged(unsigned int, bool)),
-            sources3DView, SLOT(changeSourceScalingDirection(unsigned int, bool)));
-    connect(channelsView, SIGNAL(typeChanged(unsigned int, bool)), sources3DView,
-            SLOT(changeSourceType(unsigned int, bool)));
-    connect(channelsView, SIGNAL(sourceIDChanged(unsigned int, int, int)), sources3DView,
-            SLOT(changeSourceID(unsigned int, int, int)));
-    connect(channelsView, SIGNAL(sourceIDChanged(unsigned int, int, int)), this,
-            SLOT(sendOSCNotifyIDChange(unsigned int, int, int)));
-    connect(channelsView, SIGNAL(dopplerEffectChanged(unsigned int, bool)), this,
-            SLOT(sendOSCSourceDopplerEffetChanged(unsigned int, bool)));
-    connect(channelsView, SIGNAL(nameChanged(unsigned int, const QString&)),
-            sources3DView, SLOT(changeSourceName(unsigned int, const QString&)));
-    connect(channelsView, SIGNAL(channelActivated(unsigned int, int, bool)), this,
-            SLOT(toggleAddChannelActs(unsigned int, int, bool)));
-    connect(channelsView, SIGNAL(channelDeactivated(unsigned int)), this,
-            SLOT(toggleAddChannelActs(unsigned int)));
-    connect(channelsView, SIGNAL(sourceSelected(unsigned int)), sources3DView,
-            SLOT(selectSource(unsigned int)));
-    connect(channelsView, SIGNAL(sourceSelected(unsigned int)), this,
-            SLOT(shiftFocusToSources3DWidget(unsigned int)));
-    connect(channelsView, SIGNAL(sourceRecordModeChanged(unsigned int, bool)),
-            sources3DView, SLOT(changeSourceRecordMode(unsigned int, bool)));
-    connect(channelsView, SIGNAL(sourceReadModeChanged(unsigned int, bool)),
-            sources3DView, SLOT(changeSourceReadMode(unsigned int, bool)));
-    connect(channelsView, SIGNAL(viewRelatedKeyPressed(QKeyEvent*)), this,
-            SLOT(dispatchViewRelatedKeys(QKeyEvent*)));
+    connect(channelsView, &ChannelsWidget::channelActivated,
+            sources3DView, &Sources3DWidget::activateSource);
+    connect(channelsView, &ChannelsWidget::sourceActivated, this,
+            &XwonderMainWindow::sendOSCSourceActivate);
+    connect(channelsView, &ChannelsWidget::channelDeactivated, sources3DView,
+            &Sources3DWidget::deactivateSource);
+    connect(channelsView, &ChannelsWidget::sourceDeactivated, this,
+            &XwonderMainWindow::sendOSCSourceDeactivate);
+    connect(channelsView, &ChannelsWidget::colorChanged,
+            sources3DView, &Sources3DWidget::changeSourceColor);
+    connect(channelsView, &ChannelsWidget::colorChanged, this,
+            &XwonderMainWindow::sendOSCSourceColor);
+    connect(sources3DView, &Sources3DWidget::sourceTypeChanged, channelsView,
+            &ChannelsWidget::changeType);
+    connect(sources3DView, &Sources3DWidget::sourceColorChanged, channelsView,
+            &ChannelsWidget::changeColor);
+    connect(sources3DView, &Sources3DWidget::sourceRecordModeChanged,
+            channelsView, &ChannelsWidget::changeSourceRecordMode);
+    connect(channelsView, &ChannelsWidget::visibleChanged, sources3DView,
+            &Sources3DWidget::changeSourceVisible);
+    connect(channelsView, &ChannelsWidget::rotationDirectionChanged,
+            sources3DView, &Sources3DWidget::changeSourceRotationDirection);
+    connect(channelsView, &ChannelsWidget::scalingDirectionChanged,
+            sources3DView, &Sources3DWidget::changeSourceScalingDirection);
+    connect(channelsView, &ChannelsWidget::typeChanged, sources3DView,
+            &Sources3DWidget::changeSourceType);
+    connect(channelsView, &ChannelsWidget::sourceIDChanged, sources3DView,
+            &Sources3DWidget::changeSourceID);
+    connect(channelsView, &ChannelsWidget::sourceIDChanged, this,
+            &XwonderMainWindow::sendOSCNotifyIDChange);
+    connect(channelsView, &ChannelsWidget::dopplerEffectChanged, this,
+            &XwonderMainWindow::sendOSCSourceDopplerEffetChanged);
+    connect(channelsView, &ChannelsWidget::nameChanged,
+            sources3DView, &Sources3DWidget::changeSourceName);
+    connect(channelsView, &ChannelsWidget::channelActivated, this,
+            &XwonderMainWindow::toggleAddChannelActs);
+    connect(channelsView, &ChannelsWidget::channelDeactivated, this,
+            &XwonderMainWindow::toggleAddChannelActs);
+    connect(channelsView, &ChannelsWidget::sourceSelected, sources3DView,
+            &Sources3DWidget::selectSource);
+    connect(channelsView, &ChannelsWidget::sourceSelected, this,
+            &XwonderMainWindow::shiftFocusToSources3DWidget);
+    connect(channelsView, &ChannelsWidget::sourceRecordModeChanged,
+            sources3DView, &Sources3DWidget::changeSourceRecordMode);
+    connect(channelsView, &ChannelsWidget::sourceReadModeChanged,
+            sources3DView, &Sources3DWidget::changeSourceReadMode);
+    connect(channelsView, &ChannelsWidget::viewRelatedKeyPressed, this,
+            &XwonderMainWindow::dispatchViewRelatedKeys);
 
     // incoming OSC-Messages
-    connect(oscReceiver, SIGNAL(sourceTypeChanged(int, bool)), channelsView,
-            SLOT(changeType(int, bool)));
-    connect(oscReceiver, SIGNAL(sourceNameChanged(int, QString)), channelsView,
-            SLOT(changeName(int, QString)));
-    connect(oscReceiver, SIGNAL(sourceColorChanged(int, QColor)), channelsView,
-            SLOT(changeColor(int, QColor)));
-    connect(oscReceiver, SIGNAL(sourceRecordModeChanged(int, bool, bool)), channelsView,
-            SLOT(changeSourceRecordMode(int, bool, bool)));
-    connect(oscReceiver, SIGNAL(sourceReadModeChanged(int, bool, bool)), channelsView,
-            SLOT(changeSourceReadMode(int, bool, bool)));
-    connect(oscReceiver, SIGNAL(sourceRotationDirectionChanged(int, bool)), channelsView,
-            SLOT(changeRotationDirection(int, bool)));
-    connect(oscReceiver, SIGNAL(sourceScalingDirectionChanged(int, bool)), channelsView,
-            SLOT(changeScalingDirection(int, bool)));
-    connect(oscReceiver, SIGNAL(sourceDopplerEffectChanged(int, bool)), channelsView,
-            SLOT(changeDopplerEffect(int, bool)));
+    connect(oscReceiver, &OSCReceiver::sourceTypeChanged, channelsView,
+            &ChannelsWidget::changeType);
+    connect(oscReceiver, &OSCReceiver::sourceNameChanged, channelsView,
+            &ChannelsWidget::changeName);
+    connect(oscReceiver, &OSCReceiver::sourceColorChanged, channelsView,
+            &ChannelsWidget::changeColor);
+    connect(oscReceiver, &OSCReceiver::sourceRecordModeChanged, channelsView,
+            &ChannelsWidget::changeSourceRecordMode);
+    connect(oscReceiver, &OSCReceiver::sourceReadModeChanged, channelsView,
+            &ChannelsWidget::changeSourceReadMode);
+    connect(oscReceiver, &OSCReceiver::sourceRotationDirectionChanged, channelsView,
+            &ChannelsWidget::changeRotationDirection);
+    connect(oscReceiver, &OSCReceiver::sourceScalingDirectionChanged, channelsView,
+            &ChannelsWidget::changeScalingDirection);
+    connect(oscReceiver, &OSCReceiver::sourceDopplerEffectChanged, channelsView,
+            &ChannelsWidget::changeDopplerEffect);
 
     // Connections for all events of ChannelsWidget which shall produce an OSC-Message
-    connect(channelsView, SIGNAL(typeChanged(unsigned int, bool)), this,
-            SLOT(sendOSCSourceType(unsigned int, bool)));
-    connect(sources3DView, SIGNAL(sourceTypeChanged(unsigned int, bool)), this,
-            SLOT(sendOSCSourceType(unsigned int, bool)));
-    connect(channelsView, SIGNAL(nameChanged(unsigned int, const QString&)), this,
-            SLOT(sendOSCSourceName(unsigned int, const QString&)));
-    connect(channelsView, SIGNAL(sourceRecordModeChanged(unsigned int, bool)), this,
-            SLOT(sendOSCSourceRecordMode(unsigned int, bool)));
-    connect(channelsView, SIGNAL(sourceReadModeChanged(unsigned int, bool)), this,
-            SLOT(sendOSCSourceReadMode(unsigned int, bool)));
-    connect(channelsView, SIGNAL(rotationDirectionChanged(unsigned int, bool)), this,
-            SLOT(sendOSCSourceRotationDirection(unsigned int, bool)));
-    connect(channelsView, SIGNAL(scalingDirectionChanged(unsigned int, bool)), this,
-            SLOT(sendOSCSourceScalingDirection(unsigned int, bool)));
+    connect(channelsView, &ChannelsWidget::typeChanged, this,
+            &XwonderMainWindow::sendOSCSourceType);
+    connect(channelsView, &ChannelsWidget::nameChanged, this,
+            &XwonderMainWindow::sendOSCSourceName);
+    connect(channelsView, &ChannelsWidget::sourceRecordModeChanged, this,
+            &XwonderMainWindow::sendOSCSourceRecordMode);
+    connect(channelsView, &ChannelsWidget::sourceReadModeChanged, this,
+            &XwonderMainWindow::sendOSCSourceReadMode);
+    connect(channelsView, &ChannelsWidget::rotationDirectionChanged, this,
+            &XwonderMainWindow::sendOSCSourceRotationDirection);
+    connect(channelsView, &ChannelsWidget::scalingDirectionChanged, this,
+            &XwonderMainWindow::sendOSCSourceScalingDirection);
 
+    connect(sources3DView, &Sources3DWidget::sourceTypeChanged, this,
+            &XwonderMainWindow::sendOSCSourceType);
     // connections for the modified-flag to save unsaved changes
-    connect(channelsView, SIGNAL(modified()), this, SLOT(setModified()));
+    connect(channelsView, &ChannelsWidget::modified, this, &XwonderMainWindow::setModified);
 
     // menuActions
-    connect(newChannelAct, SIGNAL(triggered()), channelsView, SLOT(activateChannel()));
-    connect(newChannelsAct, SIGNAL(triggered()), channelsView, SLOT(activateChannels()));
+    connect(newChannelAct, SIGNAL(triggered()), channelsView, &ChannelsWidget::activateChannel()));
+    connect(newChannelsAct, SIGNAL(triggered()), channelsView, &ChannelsWidget::activateChannels()));
 
     // assume scoreplayer is stopped, real status will be requested when a project is
     // created or opened.
