@@ -572,13 +572,13 @@ int OSCControl::timerStreamConnectHandler(handlerArgs) {
 }
 
 int OSCControl::renderSendHandler(handlerArgs) {
-    cwonder->renderStream->send((char*)types, argc, argv, msg);
+    cwonder->renderStream.send((char*)types, argc, argv, msg);
 
     return 0;
 }
 
 int OSCControl::visualSendHandler(handlerArgs) {
-    cwonder->visualStream->send((char*)types, argc, argv, msg);
+    cwonder->visualStream.send((char*)types, argc, argv, msg);
 
     return 0;
 }
@@ -587,24 +587,24 @@ int OSCControl::pongHandler(handlerArgs) {
     lo_address from = lo_message_get_source(msg);
 
     if ((string)path == (string) "/WONDER/stream/render/pong") {
-        cwonder->renderStream->pong(argv[0]->i, from);
+        cwonder->renderStream.pong(argv[0]->i, from);
     } else if ((string)path == (string) "/WONDER/stream/visual/pong") {
-        cwonder->visualStream->pong(argv[0]->i, from);
+        cwonder->visualStream.pong(argv[0]->i, from);
     } else if ((string)path == (string) "/WONDER/stream/timer/pong") {
-        cwonder->timerStream->pong(argv[0]->i, from);
+        cwonder->timerStream.pong(argv[0]->i, from);
     }
 
     return 0;
 }
 
 int OSCControl::forwardToRenderStreamHandler(handlerArgs) {
-    cwonder->renderStream->send((char*)path, (char*)types, argc, argv, msg);
+    cwonder->renderStream.send((char*)path, (char*)types, argc, argv, msg);
 
     return 0;
 }
 
 int OSCControl::forwardToVisualStreamHandler(handlerArgs) {
-    cwonder->visualStream->send((char*)path, (char*)types, argc, argv, msg);
+    cwonder->visualStream.send((char*)path, (char*)types, argc, argv, msg);
 
     return 0;
 }

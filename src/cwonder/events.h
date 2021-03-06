@@ -51,16 +51,16 @@ class Event
 
     bool operator<(const TimeStamp& other) const { return timestamp < other; }
 
-    lo_address from;
+    lo_address from{nullptr};
     string oscpath;
-    int id;
-    int type;  /// 0 = plane source, 1 = point source
+    int id{-1};
+    int type{1};  /// 0 = plane source, 1 = point source
     string name;
     bool active;
-    Vector3D pos;
-    float angle;
+    Vector3D pos{0.,0.,0.};
+    float angle{0.f};
     TimeStamp timestamp;
-    float duration;
+    float duration{0.f};
 };  // class Event
 
 class Timeline

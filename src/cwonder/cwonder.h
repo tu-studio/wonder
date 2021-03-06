@@ -105,8 +105,7 @@ class Cwonder
 
     TimeStamp recordTime;
 
-    std::unique_ptr<Project> project =
-        std::make_unique<Project>(cwonderConf->maxNoSources);
+    Project project{cwonderConf->maxNoSources};
     Scenario* scenario{nullptr};
 
     std::string projectFileName;
@@ -115,9 +114,9 @@ class Cwonder
 
     Timeline timeLine;
 
-    std::unique_ptr<OSCStream> renderStream = std::make_unique<OSCStream>("render");
-    std::unique_ptr<OSCStream> visualStream = std::make_unique<OSCStream>("visual");
-    std::unique_ptr<OSCStream> timerStream  = std::make_unique<OSCStream>("timer");
+    OSCStream renderStream{"render"};
+    OSCStream visualStream{"visual"};
+    OSCStream timerStream{"timer"};
 
     TimeStamp lastRenderPing;
     TimeStamp lastVisualPing;

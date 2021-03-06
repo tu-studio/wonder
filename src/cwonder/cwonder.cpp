@@ -80,9 +80,9 @@ int Cwonder::createProject(string path) {
 
     // now create the project
     try {
-        project->name = projectFileName.substr(0, projectFileName.find(".xml"));
-        project->setDtdPath(dtdPath);
-        project->createProject();
+        project.name = projectFileName.substr(0, projectFileName.find(".xml"));
+        project.setDtdPath(dtdPath);
+        project.createProject();
     }
     catch (const exception& ex) {
         returnString = "project=" + filePath + " error: " + ex.what();
@@ -93,15 +93,15 @@ int Cwonder::createProject(string path) {
 
     // send information about the whole project to the visual stream
     // TODO: this may exceed the sizelimit of an OSC message, slice it up somehow
-    string p = project->show();
+    string p = project.show();
 
-    for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+    for (streamIter = visualStream.begin(); streamIter != visualStream.end();
          ++streamIter) {
         lo_send(streamIter->address, "/WONDER/project/xmlDump", "is", p.empty(),
                 p.c_str());
     }
 
-    scenario = project->getScenario();
+    scenario = project.getScenario();
 
     sendScenario();
 
@@ -142,8 +142,8 @@ int Cwonder::loadProject(string path) {
 
     // now read the project from the file
     try {
-        project->setDtdPath(dtdPath);
-        project->readFromFile(filePath.c_str());
+        project.setDtdPath(dtdPath);
+        project.readFromFile(filePath.c_str());
     }
     catch (const xmlpp::validity_error& ex) {
         returnString = "Validation error! project=" + path + " is not a valid project.";
@@ -162,16 +162,16 @@ int Cwonder::loadProject(string path) {
 
     // send information about the whole project to the visual stream
     // TODO: this may exceed the sizelimit of an OSC message, slice it up somehow
-    string p = project->show();
+    string p = project.show();
 
-    for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+    for (streamIter = visualStream.begin(); streamIter != visualStream.end();
          ++streamIter) {
         lo_send(streamIter->address, "/WONDER/project/xmlDump", "is", p.empty(),
                 p.c_str());
     }
 
     // get the scenario of the loaded project and communicate it via OSC
-    scenario = project->snapshots.front();
+    scenario = project.snapshots.front();
 
     sendScenario();
 
@@ -189,7 +189,7 @@ int Cwonder::saveProject() {
     // now write the project to the file
     try {
         // NOTE: save does not create missing directories
-        project->writeToFile(filePath);
+        project.writeToFile(filePath);
     }
     catch (const exception& ex) {
         returnString = "project=" + filePath + " write error: " + ex.what();
@@ -223,12 +223,12 @@ int Cwonder::saveProjectAs(string path) {
     string filePath = join(projectPath, projectFileName);
 
     // set the new project name
-    project->name = projectFileName.substr(0, projectFileName.find(".xml"));
+    project.name = projectFileName.substr(0, projectFileName.find(".xml"));
 
     // now write the project to the file
     try {
         // NOTE: save does not create missing directories
-        project->writeToFile(filePath);
+        project.writeToFile(filePath);
     }
     catch (const exception& ex) {
         returnString = "project=" + filePath + " write error: " + ex.what();
@@ -251,7 +251,7 @@ int Cwonder::takeSnapshot(int snapshotID, string name) {
     ostringstream st;
     st << snapshotID;
 
-    int ret = project->takeSnapshot(snapshotID, name);
+    int ret = project.takeSnapshot(snapshotID, name);
 
     if (ret == 1) {
         returnString = "can not get rood node of project file.";
@@ -269,7 +269,7 @@ int Cwonder::deleteSnapshot(int snapshotID) {
     ostringstream st;
     st << snapshotID;
 
-    int ret = project->deleteSnapshot(snapshotID);
+    int ret = project.deleteSnapshot(snapshotID);
 
     if (ret == 1) {
         returnString = "snapshot " + st.str() + " does not exist.";
@@ -296,7 +296,7 @@ int Cwonder::recallSnapshot(int snapshotID, float duration) {
 
     // recall snapshot in project
     // this gets the right data into the scenario
-    int ret = project->recallSnapshot(snapshotID);
+    int ret = project.recallSnapshot(snapshotID);
 
     if (ret != 0) {
         returnString = "snapshot " + st.str() + " does not exist in the project.";
@@ -314,7 +314,7 @@ int Cwonder::recallSnapshot(int snapshotID, float duration) {
         // if source wasn't active, then send activate first
         if (scenario->sourcesVector[i].active) {
             // send to stream receivers (render)
-            for (streamIter = renderStream->begin(); streamIter != renderStream->end();
+            for (streamIter = renderStream.begin(); streamIter != renderStream.end();
                  ++streamIter) {
                 // activate it
                 lo_send(streamIter->address, "/WONDER/source/activate", "i", i);
@@ -339,7 +339,7 @@ int Cwonder::recallSnapshot(int snapshotID, float duration) {
             }
 
             // send to stream receivers (visual)
-            for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+            for (streamIter = visualStream.begin(); streamIter != visualStream.end();
                  ++streamIter) {
                 // activate it
                 lo_send(streamIter->address, "/WONDER/source/activate", "i", i);
@@ -389,14 +389,14 @@ int Cwonder::recallSnapshot(int snapshotID, float duration) {
             // only if source was active in scenario
 
             // renderStream
-            for (streamIter = renderStream->begin(); streamIter != renderStream->end();
+            for (streamIter = renderStream.begin(); streamIter != renderStream.end();
                  ++streamIter) {
                 // deactivate it
                 lo_send(streamIter->address, "/WONDER/source/deactivate", "i", i);
             }
 
             // visualStream
-            for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+            for (streamIter = visualStream.begin(); streamIter != visualStream.end();
                  ++streamIter) {
                 // deactivate it
                 lo_send(streamIter->address, "/WONDER/source/deactivate", "i", i);
@@ -412,7 +412,7 @@ int Cwonder::recallSnapshot(int snapshotID, float duration) {
         // if group wasn't active, then send activate first
         if (scenario->sourceGroupsVector[i].active) {
             // send to stream receivers (visual)
-            for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+            for (streamIter = visualStream.begin(); streamIter != visualStream.end();
                  ++streamIter) {
                 // if source is not already active in scenario then activate it
                 if (!oldScenario.sourceGroupsVector[i].active) {
@@ -432,7 +432,7 @@ int Cwonder::recallSnapshot(int snapshotID, float duration) {
             }
         } else {
             // visualStream
-            for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+            for (streamIter = visualStream.begin(); streamIter != visualStream.end();
                  ++streamIter) {
                 // if group was active then deactivate it
                 if (oldScenario.sourcesVector[i].active) {
@@ -451,7 +451,7 @@ int Cwonder::renameSnapshot(int snapshotID, string name) {
     ostringstream st;
     st << snapshotID;
 
-    int ret = project->renameSnapshot(snapshotID, name);
+    int ret = project.renameSnapshot(snapshotID, name);
 
     if (ret == 1) {
         returnString = "snapshot " + st.str() + " does not exist.";
@@ -471,7 +471,7 @@ int Cwonder::copySnapshot(int fromID, int toID) {
 
     ostringstream st;
 
-    int ret = project->copySnapshot(fromID, toID);
+    int ret = project.copySnapshot(fromID, toID);
 
     if (ret == 1) {
         st.str("");
@@ -521,13 +521,13 @@ int Cwonder::setSourceActive(lo_address from, int sourceID, bool active) {
     if (sourceID >= -1 && sourceID < (int)scenario->sourcesVector.size()) {
         if (active) {
             // send to stream receivers (render)
-            for (streamIter = renderStream->begin(); streamIter != renderStream->end();
+            for (streamIter = renderStream.begin(); streamIter != renderStream.end();
                  ++streamIter) {
                 lo_send(streamIter->address, "/WONDER/source/activate", "i", sourceID);
             }
 
             // send to stream receivers (visual)
-            for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+            for (streamIter = visualStream.begin(); streamIter != visualStream.end();
                  ++streamIter) {
                 if (!issame(from, streamIter->address)) {
                     lo_send(streamIter->address, "/WONDER/source/activate", "i",
@@ -539,13 +539,13 @@ int Cwonder::setSourceActive(lo_address from, int sourceID, bool active) {
             scenario->activateSource(sourceID);
         } else {  // deactivate
             // send to stream receivers (render)
-            for (streamIter = renderStream->begin(); streamIter != renderStream->end();
+            for (streamIter = renderStream.begin(); streamIter != renderStream.end();
                  ++streamIter) {
                 lo_send(streamIter->address, "/WONDER/source/deactivate", "i", sourceID);
             }
 
             // send to stream receivers (visual)
-            for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+            for (streamIter = visualStream.begin(); streamIter != visualStream.end();
                  ++streamIter) {
                 if (!issame(from, streamIter->address)) {
                     lo_send(streamIter->address, "/WONDER/source/deactivate", "i",
@@ -574,7 +574,7 @@ int Cwonder::setSourceName(lo_address from, int sourceID, string name) {
     if (sourceID >= 0 && sourceID < (int)scenario->sourcesVector.size()
         && scenario->sourcesVector[sourceID].active) {
         // send to stream receivers (visual)
-        for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+        for (streamIter = visualStream.begin(); streamIter != visualStream.end();
              ++streamIter) {
             if (!issame(from, streamIter->address)) {
                 lo_send(streamIter->address, "/WONDER/source/name", "is", sourceID,
@@ -605,13 +605,13 @@ int Cwonder::setSourceType(lo_address from, int sourceID, int type, float timest
         && scenario->sourcesVector[sourceID].active) {
         if (timestamp == PLAYNOW) {
             // send to stream receivers (render)
-            for (streamIter = renderStream->begin(); streamIter != renderStream->end();
+            for (streamIter = renderStream.begin(); streamIter != renderStream.end();
                  ++streamIter) {
                 lo_send(streamIter->address, "/WONDER/source/type", "ii", sourceID, type);
             }
 
             // send to stream receivers (visual)
-            for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+            for (streamIter = visualStream.begin(); streamIter != visualStream.end();
                  ++streamIter) {
                 if (!issame(from, streamIter->address)) {
                     lo_send(streamIter->address, "/WONDER/source/type", "ii", sourceID,
@@ -657,14 +657,14 @@ int Cwonder::setSourcePosition(lo_address from, int sourceID, float x, float y,
             // play event now
 
             // send to stream receivers (render)
-            for (streamIter = renderStream->begin(); streamIter != renderStream->end();
+            for (streamIter = renderStream.begin(); streamIter != renderStream.end();
                  ++streamIter) {
                 lo_send(streamIter->address, "/WONDER/source/position", "ifff", sourceID,
                         x, y, duration);
             }
 
             // send to stream receivers (visual)
-            for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+            for (streamIter = visualStream.begin(); streamIter != visualStream.end();
                  ++streamIter) {
                 if (!issame(from, streamIter->address)) {
                     lo_send(streamIter->address, "/WONDER/source/position", "iff",
@@ -717,14 +717,14 @@ int Cwonder::setSourcePosition3D(lo_address from, int sourceID, float x, float y
             // play event now
 
             // send to stream receivers (render)
-            for (streamIter = renderStream->begin(); streamIter != renderStream->end();
+            for (streamIter = renderStream.begin(); streamIter != renderStream.end();
                  ++streamIter) {
                 lo_send(streamIter->address, "/WONDER/source/position3D", "iffff",
                         sourceID, x, y, z, duration);
             }
 
             // send to stream receivers (visual)
-            for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+            for (streamIter = visualStream.begin(); streamIter != visualStream.end();
                  ++streamIter) {
                 if (!issame(from, streamIter->address)) {
                     lo_send(streamIter->address, "/WONDER/source/position", "iff",
@@ -776,14 +776,14 @@ int Cwonder::setSourceAngle(lo_address from, int sourceID, float angle, float du
         && scenario->sourcesVector[sourceID].active) {
         if (timestamp == PLAYNOW) {
             // send to stream receivers (render)
-            for (streamIter = renderStream->begin(); streamIter != renderStream->end();
+            for (streamIter = renderStream.begin(); streamIter != renderStream.end();
                  ++streamIter) {
                 lo_send(streamIter->address, "/WONDER/source/angle", "iff", sourceID,
                         angle, duration);
             }
 
             // send to stream receivers (visual)
-            for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+            for (streamIter = visualStream.begin(); streamIter != visualStream.end();
                  ++streamIter) {
                 if (!issame(from, streamIter->address)) {
                     lo_send(streamIter->address, "/WONDER/source/angle", "if", sourceID,
@@ -825,7 +825,7 @@ int Cwonder::setSourceGroupID(lo_address from, int sourceID, int groupID) {
     if (sourceID >= 0 && sourceID < (int)scenario->sourcesVector.size()
         && scenario->sourcesVector[sourceID].active) {
         // send to stream receivers (visual)
-        for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+        for (streamIter = visualStream.begin(); streamIter != visualStream.end();
              ++streamIter) {
             if (!issame(from, streamIter->address)) {
                 lo_send(streamIter->address, "/WONDER/source/groupID", "ii", sourceID,
@@ -856,7 +856,7 @@ int Cwonder::setSourceColor(lo_address from, int sourceID, int red, int green, i
     if (sourceID >= 0 && sourceID < (int)scenario->sourcesVector.size()
         && scenario->sourcesVector[sourceID].active) {
         // send to stream receivers (visual)
-        for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+        for (streamIter = visualStream.begin(); streamIter != visualStream.end();
              ++streamIter) {
             if (!issame(from, streamIter->address)) {
                 lo_send(streamIter->address, "/WONDER/source/color", "iiii", sourceID,
@@ -890,7 +890,7 @@ int Cwonder::setSourceRotationDirection(lo_address from, int sourceID, bool inve
     if (sourceID >= 0 && sourceID < (int)scenario->sourcesVector.size()
         && scenario->sourcesVector[sourceID].active) {
         // send to stream receivers (visual)
-        for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+        for (streamIter = visualStream.begin(); streamIter != visualStream.end();
              ++streamIter) {
             if (!issame(from, streamIter->address)) {
                 lo_send(streamIter->address, "/WONDER/source/rotationDirection", "ii",
@@ -922,7 +922,7 @@ int Cwonder::setSourceScalingDirection(lo_address from, int sourceID, bool inver
     if (sourceID >= 0 && sourceID < (int)scenario->sourcesVector.size()
         && scenario->sourcesVector[sourceID].active) {
         // send to stream receivers (visual)
-        for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+        for (streamIter = visualStream.begin(); streamIter != visualStream.end();
              ++streamIter) {
             if (!issame(from, streamIter->address)) {
                 lo_send(streamIter->address, "/WONDER/source/scalingDirection", "ii",
@@ -953,14 +953,14 @@ int Cwonder::setSourceDopplerEffect(lo_address from, int sourceID, bool dopplerO
     if (sourceID >= 0 && sourceID < (int)scenario->sourcesVector.size()
         && scenario->sourcesVector[sourceID].active) {
         // send to stream receivers (render)
-        for (streamIter = renderStream->begin(); streamIter != renderStream->end();
+        for (streamIter = renderStream.begin(); streamIter != renderStream.end();
              ++streamIter) {
             lo_send(streamIter->address, "/WONDER/source/dopplerEffect", "ii", sourceID,
                     dopplerOn);
         }
 
         // send to stream receivers (visual)
-        for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+        for (streamIter = visualStream.begin(); streamIter != visualStream.end();
              ++streamIter) {
             if (!issame(from, streamIter->address)) {
                 lo_send(streamIter->address, "/WONDER/source/dopplerEffect", "ii",
@@ -989,14 +989,14 @@ int Cwonder::setListenerPosition(lo_address from, int listenerID, float x, float
 
     if (listenerID >= 0) {
         // send to stream receivers (render)
-        for (streamIter = renderStream->begin(); streamIter != renderStream->end();
+        for (streamIter = renderStream.begin(); streamIter != renderStream.end();
              ++streamIter) {
             lo_send(streamIter->address, "/WONDER/listener/position", "iff", listenerID,
                     x, y);
         }
 
         // send to stream receivers (visual)
-        for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+        for (streamIter = visualStream.begin(); streamIter != visualStream.end();
              ++streamIter) {
             if (!issame(from, streamIter->address)) {
                 lo_send(streamIter->address, "/WONDER/listener/position", "iff",
@@ -1026,7 +1026,7 @@ int Cwonder::setGroupActive(lo_address from, int groupID, bool active) {
     if (id >= 0 && id < (int)scenario->sourceGroupsVector.size()) {
         if (active) {
             // send to stream receivers (visual)
-            for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+            for (streamIter = visualStream.begin(); streamIter != visualStream.end();
                  ++streamIter) {
                 if (!issame(from, streamIter->address)) {
                     lo_send(streamIter->address, "/WONDER/group/activate", "i", groupID);
@@ -1040,7 +1040,7 @@ int Cwonder::setGroupActive(lo_address from, int groupID, bool active) {
             returnString = st.str();
         } else {
             // send to stream receivers (visual)
-            for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+            for (streamIter = visualStream.begin(); streamIter != visualStream.end();
                  ++streamIter) {
                 if (!issame(from, streamIter->address)) {
                     lo_send(streamIter->address, "/WONDER/group/deactivate", "i",
@@ -1078,7 +1078,7 @@ int Cwonder::setGroupColor(lo_address from, int groupID, int red, int green, int
     if (id >= 0 && id < (int)scenario->sourceGroupsVector.size()
         && scenario->sourceGroupsVector[id].active) {
         // send to stream receivers (visual)
-        for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+        for (streamIter = visualStream.begin(); streamIter != visualStream.end();
              ++streamIter) {
             if (!issame(from, streamIter->address)) {
                 lo_send(streamIter->address, "/WONDER/group/color", "iiii", groupID, red,
@@ -1115,7 +1115,7 @@ int Cwonder::setGroupPosition(lo_address from, int groupID, float x, float y) {
     if (id >= 0 && id < (int)scenario->sourceGroupsVector.size()
         && scenario->sourceGroupsVector[id].active) {
         // send to stream receivers (visual)
-        for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+        for (streamIter = visualStream.begin(); streamIter != visualStream.end();
              ++streamIter) {
             if (!issame(from, streamIter->address)) {
                 lo_send(streamIter->address, "/WONDER/group/position", "iff", groupID, x,
@@ -1139,8 +1139,8 @@ int Cwonder::setGroupPosition(lo_address from, int groupID, float x, float y) {
 }
 
 int Cwonder::renderStreamConnect(string host, string port, string name) {
-    int ret                     = renderStream->connect(host, port, name);
-    lo_address newClientAddress = (--renderStream->end())->address;
+    int ret                     = renderStream.connect(host, port, name);
+    lo_address newClientAddress = (--renderStream.end())->address;
 
     // send number of allowed sources
     lo_send(newClientAddress, "/WONDER/global/maxNoSources", "i",
@@ -1219,8 +1219,8 @@ int Cwonder::visualStreamConnect(string host, string port, string name) {
         return -1;
     }
 
-    int ret                     = visualStream->connect(host, port, name);
-    lo_address newClientAddress = (--visualStream->end())->address;
+    int ret                     = visualStream.connect(host, port, name);
+    lo_address newClientAddress = (--visualStream.end())->address;
 
     // send number of allowed sources
     lo_send(newClientAddress, "/WONDER/global/maxNoSources", "i",
@@ -1249,11 +1249,11 @@ int Cwonder::visualStreamConnect(string host, string port, string name) {
     lo_message_free(renderPolygonMessage);
 
     // write scenario to DOM
-    project->writeProjectToDOM();
+    project.writeProjectToDOM();
 
     // send information about the whole project
     // TODO: this may exceed the sizelimit of an OSC message, slice it up
-    string p = project->show();
+    string p = project.show();
     lo_send(newClientAddress, "/WONDER/project/xmlDump", "is", p.empty(), p.c_str());
 
     // send information about newly connected client on the visual stream
@@ -1261,19 +1261,19 @@ int Cwonder::visualStreamConnect(string host, string port, string name) {
 
     // send information about all other connected stream clients to the newly connected
     // visual stream client
-    for (streamIter = renderStream->begin(); streamIter != renderStream->end();
+    for (streamIter = renderStream.begin(); streamIter != renderStream.end();
          ++streamIter) {
         sendStreamClientDataTo(newClientAddress, *streamIter);
     }
 
-    for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+    for (streamIter = visualStream.begin(); streamIter != visualStream.end();
          ++streamIter) {
         if (!issame(newClientAddress, streamIter->address)) {
             sendStreamClientDataTo(newClientAddress, *streamIter);
         }
     }
 
-    for (streamIter = timerStream->begin(); streamIter != timerStream->end();
+    for (streamIter = timerStream.begin(); streamIter != timerStream.end();
          ++streamIter) {
         sendStreamClientDataTo(newClientAddress, *streamIter);
     }
@@ -1288,10 +1288,10 @@ int Cwonder::visualStreamConnect(string host, string port, string name) {
 }
 
 int Cwonder::timerStreamConnect(string host, string port, string name) {
-    int ret = timerStream->connect(host, port, name);
+    int ret = timerStream.connect(host, port, name);
 
     // send the actual frametime
-    lo_send((--timerStream->end())->address, "/WONDER/frametime", "i", nowTime.getTime());
+    lo_send((--timerStream.end())->address, "/WONDER/frametime", "i", nowTime.getTime());
 
     // send information about newly connected stream client on the visual stream
     notifyVisualStreamOfNewStreamClient(host, port, name);
@@ -1306,7 +1306,7 @@ int Cwonder::timerStreamConnect(string host, string port, string name) {
 }
 
 void Cwonder::notifyVisualStreamOfNewStreamClient(string host, string port, string name) {
-    for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+    for (streamIter = visualStream.begin(); streamIter != visualStream.end();
          ++streamIter) {
         lo_send(streamIter->address, "/WONDER/stream/connected", "sss", host.c_str(),
                 port.c_str(), name.c_str());
@@ -1326,7 +1326,7 @@ void Cwonder::notifyVisualStreamOfDeadStreamClients(
 
     for (clients = deadStreamClients.begin(); clients != deadStreamClients.end();
          ++clients) {
-        for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+        for (streamIter = visualStream.begin(); streamIter != visualStream.end();
              ++streamIter) {
             lo_send(streamIter->address, "/WONDER/stream/disconnected", "sss",
                     clients->host.c_str(), clients->port.c_str(), clients->name.c_str());
@@ -1350,15 +1350,15 @@ void Cwonder::scheduler(int currtime) {
         } else {
             if (ev->oscpath == "/WONDER/source/position") {
                 // send to stream receivers (render)
-                for (streamIter = renderStream->begin();
-                     streamIter != renderStream->end(); ++streamIter) {
+                for (streamIter = renderStream.begin();
+                     streamIter != renderStream.end(); ++streamIter) {
                     lo_send(streamIter->address, "/WONDER/source/position", "ifff",
                             ev->id, ev->pos[0], ev->pos[1], ev->duration);
                 }
 
                 // send to stream receivers (visual)
-                for (streamIter = visualStream->begin();
-                     streamIter != visualStream->end(); ++streamIter) {
+                for (streamIter = visualStream.begin();
+                     streamIter != visualStream.end(); ++streamIter) {
                     if (!issame(ev->from, streamIter->address)) {
                         lo_send(streamIter->address, "/WONDER/source/position", "iff",
                                 ev->id, ev->pos[0], ev->pos[1]);
@@ -1371,15 +1371,15 @@ void Cwonder::scheduler(int currtime) {
                 scenario->sourcesVector[ev->id].pos[2] = z_default;
             } else if (ev->oscpath == "/WONDER/source/position3D") {
                 // send to stream receivers (render)
-                for (streamIter = renderStream->begin();
-                     streamIter != renderStream->end(); ++streamIter) {
+                for (streamIter = renderStream.begin();
+                     streamIter != renderStream.end(); ++streamIter) {
                     lo_send(streamIter->address, "/WONDER/source/position3D", "iffff",
                             ev->id, ev->pos[0], ev->pos[1], ev->pos[2], ev->duration);
                 }
 
                 // send to stream receivers (visual)
-                for (streamIter = visualStream->begin();
-                     streamIter != visualStream->end(); ++streamIter) {
+                for (streamIter = visualStream.begin();
+                     streamIter != visualStream.end(); ++streamIter) {
                     if (!issame(ev->from, streamIter->address)) {
                         lo_send(streamIter->address, "/WONDER/source/position", "iff",
                                 ev->id, ev->pos[0], ev->pos[1]);
@@ -1392,15 +1392,15 @@ void Cwonder::scheduler(int currtime) {
                 scenario->sourcesVector[ev->id].pos[2] = ev->pos[2];
             } else if (ev->oscpath == "/WONDER/source/type") {
                 // send to stream receivers (render)
-                for (streamIter = renderStream->begin();
-                     streamIter != renderStream->end(); ++streamIter) {
+                for (streamIter = renderStream.begin();
+                     streamIter != renderStream.end(); ++streamIter) {
                     lo_send(streamIter->address, "/WONDER/source/type", "ii", ev->id,
                             ev->type);
                 }
 
                 // send to stream receivers (visual)
-                for (streamIter = visualStream->begin();
-                     streamIter != visualStream->end(); ++streamIter) {
+                for (streamIter = visualStream.begin();
+                     streamIter != visualStream.end(); ++streamIter) {
                     if (!issame(ev->from, streamIter->address)) {
                         lo_send(streamIter->address, "/WONDER/source/type", "ii", ev->id,
                                 ev->type);
@@ -1411,15 +1411,15 @@ void Cwonder::scheduler(int currtime) {
                 scenario->sourcesVector[ev->id].type = ev->type;
             } else if (ev->oscpath == "/WONDER/source/angle") {
                 // send to stream receivers (render)
-                for (streamIter = renderStream->begin();
-                     streamIter != renderStream->end(); ++streamIter) {
+                for (streamIter = renderStream.begin();
+                     streamIter != renderStream.end(); ++streamIter) {
                     lo_send(streamIter->address, "/WONDER/source/angle", "iff", ev->id,
                             ev->angle, ev->duration);
                 }
 
                 // send to stream receivers (visual)
-                for (streamIter = visualStream->begin();
-                     streamIter != visualStream->end(); ++streamIter) {
+                for (streamIter = visualStream.begin();
+                     streamIter != visualStream.end(); ++streamIter) {
                     if (!issame(ev->from, streamIter->address)) {
                         lo_send(streamIter->address, "/WONDER/source/angle", "if", ev->id,
                                 ev->angle);
@@ -1436,7 +1436,7 @@ void Cwonder::scheduler(int currtime) {
     }
 
     // send timer information to the timer stream
-    for (streamIter = timerStream->begin(); streamIter != timerStream->end();
+    for (streamIter = timerStream.begin(); streamIter != timerStream.end();
          ++streamIter) {
         lo_send(streamIter->address, "/WONDER/frametime", "i", (wonder_frames_t)currtime);
     }
@@ -1445,9 +1445,9 @@ void Cwonder::scheduler(int currtime) {
     deadStreamClients.clear();
 
     // ping renderStream
-    if (renderStream->hasClients()) {
+    if (renderStream.hasClients()) {
         if ((nowTime - lastRenderPing) >= (wonder_frames_t)cwonderConf->pingRate) {
-            renderStream->ping(deadStreamClients);
+            renderStream.ping(deadStreamClients);
 
             // send information about dead clients to visual stream
             if (!deadStreamClients.empty()) {
@@ -1461,9 +1461,9 @@ void Cwonder::scheduler(int currtime) {
     }
 
     // ping visualStream
-    if (visualStream->hasClients()) {
+    if (visualStream.hasClients()) {
         if ((nowTime - lastVisualPing) >= (wonder_frames_t)cwonderConf->pingRate) {
-            visualStream->ping(deadStreamClients);
+            visualStream.ping(deadStreamClients);
 
             // send information about dead clients to visual stream
             if (!deadStreamClients.empty()) {
@@ -1477,9 +1477,9 @@ void Cwonder::scheduler(int currtime) {
     }
 
     // ping timerStream
-    if (timerStream->hasClients()) {
+    if (timerStream.hasClients()) {
         if ((nowTime - lastTimerPing) >= (wonder_frames_t)cwonderConf->pingRate) {
-            timerStream->ping(deadStreamClients);
+            timerStream.ping(deadStreamClients);
 
             // send information about dead clients to visual stream
             if (!deadStreamClients.empty()) {
@@ -1502,7 +1502,7 @@ void Cwonder::sendScenario() {
         Source* source = &(scenario->sourcesVector[i]);
 
         // send to stream receivers (render)
-        for (streamIter = renderStream->begin(); streamIter != renderStream->end();
+        for (streamIter = renderStream.begin(); streamIter != renderStream.end();
              ++streamIter) {
             address = streamIter->address;
 
@@ -1529,7 +1529,7 @@ void Cwonder::sendScenario() {
         }
 
         // send to stream receivers (visual)
-        for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+        for (streamIter = visualStream.begin(); streamIter != visualStream.end();
              ++streamIter) {
             address = streamIter->address;
 
@@ -1576,7 +1576,7 @@ void Cwonder::sendScenario() {
 
     for (auto& group : scenario->sourceGroupsVector) {
         // send to stream receivers (visual)
-        for (streamIter = visualStream->begin(); streamIter != visualStream->end();
+        for (streamIter = visualStream.begin(); streamIter != visualStream.end();
              ++streamIter) {
             lo_address address = streamIter->address;
             int id             = group.id;

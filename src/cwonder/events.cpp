@@ -34,19 +34,7 @@
 using std::cout;
 using std::endl;
 
-Event::Event() {
-    from     = nullptr;
-    id       = -1;
-    type     = 1;
-    active   = false;
-    name     = "";
-    oscpath  = "";
-    pos[0]   = 0.0;
-    pos[1]   = 0.0;
-    pos[2]   = 0.0;
-    angle    = 0.0;
-    duration = 0;
-}
+Event::Event() = default;
 
 Event::~Event() {
     if (from) { lo_address_free(from); }
