@@ -1,4 +1,4 @@
-Checks:          'clang-diagnostic-*,clang-analyzer-*'
+Checks:          'clang-diagnostic-*,clang-analyzer-*,modernize-use-nullptr'
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
