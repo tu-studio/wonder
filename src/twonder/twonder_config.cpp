@@ -40,7 +40,7 @@
 
 #include "wonder_path.h"
 
-TwonderConfig* twonderConf = NULL;
+TwonderConfig* twonderConf = nullptr;
 
 TwonderConfig::TwonderConfig(int argc, char* argv[]) {
     verbose = false;
@@ -84,7 +84,7 @@ TwonderConfig::TwonderConfig(int argc, char* argv[]) {
 TwonderConfig::~TwonderConfig() {
     if (cwonderAddr) {
         lo_address_free(cwonderAddr);
-        cwonderAddr = NULL;
+        cwonderAddr = nullptr;
     }
 }
 
@@ -94,21 +94,21 @@ void TwonderConfig::parseArgs(int argc, char* argv[]) {
     while (1) {
         int option_index                    = 0;
         static struct option long_options[] = {
-            {"configfile", required_argument, 0, 'c'},
-            {"speakerfile", required_argument, 0, 's'},
-            {"jackname", required_argument, 0, 'j'},
-            {"name", required_argument, 0, 'n'},
-            {"listeningport", required_argument, 0, 'o'},
-            {"cwonderhost", required_argument, 0, 'i'},
-            {"cwonderport", required_argument, 0, 'p'},
-            {"planecomp", required_argument, 0, 'm'},
-            {"verbose", no_argument, 0, 'v'},
-            {"negdelay", required_argument, 0, 1},
-            {"speedofsound", required_argument, 0, 2},
-            {"alwaysout", no_argument, 0, 3},
-            {"alwaysin", no_argument, 0, 4},
-            {"help", no_argument, 0, 'h'},
-            {0, 0, 0, 0}};
+            {"configfile", required_argument, nullptr, 'c'},
+            {"speakerfile", required_argument, nullptr, 's'},
+            {"jackname", required_argument, nullptr, 'j'},
+            {"name", required_argument, nullptr, 'n'},
+            {"listeningport", required_argument, nullptr, 'o'},
+            {"cwonderhost", required_argument, nullptr, 'i'},
+            {"cwonderport", required_argument, nullptr, 'p'},
+            {"planecomp", required_argument, nullptr, 'm'},
+            {"verbose", no_argument, nullptr, 'v'},
+            {"negdelay", required_argument, nullptr, 1},
+            {"speedofsound", required_argument, nullptr, 2},
+            {"alwaysout", no_argument, nullptr, 3},
+            {"alwaysin", no_argument, nullptr, 4},
+            {"help", no_argument, nullptr, 'h'},
+            {nullptr, 0, nullptr, 0}};
 
         c = getopt_long(argc, argv, "c:s:j:n:o:i:p:m:vh", long_options, &option_index);
 

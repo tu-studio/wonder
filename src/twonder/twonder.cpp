@@ -79,27 +79,27 @@ void exitCleanupFunction() {
     if (oscServer) {
         oscServer->stop();
         delete oscServer;
-        oscServer = NULL;
+        oscServer = nullptr;
     }
 
     if (twonderConf) {
         delete twonderConf;
-        twonderConf = NULL;
+        twonderConf = nullptr;
     }
 
     if (speakers) {
         delete speakers;
-        speakers = NULL;
+        speakers = nullptr;
     }
 
     if (sources) {
         delete sources;
-        sources = NULL;
+        sources = nullptr;
     }
 
     if (realtimeCommandEngine) {
         delete realtimeCommandEngine;
-        realtimeCommandEngine = NULL;
+        realtimeCommandEngine = nullptr;
     }
 }
 
@@ -173,8 +173,8 @@ bool initialize_jack() {
     int available_outputs = 0;      // Number of physically available outputs
 
     const char* client_name = twonderConf->jackName;  // Get name from twonderConfig
-    const char* server_name = NULL;  // Without a JACK server name the default server from
-                                     // the .jackdrc file will be started.
+    const char* server_name = nullptr;  // Without a JACK server name the default server
+                                        // from the .jackdrc file will be started.
     jack_options_t options = JackNullOption;  // No options needed, since we use the
                                               // options from the .jackdrc file.
     jack_status_t status;  // Holds the JACK status after the connection attempt for
@@ -184,7 +184,7 @@ bool initialize_jack() {
     jackClient = jack_client_open(client_name, options, &status, server_name);
     running    = true;
 
-    if (jackClient == NULL) {
+    if (jackClient == nullptr) {
         running = false;
         std::cerr
             << "[JACK][ERROR]: Unable to open the JACK client! Failed with status: 0x"
@@ -209,7 +209,7 @@ bool initialize_jack() {
         if (status & JackNameNotUnique) {
             client_name = jack_get_client_name(jackClient);
 
-            if (client_name == NULL) {
+            if (client_name == nullptr) {
                 std::cout << "[JACK][WARNING]: JACK client name was not unique and has "
                              "been changed!"
                           << client_name << std::endl;
@@ -223,8 +223,8 @@ bool initialize_jack() {
 
     // 3. Set the callback and shutdown functions to be called by the JACK server.
     if (running) {
-        jack_set_process_callback(jackClient, process, 0);
-        jack_on_shutdown(jackClient, jack_shutdown, 0);
+        jack_set_process_callback(jackClient, process, nullptr);
+        jack_on_shutdown(jackClient, jack_shutdown, nullptr);
     }
 
     // 4. Preallocate memory for JACK ports of Sources (inputs) and Speakers (outputs).
@@ -246,7 +246,7 @@ bool initialize_jack() {
                 jack_port_register(jackClient, port_name.data(), JACK_DEFAULT_AUDIO_TYPE,
                                    JackPortIsInput, 0);
 
-            if (jackInputs[i] == NULL) {
+            if (jackInputs[i] == nullptr) {
                 running = false;
                 std::cerr << "[JACK][ERROR]: Unable to register the input ports "
                              "(sources) of the JACK client!\n";
@@ -265,7 +265,7 @@ bool initialize_jack() {
                 jack_port_register(jackClient, port_name.data(), JACK_DEFAULT_AUDIO_TYPE,
                                    JackPortIsOutput, 0);
 
-            if (jackOutputs[i] == NULL) {
+            if (jackOutputs[i] == nullptr) {
                 running = false;
                 std::cerr << "[JACK][ERROR]: Unable to register the output ports "
                              "(speakers) of the JACK client!\n";
@@ -292,10 +292,10 @@ bool initialize_jack() {
     // client (JACK calls them "output ports", because they are readable by the JACK
     // client).
     if (running) {
-        const char** ports =
-            jack_get_ports(jackClient, NULL, NULL, JackPortIsPhysical | JackPortIsOutput);
+        const char** ports = jack_get_ports(jackClient, nullptr, nullptr,
+                                            JackPortIsPhysical | JackPortIsOutput);
 
-        if (ports == NULL) {
+        if (ports == nullptr) {
             running = false;
             std::cerr << "[JACK][ERROR]: No physical audio input (capture) ports are "
                          "available!\n";
@@ -304,9 +304,9 @@ bool initialize_jack() {
         // Proceed only if the soundcard has physical audio input (capture) ports!
         if (running) {
             for (int i = 0; i < twonderConf->noSources; ++i) {
-                if (!((ports[i] == NULL)
+                if (!((ports[i] == nullptr)
                       || (jack_port_name(jackInputs[i])
-                          == NULL))) {  // Do not connect to NULL ports
+                          == nullptr))) {  // Do not connect to NULL ports
                     // jack_connect(jackClient, ports[i], jack_port_name(jackInputs[i]));
                     // // TODO: Disabled internal auto-connect in favor of external
                     // startup script!
@@ -326,10 +326,10 @@ bool initialize_jack() {
     // soundcard (JACK calls them "input ports", because they are writable by the JACK
     // client).
     if (running) {
-        const char** ports =
-            jack_get_ports(jackClient, NULL, NULL, JackPortIsPhysical | JackPortIsInput);
+        const char** ports = jack_get_ports(jackClient, nullptr, nullptr,
+                                            JackPortIsPhysical | JackPortIsInput);
 
-        if (ports == NULL) {
+        if (ports == nullptr) {
             running = false;
             std::cerr << "[JACK][ERROR]: No physical audio output (playback) ports are "
                          "available!\n";
@@ -339,8 +339,8 @@ bool initialize_jack() {
         // take care of the usable loudspeakers!
         if (running) {
             for (size_t i = 0; i < speakers->size(); ++i) {
-                if (!((jack_port_name(jackOutputs[i]) == NULL)
-                      || (ports[i] == NULL))) {  // Do not connect to NULL ports
+                if (!((jack_port_name(jackOutputs[i]) == nullptr)
+                      || (ports[i] == nullptr))) {  // Do not connect to NULL ports
                     // jack_connect(jackClient, jack_port_name(jackOutputs[i]), ports[i]);
                     // // TODO: Disabled internal auto-connect in favor of external
                     // startup script!
@@ -498,7 +498,7 @@ TypeChangeCommand::TypeChangeCommand(int id, int t, TimeStamp timestamp)
                                sources->at(sourceId)->angle * M_PI * 2 / 360.0);
         srcPtr->setDopplerEffect(temp->hasDopplerEffect());
     } else {
-        srcPtr = NULL;
+        srcPtr = nullptr;
     }
 }
 
@@ -515,7 +515,7 @@ void TypeChangeCommand::execute() {
 TypeChangeCommand::~TypeChangeCommand() {
     if (srcPtr) {
         delete srcPtr;
-        srcPtr = NULL;
+        srcPtr = nullptr;
     }
 }
 
@@ -944,9 +944,10 @@ int main(int argc, char* argv[]) {
     oscServer->addMethod("/WONDER/source/dopplerEffect", "iif", oscSrcDopplerHandler);
     oscServer->addMethod("/WONDER/listener/position", "iff", oscListenerPosHandler);
     oscServer->addMethod("/WONDER/global/maxNoSources", "i", oscNoSourcesHandler);
-    oscServer->addMethod("/WONDER/global/renderpolygon", NULL, oscRenderPolygonHandler);
+    oscServer->addMethod("/WONDER/global/renderpolygon", nullptr,
+                         oscRenderPolygonHandler);
     oscServer->addMethod("/WONDER/stream/render/ping", "i", oscPingHandler);
-    oscServer->addMethod(NULL, NULL, oscGenericHandler);
+    oscServer->addMethod(nullptr, nullptr, oscGenericHandler);
     oscServer->start();
 
     // connect to cwonder

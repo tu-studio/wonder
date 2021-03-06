@@ -453,8 +453,8 @@ void DelayLine::getFadej(DelayCoeff& coeff0, DelayCoeff& coeff1, float* samples,
     }
 }
 
-float* DelayLine::fadeIn3dB = NULL;
-float* DelayLine::fadeIn6dB = NULL;
+float* DelayLine::fadeIn3dB = nullptr;
+float* DelayLine::fadeIn6dB = nullptr;
 
 void DelayLine::initFadeBuffers(const unsigned int blockSize) {
     fadeIn3dB = new float[blockSize];
