@@ -43,7 +43,7 @@ class OSCServer
     void stop();
 
     void addMethod(const char* path, const char* types, lo_method_handler h,
-                   void* user_data = NULL);
+                   void* user_data = nullptr);
     std::string getContent(const char* path, const char* types, lo_arg** argv, int argc);
 
     lo_server_thread serverThread;

@@ -137,7 +137,7 @@ class Scenario
 
     Scenario(xmlpp::Node* node, int maxNoSources);
 
-    Scenario(const Scenario& other, xmlpp::Node* node = NULL);
+    Scenario(const Scenario& other, xmlpp::Node* node = nullptr);
 
     ~Scenario();
 
