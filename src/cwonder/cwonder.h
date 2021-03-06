@@ -34,6 +34,7 @@
 #include <string>
 #include <vector>
 
+#include "cwonder_config.h"
 #include "events.h"
 #include "liblo_extended.h"
 #include "oscstream.h"
@@ -48,10 +49,6 @@ class ListOSCPing;
 class Cwonder
 {
   public:
-    Cwonder();
-
-    ~Cwonder();
-
     int createProject(std::string path);
     int loadProject(std::string path);
     int saveProject();
@@ -108,7 +105,8 @@ class Cwonder
 
     TimeStamp recordTime;
 
-    Project* project;
+    std::unique_ptr<Project> project =
+        std::make_unique<Project>(cwonderConf->maxNoSources);
     Scenario* scenario{nullptr};
 
     std::string projectFileName;
@@ -117,9 +115,9 @@ class Cwonder
 
     Timeline timeLine;
 
-    OSCStream* renderStream;
-    OSCStream* visualStream;
-    OSCStream* timerStream;
+    std::unique_ptr<OSCStream> renderStream = std::make_unique<OSCStream>("render");
+    std::unique_ptr<OSCStream> visualStream = std::make_unique<OSCStream>("visual");
+    std::unique_ptr<OSCStream> timerStream  = std::make_unique<OSCStream>("timer");
 
     TimeStamp lastRenderPing;
     TimeStamp lastVisualPing;

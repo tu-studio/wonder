@@ -33,8 +33,6 @@
 #include <iostream>
 #include <sstream>
 
-#include "cwonder_config.h"
-
 using std::exception;
 using std::ifstream;
 using std::ios_base;
@@ -44,22 +42,6 @@ using std::string;
 using std::vector;
 
 #define PLAYNOW 0
-
-Cwonder::Cwonder() {
-    renderStream = new OSCStream("render");
-    visualStream = new OSCStream("visual");
-    timerStream  = new OSCStream("timer");
-
-    // create the project and the scenario
-    project  = new Project(cwonderConf->maxNoSources);
-}
-
-Cwonder::~Cwonder() {
-    delete renderStream;
-    delete visualStream;
-    delete timerStream;
-    delete project;
-}
 
 int Cwonder::createProject(string path) {
     // add fileextension ".xml" if it was not passed in path
