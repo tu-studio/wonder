@@ -1599,8 +1599,8 @@ void Cwonder::sendScenario() {
         }
     }
 
-    for (int i = 0; i < (int)scenario->sourceGroupsVector.size(); ++i) {
-        SourceGroup* group = &(scenario->sourceGroupsVector[i]);
+    for (auto& i : scenario->sourceGroupsVector) {
+        SourceGroup* group = &i;
 
         // send to stream receivers (visual)
         for (streamIter = visualStream->begin(); streamIter != visualStream->end();
