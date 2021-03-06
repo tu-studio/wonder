@@ -34,15 +34,9 @@
 #include "speaker.h"
 #include "twonder_config.h"
 
-Source::~Source() {
-    // nothing
-}
+Source::~Source() = default;
 
 PositionSource::PositionSource(const Vector3D& p) : position(p) {
-    // nothing
-}
-
-PointSource::~PointSource() {
     // nothing
 }
 
@@ -173,10 +167,6 @@ bool PointSource::isFocused(const Vector3D& sourcePos) const {
     }
 
     return inside;
-}
-
-PlaneWave::~PlaneWave() {
-    // nothing
 }
 
 DelayCoeff PlaneWave::getDelayCoeff(const Speaker& speaker, ListenerArray& listeners) {

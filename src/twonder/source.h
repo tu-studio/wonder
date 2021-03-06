@@ -92,8 +92,8 @@ class PointSource : public PositionSource
         type          = 1;
         dopplerEffect = true;
     }
-
-    ~PointSource();
+    PointSource() = delete;
+    ~PointSource() = default;
 
     DelayCoeff getDelayCoeff(const Speaker& spk, ListenerArray& listeners);
 
@@ -116,13 +116,13 @@ class PlaneWave : public PositionSource
     // from PositionSource.
     Interpolat<Angle> angle;
 
+    PlaneWave() = delete;
+    ~PlaneWave() = default;
     PlaneWave(const Vector3D& position, float angle)
         : PositionSource(position), angle(angle) {
         type          = 0;
         dopplerEffect = true;
     }
-
-    ~PlaneWave();
 
     DelayCoeff getDelayCoeff(const Speaker& spk, ListenerArray& listeners);
 
