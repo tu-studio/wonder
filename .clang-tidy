@@ -1,4 +1,4 @@
-Checks:          'clang-diagnostic-*,clang-analyzer-*,modernize-use-nullptr,modernize-use-bool-literals'
+Checks:          'clang-diagnostic-*,clang-analyzer-*,modernize-use-nullptr,modernize-use-bool-literals,modernize-use-default-member-init,cppcoreguidelines-special-member-functions'
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
