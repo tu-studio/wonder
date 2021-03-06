@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
 
     // create the control application
     Cwonder* cwonder     = new Cwonder();
-    cwonder->dtdPath     = join(INSTALL_PREFIX, "configs/dtd");
+    cwonder->dtdPath     = join(DATA_DIR, "dtd");
     cwonder->projectPath = cwonderConf->projectPath;
 
     OSCControl* oscctrl;

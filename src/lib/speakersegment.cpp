@@ -177,7 +177,7 @@ int SegmentArray::readFromFile(string fileName) {
             if (root) {
                 // validate the current dom representation, but first find the dtd
                 string dtdPath;
-                dtdPath = join(INSTALL_PREFIX, "configs/dtd/twonder_speakerarray.dtd");
+                dtdPath = join(DATA_DIR, "dtd/twonder_speakerarray.dtd");
                 fin.open(dtdPath.c_str(), std::ios_base::in);
 
                 if (!fin.is_open()) {
