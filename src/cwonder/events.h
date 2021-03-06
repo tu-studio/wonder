@@ -66,7 +66,7 @@ class Event
 class Timeline
 {
   public:
-    Timeline() : found(false) {}
+    Timeline()  {}
 
     ~Timeline();
 
@@ -81,5 +81,5 @@ class Timeline
   private:
     list<Event*> timeline;
     list<Event*>::iterator it, last;
-    bool found;
+    bool found{false};
 };  // class Timeline
