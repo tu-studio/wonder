@@ -21,6 +21,12 @@ subdir('src/cwonder')
 subdir('src/twonder')
 subdir('src/xwonder')
 
-install_subdir('configs', strip_directory: true, install_dir : '/etc/wonder')
+fs = import('fs')
+config_dir = '/etc/wonder'
+if not fs.exists(config_dir)
+	install_subdir('configs', strip_directory: true, install_dir : config_dir )
+else
+	message('/etc/wonder already exists. Remove directory if you want an example configuration!')
+endif
 install_subdir('scripts', install_dir: get_option('datadir') / 'wonder')
 install_subdir('dtd', install_dir: get_option('datadir') / 'wonder')
