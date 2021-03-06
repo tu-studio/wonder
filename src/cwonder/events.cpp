@@ -35,7 +35,7 @@ using std::cout;
 using std::endl;
 
 Event::Event() {
-    from     = NULL;
+    from     = nullptr;
     id       = -1;
     type     = 1;
     active   = false;
@@ -79,7 +79,7 @@ Event* Timeline::getevent(TimeStamp now) {
         ev = (*it);
         timeline.erase(it);
     } else {
-        ev = NULL;
+        ev = nullptr;
     }
 
     return ev;

@@ -96,7 +96,7 @@ void OSCStream::ping(list<OSCStreamClient>& deadClients) {
 
     for (deadIter = deadClients.begin(); deadIter != deadClients.end(); ++deadIter) {
         for (clientsIter = clients.begin(); clientsIter != clients.end(); ++clientsIter) {
-            if ((deadIter->address != NULL) && (clientsIter->address != NULL)
+            if ((deadIter->address != nullptr) && (clientsIter->address != nullptr)
                 && (deadIter->address == clientsIter->address)) {
                 lo_address_free(clientsIter->address);
                 clients.erase(clientsIter);

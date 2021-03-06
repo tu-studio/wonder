@@ -38,7 +38,7 @@
 
 #include "wonder_path.h"
 
-CwonderConfig* cwonderConf = NULL;
+CwonderConfig* cwonderConf = nullptr;
 
 CwonderConfig::CwonderConfig(int argc, char* argv[]) {
     basicMode = false;
@@ -57,12 +57,13 @@ void CwonderConfig::parseArgs(int argc, char* argv[]) {
     int c;
     int option_index = 0;
 
-    static struct option long_options[] = {{"configfile", required_argument, 0, 'c'},
-                                           {"listeningport", required_argument, 0, 'o'},
-                                           {"pingrate", required_argument, 0, 'r'},
-                                           {"basicmode", no_argument, 0, 'b'},
-                                           {"help", no_argument, 0, 'h'},
-                                           {0, 0, 0, 0}};
+    static struct option long_options[] = {
+        {"configfile", required_argument, nullptr, 'c'},
+        {"listeningport", required_argument, nullptr, 'o'},
+        {"pingrate", required_argument, nullptr, 'r'},
+        {"basicmode", no_argument, nullptr, 'b'},
+        {"help", no_argument, nullptr, 'h'},
+        {nullptr, 0, nullptr, 0}};
 
     while (1) {
         c = getopt_long(argc, argv, "c:o:r:bvh", long_options, &option_index);

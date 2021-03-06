@@ -54,7 +54,7 @@ Cwonder::Cwonder() {
 
     // create the project and the scenario
     project  = new Project(cwonderConf->maxNoSources);
-    scenario = NULL;
+    scenario = nullptr;
 
     // these must be set externally !
     dtdPath     = "";
@@ -1370,7 +1370,7 @@ void Cwonder::scheduler(int currtime) {
     for (int i = 0; i < (int)timeLine.getsize(); ++i) {
         ev = timeLine.getevent(nowTime);  // get event which is smaller than timestamp
 
-        if (ev == NULL) {
+        if (ev == nullptr) {
             break;  // no event found that is smaller than the timestamp
         } else {
             if (ev->oscpath == "/WONDER/source/position") {
@@ -1521,7 +1521,7 @@ void Cwonder::scheduler(int currtime) {
 void Cwonder::sendScenario() {
     if (!checkScenario()) { return; }
 
-    lo_address address = NULL;
+    lo_address address = nullptr;
 
     for (int i = 0; i < (int)scenario->sourcesVector.size(); ++i) {
         Source* source = &(scenario->sourcesVector[i]);

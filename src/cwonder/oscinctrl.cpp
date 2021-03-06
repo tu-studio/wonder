@@ -37,10 +37,10 @@
 #include "oscstream.h"
 
 // XXX:these have to be set at runtime
-Cwonder* OSCControl::cwonder        = NULL;
-lo_address OSCControl::timerAddress = NULL;
+Cwonder* OSCControl::cwonder        = nullptr;
+lo_address OSCControl::timerAddress = nullptr;
 
-OSCControl::OSCControl(const char* port) : OSCServer(port) { timerAddress = NULL; }
+OSCControl::OSCControl(const char* port) : OSCServer(port) { timerAddress = nullptr; }
 
 OSCControl::~OSCControl() {
     if (timerAddress) { lo_address_free(timerAddress); }
@@ -64,13 +64,13 @@ void OSCControl::addMethods() {
     addMethod("/WONDER/stream/render/connect", "s", renderStreamConnectHandler, this);
     addMethod("/WONDER/stream/render/connect", "", renderStreamConnectHandler, this);
     addMethod("/WONDER/stream/render/pong", "i", pongHandler, this);
-    addMethod("/WONDER/stream/render/send", NULL, renderSendHandler, this);
+    addMethod("/WONDER/stream/render/send", nullptr, renderSendHandler, this);
 
     addMethod("/WONDER/stream/visual/connect", "ss", visualStreamConnectHandler, this);
     addMethod("/WONDER/stream/visual/connect", "s", visualStreamConnectHandler, this);
     addMethod("/WONDER/stream/visual/connect", "", visualStreamConnectHandler, this);
     addMethod("/WONDER/stream/visual/pong", "i", pongHandler, this);
-    addMethod("/WONDER/stream/visual/send", NULL, visualSendHandler, this);
+    addMethod("/WONDER/stream/visual/send", nullptr, visualSendHandler, this);
 
     addMethod("/WONDER/stream/timer/connect", "ss", timerStreamConnectHandler, this);
     addMethod("/WONDER/stream/timer/connect", "s", timerStreamConnectHandler, this);
@@ -160,7 +160,7 @@ void OSCControl::addMethods() {
 
     // The generic handler must be added last.
     // Otherwise it would be called instead of the handlers.
-    addMethod(NULL, NULL, genericHandler);
+    addMethod(nullptr, nullptr, genericHandler);
 }
 
 int OSCControl::replyHandler(handlerArgs) {
@@ -204,7 +204,7 @@ int OSCControl::timerConnectHandler(handlerArgs) {
 
 int OSCControl::timerErrorHandler(handlerArgs) {
     lo_address_free(timerAddress);
-    timerAddress = NULL;
+    timerAddress = nullptr;
 
     return 0;
 }
