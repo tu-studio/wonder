@@ -72,11 +72,11 @@ void CwonderConfig::parseArgs(int argc, char* argv[]) {
 
         switch (c) {
         case 'c':
-            cwonderConfigFile = strdup(optarg);
+            cwonderConfigFile = optarg;
             break;
 
         case 'o':
-            listeningPort = strdup(optarg);
+            listeningPort = optarg;
             break;
 
         case 'r': {

@@ -116,31 +116,31 @@ void TwonderConfig::parseArgs(int argc, char* argv[]) {
 
         switch (c) {
         case 'c':
-            twonderConfigfile = strdup(optarg);
+            twonderConfigfile = optarg;
             break;
 
         case 's':
-            speakersConfigfile = strdup(optarg);
+            speakersConfigfile = optarg;
             break;
 
         case 'j':
-            jackName = strdup(optarg);
+            jackName = optarg;
             break;
 
         case 'n':
-            name = strdup(optarg);
+            name = optarg;
             break;
 
         case 'o':
-            listeningPort = strdup(optarg);
+            listeningPort = optarg;
             break;
 
         case 'i':
-            cwonderHost = strdup(optarg);
+            cwonderHost = optarg;
             break;
 
         case 'p':
-            cwonderPort = strdup(optarg);
+            cwonderPort = optarg;
             break;
 
         case 'm': {
