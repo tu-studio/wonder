@@ -258,17 +258,13 @@ string Project::show() {
         Element* shortRootNode      = shortDoc.get_root_node();
         Node::NodeList snapshotList = shortRootNode->get_children();
 
-        for (Node::NodeList::iterator iter = snapshotList.begin();
-             iter != snapshotList.end(); ++iter) {
-            if (Element* nodeElement = dynamic_cast<Element*>(*iter)) {
+        for (auto& iter : snapshotList) {
+            if (Element* nodeElement = dynamic_cast<Element*>(iter)) {
                 if (nodeElement->get_name() == "snapshot") {
                     Node::NodeList childList;
                     childList = nodeElement->get_children();
 
-                    for (Node::NodeList::iterator srcIt = childList.begin();
-                         srcIt != childList.end(); ++srcIt) {
-                        nodeElement->remove_node(*srcIt);
-                    }
+                    for (auto& srcIt : childList) { nodeElement->remove_node(srcIt); }
                 }
             }
         }
@@ -447,10 +443,7 @@ int Project::deleteSnapshot(int snapshotID) {
             // remove the sources and groups from the dom representation of the snapshot
             Node::NodeList nList = ((*iter)->node)->get_children();
 
-            for (Node::NodeList::iterator niter = nList.begin(); niter != nList.end();
-                 ++niter) {
-                (*iter)->node->remove_node((*niter));
-            }
+            for (auto& niter : nList) { (*iter)->node->remove_node(niter); }
 
             // remove snapshot from the dom representation
             rootNode->remove_node((*iter)->node);
@@ -641,9 +634,8 @@ void Scenario::readFromDOM() {
         // read data of all sources
         Node::NodeList childList = node->get_children();
 
-        for (Node::NodeList::iterator childListIter = childList.begin();
-             childListIter != childList.end(); ++childListIter) {
-            if (Element* childElement = dynamic_cast<Element*>(*childListIter)) {
+        for (auto& childListIter : childList) {
+            if (Element* childElement = dynamic_cast<Element*>(childListIter)) {
                 elementName = childElement->get_name();
 
                 if (elementName == "source") {
@@ -651,11 +643,8 @@ void Scenario::readFromDOM() {
                     const Element::AttributeList& srcAttribs =
                         childElement->get_attributes();
 
-                    for (Element::AttributeList::const_iterator srcAttrIter =
-                             srcAttribs.begin();
-                         srcAttrIter != srcAttribs.end(); ++srcAttrIter) {
-                        const Attribute* attribute = *srcAttrIter;
-                        attribName                 = attribute->get_name();
+                    for (auto attribute : srcAttribs) {
+                        attribName = attribute->get_name();
                         istringstream is(attribute->get_value());
 
                         if (attribName == "id") {
@@ -744,11 +733,8 @@ void Scenario::readFromDOM() {
                     const Element::AttributeList& grpAttribs =
                         childElement->get_attributes();
 
-                    for (Element::AttributeList::const_iterator grpAttrIter =
-                             grpAttribs.begin();
-                         grpAttrIter != grpAttribs.end(); ++grpAttrIter) {
-                        const Attribute* attribute = *grpAttrIter;
-                        attribName                 = attribute->get_name();
+                    for (auto attribute : grpAttribs) {
+                        attribName = attribute->get_name();
                         istringstream is(attribute->get_value());
 
                         if (attribName == "id") {
@@ -827,42 +813,41 @@ void Scenario::writeToDOM() {
         }
 
         // write source data
-        for (int i = 0; i < (int)sourcesVector.size(); i++) {
-            if (sourcesVector[i].active) {
-                if (Element* sourceElement =
-                        dynamic_cast<Element*>(sourcesVector[i].node)) {
+        for (auto& i : sourcesVector) {
+            if (i.active) {
+                if (Element* sourceElement = dynamic_cast<Element*>(i.node)) {
                     for (auto& srcAttrib : sourceElement->get_attributes()) {
                         attribName = srcAttrib->get_name();
                         ostringstream os;
 
                         if (attribName == "id") {
-                            os << sourcesVector[i].id;
+                            os << i.id;
                         } else if (attribName == "type") {
-                            os << sourcesVector[i].type;
+                            os << i.type;
                         } else if (attribName == "name") {
-                            os << sourcesVector[i].name;
+                            os << i.name;
                         } else if (attribName == "posx") {
-                            os << sourcesVector[i].pos[0];
+                            os << i.pos[0];
                         } else if (attribName == "posy") {
-                            os << sourcesVector[i].pos[1];
+                            os << i.pos[1];
                         } else if (attribName == "posz") {
-                            os << sourcesVector[i].pos[2];
+                            os << i.pos[2];
                         } else if (attribName == "angle") {
-                            os << sourcesVector[i].angle;
+                            os << i.angle;
                         } else if (attribName == "groupId") {
-                            os << sourcesVector[i].groupID;
+                            os << i.groupID;
                         } else if (attribName == "colorR") {
-                            os << sourcesVector[i].color[0];
+                            os << i.color[0];
                         } else if (attribName == "colorG") {
-                            os << sourcesVector[i].color[1];
+                            os << i.color[1];
                         } else if (attribName == "colorB") {
-                            os << sourcesVector[i].color[2];
+                            os << i.color[2];
                         } else if (attribName == "invRotation") {
-                            os << sourcesVector[i].invertedRotationDirection;
+                            os << i.invertedRotationDirection;
                         } else if (attribName == "invScaling") {
-                            os << sourcesVector[i].invertedScalingDirection;
+                            os << i.invertedScalingDirection;
                         } else if (attribName == "doppler") {
-                            os << sourcesVector[i].dopplerEffect;
+                            os << i.dopplerEffect;
                         }
 
                         const Glib::ustring out = os.str();
@@ -873,28 +858,27 @@ void Scenario::writeToDOM() {
         }
 
         // write group data
-        for (int i = 0; i < (int)sourceGroupsVector.size(); i++) {
-            if (sourceGroupsVector[i].active) {
-                if (Element* groupElement =
-                        dynamic_cast<Element*>(sourceGroupsVector[i].node)) {
+        for (auto& i : sourceGroupsVector) {
+            if (i.active) {
+                if (Element* groupElement = dynamic_cast<Element*>(i.node)) {
                     for (auto& grpAttrib : groupElement->get_attributes()) {
                         attribName = grpAttrib->get_name();
                         ostringstream os;
 
                         if (attribName == "id") {
-                            os << sourceGroupsVector[i].id;
+                            os << i.id;
                         } else if (attribName == "posx") {
-                            os << sourceGroupsVector[i].pos[0];
+                            os << i.pos[0];
                         } else if (attribName == "posy") {
-                            os << sourceGroupsVector[i].pos[1];
+                            os << i.pos[1];
                         } else if (attribName == "posz") {
-                            os << sourceGroupsVector[i].pos[2];
+                            os << i.pos[2];
                         } else if (attribName == "colorR") {
-                            os << sourceGroupsVector[i].color[0];
+                            os << i.color[0];
                         } else if (attribName == "colorG") {
-                            os << sourceGroupsVector[i].color[1];
+                            os << i.color[1];
                         } else if (attribName == "colorB") {
-                            os << sourceGroupsVector[i].color[2];
+                            os << i.color[2];
                         }
 
                         const Glib::ustring out = os.str();
@@ -909,46 +893,46 @@ void Scenario::writeToDOM() {
 void Scenario::activateSource(int id) {
     // activate all the sources
     if (id == -1) {
-        for (int i = 0; i < (int)sourcesVector.size(); i++) {
-            sourcesVector[i].active = true;
+        for (auto& i : sourcesVector) {
+            i.active = true;
 
             // if this is the first time this source is activated then
             // add it to the dom representation
             // but only if a parent node does exist
-            if (sourcesVector[i].node == nullptr && node != nullptr) {
+            if (i.node == nullptr && node != nullptr) {
                 ostringstream os;
                 Element* srcElement =
                     dynamic_cast<xmlpp::Element*>(node)->add_child_element("source");
                 os.str("");
-                os << sourcesVector[i].id;
+                os << i.id;
                 srcElement->set_attribute("id", os.str());
 
                 os.str("");
-                os << sourcesVector[i].type;
+                os << i.type;
                 srcElement->set_attribute("type", os.str());
 
                 os.str("");
-                os << sourcesVector[i].name;
+                os << i.name;
                 srcElement->set_attribute("name", os.str());
 
                 os.str("");
-                os << sourcesVector[i].pos[0];
+                os << i.pos[0];
                 srcElement->set_attribute("posx", os.str());
 
                 os.str("");
-                os << sourcesVector[i].pos[1];
+                os << i.pos[1];
                 srcElement->set_attribute("posy", os.str());
 
                 os.str("");
-                os << sourcesVector[i].pos[2];
+                os << i.pos[2];
                 srcElement->set_attribute("posz", os.str());
 
                 os.str("");
-                os << sourcesVector[i].angle;
+                os << i.angle;
                 srcElement->set_attribute("angle", os.str());
 
                 os.str("");
-                os << sourcesVector[i].groupID;
+                os << i.groupID;
                 srcElement->set_attribute("groupId", os.str());
 
                 os.str("");
@@ -975,7 +959,7 @@ void Scenario::activateSource(int id) {
                 os << sourcesVector[id].dopplerEffect;
                 srcElement->set_attribute("doppler", os.str());
 
-                sourcesVector[i].node = srcElement;
+                i.node = srcElement;
             }
         }
     } else {  // activate just one source
@@ -1054,9 +1038,9 @@ void Scenario::activateSource(int id) {
 void Scenario::deactivateSource(int id) {
     // deactivate all the sources (or just one source)
     if (id == -1) {
-        for (int i = 0; i < (int)sourcesVector.size(); i++) {
+        for (auto& i : sourcesVector) {
             // deactivate and reset to default values
-            Source* temp = &(sourcesVector[i]);
+            Source* temp = &i;
 
             temp->active = false;
             // temp->id      = 0; // id should be kept in case of reactivation
@@ -1078,11 +1062,9 @@ void Scenario::deactivateSource(int id) {
 
             temp->dopplerEffect = true;
 
-            if (sourcesVector[i].node && node != nullptr) {
-                node->remove_node(sourcesVector[i].node);
-            }
+            if (i.node && node != nullptr) { node->remove_node(i.node); }
 
-            sourcesVector[i].node = nullptr;
+            i.node = nullptr;
         }
     } else {
         // mandatory boundschecking, operator[] of std::vector is unchecked!
@@ -1180,9 +1162,7 @@ string Scenario::show() {
     ostringstream log;
     log << "Show scenario id=" << id << endl;
 
-    for (int i = 0; i < (int)sourcesVector.size(); i++) {
-        Source& source = sourcesVector[i];
-
+    for (auto& source : sourcesVector) {
         if (source.active) {
             log << endl
                 << "Source id=" << source.id << " type=" << source.type
@@ -1196,9 +1176,7 @@ string Scenario::show() {
         }
     }
 
-    for (int i = 0; i < (int)sourceGroupsVector.size(); i++) {
-        SourceGroup& sourceGroup = sourceGroupsVector[i];
-
+    for (auto& sourceGroup : sourceGroupsVector) {
         if (sourceGroup.active) {
             log << endl
                 << "Group id=" << sourceGroup.id << " x=" << sourceGroup.pos[0]
