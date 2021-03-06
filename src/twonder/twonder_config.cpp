@@ -91,7 +91,7 @@ TwonderConfig::~TwonderConfig() {
 void TwonderConfig::parseArgs(int argc, char* argv[]) {
     int c;
 
-    while (1) {
+    while (true) {
         int option_index                    = 0;
         static struct option long_options[] = {
             {"configfile", required_argument, nullptr, 'c'},
@@ -156,7 +156,7 @@ void TwonderConfig::parseArgs(int argc, char* argv[]) {
         } break;
 
         case 'v':
-            verbose = 1;
+            verbose = true;
             break;
 
         case 1:

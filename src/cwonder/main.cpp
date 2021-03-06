@@ -94,7 +94,7 @@ int main(int argc, char* argv[]) {
 #endif
 
     // now wait for incoming OSC messages
-    while (1) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
+    while (true) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
 
     delete cwonder;
     delete oscctrl;

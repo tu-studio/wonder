@@ -68,7 +68,7 @@ XwonderConfig::XwonderConfig(int argc, char* argv[], QObject* parent) : QObject(
 void XwonderConfig::parseArgs(int argc, char* argv[]) {
     int c;
 
-    while (1) {
+    while (true) {
         int option_index = 0;
 
         static struct option long_options[] = {

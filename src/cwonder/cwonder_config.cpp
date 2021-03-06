@@ -65,7 +65,7 @@ void CwonderConfig::parseArgs(int argc, char* argv[]) {
         {"help", no_argument, nullptr, 'h'},
         {nullptr, 0, nullptr, 0}};
 
-    while (1) {
+    while (true) {
         c = getopt_long(argc, argv, "c:o:r:bvh", long_options, &option_index);
 
         if (c == -1) { break; }
