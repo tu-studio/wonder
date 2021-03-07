@@ -34,8 +34,6 @@
 using std::cout;
 using std::endl;
 
-Event::Event() = default;
-
 Event::~Event() {
     if (from) { lo_address_free(from); }
 }

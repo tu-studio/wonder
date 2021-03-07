@@ -42,8 +42,14 @@ using std::string;
 class Event
 {
   public:
-    Event();
+    Event() = default;
     ~Event();
+
+    Event(Event&&) = default;
+    Event& operator=(Event&&) = default;
+
+    Event(const Event&) = default;
+    Event& operator=(const Event&) = default;
 
     bool operator==(const Event& other) const { return timestamp == other.timestamp; }
 
@@ -67,8 +73,12 @@ class Timeline
 {
   public:
     Timeline() = default;
-
     ~Timeline();
+
+    Timeline(Timeline&&) = default;
+    Timeline& operator=(Timeline&&) = default;
+    Timeline(const Timeline&) = default;
+    Timeline& operator=(const Timeline&) = default;
 
     void addevent(Event* event);
 
