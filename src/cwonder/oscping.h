@@ -78,8 +78,12 @@ class ListOSCPing : public std::list<OSCPing*>
 {
   public:
     ListOSCPing(std::string path);
-
     ~ListOSCPing();
+
+    ListOSCPing(ListOSCPing&&) = default;
+    ListOSCPing& operator=(ListOSCPing&&) = default;
+    ListOSCPing(const ListOSCPing&) = default;
+    ListOSCPing& operator=(const ListOSCPing&) = default;
 
     int add(lo_address a, std::string name = "", int pingSpan = 3,
             int allowedLostPongs = 90);
