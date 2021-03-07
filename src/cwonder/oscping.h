@@ -43,10 +43,10 @@ class OSCPing
             int allowedLostPongs = 90, std::string name = "");
     ~OSCPing() = default;
 
-    OSCPing(OSCPing&&) = default;
-    OSCPing& operator=(OSCPing&&) = default;
-    OSCPing(const OSCPing&)       = default;
-    OSCPing& operator=(const OSCPing&) = default;
+    OSCPing(OSCPing&&) = delete;
+    OSCPing& operator=(OSCPing&&) = delete;
+    OSCPing(const OSCPing&)       = delete;
+    OSCPing& operator=(const OSCPing&) = delete;
 
     /// evaluate responses received and send new ping
     /// if response evaluation indicates that the client is not responding
@@ -80,10 +80,10 @@ class ListOSCPing : public std::list<OSCPing*>
     ListOSCPing(std::string path);
     ~ListOSCPing();
 
-    ListOSCPing(ListOSCPing&&) = default;
-    ListOSCPing& operator=(ListOSCPing&&) = default;
-    ListOSCPing(const ListOSCPing&) = default;
-    ListOSCPing& operator=(const ListOSCPing&) = default;
+    ListOSCPing(ListOSCPing&&) = delete;
+    ListOSCPing& operator=(ListOSCPing&&) = delete;
+    ListOSCPing(const ListOSCPing&) = delete;
+    ListOSCPing& operator=(const ListOSCPing&) = delete;
 
     int add(lo_address a, std::string name = "", int pingSpan = 3,
             int allowedLostPongs = 90);

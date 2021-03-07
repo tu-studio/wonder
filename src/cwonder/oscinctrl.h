@@ -44,10 +44,10 @@ class OSCControl : public OSCServer
     OSCControl(const char* port = "58100");
     ~OSCControl();
 
-    OSCControl(OSCControl&&) = default;
-    OSCControl& operator=(OSCControl&&) = default;
-    OSCControl(const OSCControl&) = default;
-    OSCControl& operator=(const OSCControl&) = default;
+    OSCControl(OSCControl&&) = delete;
+    OSCControl& operator=(OSCControl&&) = delete;
+    OSCControl(const OSCControl&) = delete;
+    OSCControl& operator=(const OSCControl&) = delete;
 
     // add the reply message /WONDER/reply to the known messages
     // pass a pointer to the cwonder object to be able to access member variables
