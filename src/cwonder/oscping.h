@@ -41,6 +41,12 @@ class OSCPing
   public:
     OSCPing(lo_address address, std::string path, int pingSpan = 5,
             int allowedLostPongs = 90, std::string name = "");
+    ~OSCPing() = default;
+
+    OSCPing(OSCPing&&) = default;
+    OSCPing& operator=(OSCPing&&) = default;
+    OSCPing(const OSCPing&)       = default;
+    OSCPing& operator=(const OSCPing&) = default;
 
     /// evaluate responses received and send new ping
     /// if response evaluation indicates that the client is not responding
@@ -57,7 +63,7 @@ class OSCPing
 
   private:
     int pingCount;
-    int pongCount;
+    int pongCount{0};
     int pingSpan;
     int allowedLostPongs;  // in percent
     std::string path;

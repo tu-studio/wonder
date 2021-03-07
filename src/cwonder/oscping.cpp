@@ -39,18 +39,13 @@ using std::string;
 using std::vector;
 
 OSCPing::OSCPing(lo_address address, string path, int pingSpan, int allowedLostPongs,
-                 string name) {
-    this->address = address;
-
-    this->pingSpan         = pingSpan;
-    this->allowedLostPongs = allowedLostPongs;
-
-    pingCount = pingSpan;
-    pongCount = 0;
-
-    this->path = path;
-    this->name = name;
-}
+                 string name)
+    : address(address)
+    , name(name)
+    , pingCount(pingSpan)
+    , pingSpan(pingSpan)
+    , allowedLostPongs(allowedLostPongs)
+    , path(path) {}
 
 bool OSCPing::ping() {
     // check the responses
