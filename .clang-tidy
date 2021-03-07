@@ -1,4 +1,4 @@
-Checks:          'clang-diagnostic-*,clang-analyzer-*,modernize-use-nullptr,modernize-use-bool-literals,modernize-use-default-member-init,cppcoreguidelines-special-member-functions,modernize-use-equals-default,modernize-loop-convert'
+Checks:          'clang-diagnostic-*,clang-analyzer-*,modernize-use-nullptr,modernize-use-bool-literals,modernize-use-default-member-init,cppcoreguidelines-special-member-functions,modernize-use-equals-default,modernize-loop-convert,cppcoreguidelines-prefer-member-initializer'
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
