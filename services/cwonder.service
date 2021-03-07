@@ -1,0 +1,16 @@
+[Unit]
+Description=CWonder
+After=network.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=simple
+PrivateTmp=true
+WorkingDirectory=/opt/wonder/current/scripts/cwonder/
+ExecStart=/bin/bash '/opt/wonder/current/scripts/cwonder/start-cwonder.sh'
+LimitRTPRIO=95
+LimitRTTIME=infinity
+LimitMEMLOCK=infinity
+User=studio

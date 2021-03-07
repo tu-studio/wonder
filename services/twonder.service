@@ -1,0 +1,16 @@
+[Unit]
+Description=TWonder
+After=wonder.target network.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=forking
+PrivateTmp=true
+WorkingDirectory=/opt/wonder/current/scripts/twonder/
+ExecStart=/opt/wonder/current/scripts/twonder/start-twonder.sh n101
+LimitRTPRIO=95
+LimitRTTIME=infinity
+LimitMEMLOCK=infinity
+User=studio
