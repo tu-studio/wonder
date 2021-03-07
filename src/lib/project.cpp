@@ -1194,27 +1194,18 @@ string Scenario::show() {
 
 //---------------------------------Source------------------------------------//
 
-Source::Source() {
-    // set default values
-    node    = nullptr;
-    id      = -1;
-    type    = 1;
-    name    = "";
-    active  = false;
-    angle   = 0.f;
-    groupID = 0;
-
-    // default color is green
-    color[0] = 0;
-    color[1] = 255;
-    color[2] = 0;
-
-    invertedRotationDirection = false;
-    invertedScalingDirection  = false;
-    dopplerEffect             = true;
-}
-
-Source::~Source() { node = nullptr; }
+Source::Source(const Source& other)
+    : id(other.id)
+    , type(other.type)
+    , name(other.name)
+    , active(other.active)
+    , pos(other.pos)
+    , angle(other.angle)
+    , groupID(other.groupID)
+    , color{other.color[0], other.color[1], other.color[2]}
+    , dopplerEffect(other.dopplerEffect)
+    , invertedRotationDirection(other.invertedRotationDirection)
+    , invertedScalingDirection(other.invertedScalingDirection) {}
 
 Source& Source::operator=(Source const& other) {
     id      = other.id;

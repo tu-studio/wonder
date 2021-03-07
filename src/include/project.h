@@ -48,49 +48,53 @@ class Element;
 class Source
 {
   public:
-    Source();
-    ~Source();
+    Source() = default;
+    ~Source() = default;
+
+    Source(Source&&) = default;
+    Source(const Source& other);
+    // move assignement moves data including the node
+    Source& operator=(Source&& other) = default;
+    // assignement copies only data, not the node
+    Source& operator=(Source const& other);
 
     // do the sources have the same id
     bool operator==(Source const& other) const { return (id == other.id); }
 
-    // assignement copies only data, not the node
-    Source& operator=(Source const& other);
-
     // unique identifier of the source ( starting at 0 )
-    int id;
+    int id{-1};
 
     // type of the source: 0 = plane wave, 1 = point source
-    int type;
+    int type{1};
 
     // name of the source
     std::string name;
 
     // if the source is active ( audible and written to the DOM representation )
-    bool active;
+    bool active{false};
 
     // x/y/z-coordinates of the source
     Vector3D pos;
 
     // angle of the source, when source is a plane wave
-    float angle;
+    float angle{0.f};
 
     // id of group the source belongs to ( 0 if no group )
-    int groupID;
+    int groupID{0};
 
     // color in RGB ( values from 0 to 255 )
-    int color[3];
+    int color[3] {0,255,0};
 
     // simulate doppler effect
-    bool dopplerEffect;
+    bool dopplerEffect{true};
 
     // needed for xwonder
     // if source is part of a group, the direction of rotation and scaling can be inverted
-    bool invertedRotationDirection;
-    bool invertedScalingDirection;
+    bool invertedRotationDirection{false};
+    bool invertedScalingDirection{false};
 
     // node in the DOM representation
-    xmlpp::Node* node;
+    xmlpp::Node* node{nullptr};
 
   private:
     Glib::ustring nodename;
