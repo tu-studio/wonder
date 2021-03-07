@@ -54,8 +54,12 @@ class OSCStream
 {
   public:
     OSCStream(std::string name);
-
     ~OSCStream();
+
+    OSCStream(OSCStream&&)      = delete;
+    OSCStream(const OSCStream&) = delete;
+    OSCStream& operator=(OSCStream&&) = delete;
+    OSCStream& operator=(const OSCStream&) = delete;
 
     int connect(std::string host, std::string port, std::string name);
     void disconnect(lo_address b);
