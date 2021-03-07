@@ -8,8 +8,8 @@ WantedBy=multi-user.target
 [Service]
 Type=simple
 PrivateTmp=true
-WorkingDirectory=/opt/wonder/current/scripts/cwonder/
-ExecStart=/bin/bash '/opt/wonder/current/scripts/cwonder/start-cwonder.sh'
+EnvironmentFile=/etc/wonder/cluster.conf
+ExecStart=/bin/bash 'cwonder -c /etc/wonder/cwonder_config.xml -r $(($CWONDER_PING * $JACK_SAMPLERATE))'
 LimitRTPRIO=95
 LimitRTTIME=infinity
 LimitMEMLOCK=infinity
