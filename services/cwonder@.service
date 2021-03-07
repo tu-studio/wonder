@@ -13,4 +13,4 @@ ExecStart=/bin/bash '/opt/wonder/current/scripts/cwonder/start-cwonder.sh'
 LimitRTPRIO=95
 LimitRTTIME=infinity
 LimitMEMLOCK=infinity
-User=studio
+User=%i

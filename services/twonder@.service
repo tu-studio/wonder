@@ -13,4 +13,4 @@ ExecStart=/opt/wonder/current/scripts/twonder/start-twonder.sh n101
 LimitRTPRIO=95
 LimitRTTIME=infinity
 LimitMEMLOCK=infinity
-User=studio
+User=%i
