@@ -78,7 +78,8 @@ bool OSCPing::ping() {
 
 void OSCPing::pong() { ++pongCount; }
 
-ListOSCPing::ListOSCPing(string path) { this->path = path; }
+ListOSCPing::ListOSCPing(string path)
+    : path(path) {}
 
 ListOSCPing::~ListOSCPing() {
     for (clients = begin(); clients != end(); ++clients) { delete (*clients); }
