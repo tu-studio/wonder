@@ -29,7 +29,7 @@ sudo apt-get install meson pkg-config
 
 #### 3. Install WONDER dependencies (libraries and header files) of libxml++2.6, libjack2, liblo, freeglut and Qt5:
 ```
-sudo apt-get install libxml++3.0 libxml++3.0-dev libjack-jackd2-0 libjack-jackd2-dev liblo7 liblo-dev freeglut3 freeglut3-dev qt5-default
+sudo apt-get install libxml++3.0 libxml++3.0-dev libjack-jackd2-0 libjack-jackd2-dev liblo7 liblo-dev qt5-default
 ```
 
 ### BUILD / INSTALLATION
