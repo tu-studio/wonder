@@ -3,7 +3,7 @@
 
 WONDER Lite is a stripped down version of the original *WONDER* suite 
 developed by the Audiocommunication Group at TU Berlin.
-It is forked from the repository of David Runge: https://github.com/dvzrv/wonder
+Eugen Winter of HAW Hamburg updated and improved the codebase.
 
 This package contains the following components of WONDER:
 
