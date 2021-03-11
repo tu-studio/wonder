@@ -37,7 +37,6 @@ class Cwonder;
     const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, \
         void *user_data
 
-using std::string;
 // The OSC Server for cwonder
 class OSCControl : public OSCServer
 {

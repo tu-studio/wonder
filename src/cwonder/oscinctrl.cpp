@@ -535,7 +535,7 @@ int OSCControl::visualStreamConnectHandler(handlerArgs) {
     if (argc == 2) {
         ret = cwonder->visualStreamConnect(&argv[0]->s, &argv[1]->s);
     } else {
-        string name = "";
+        std::string name = "";
 
         if (argc == 1) { name = &argv[0]->s; }
 
@@ -558,7 +558,7 @@ int OSCControl::timerStreamConnectHandler(handlerArgs) {
     if (argc == 2) {
         ret = cwonder->timerStreamConnect(&argv[0]->s, &argv[1]->s);
     } else {
-        string name = "";
+        std::string name = "";
 
         if (argc == 1) { name = &argv[0]->s; }
 
@@ -586,11 +586,11 @@ int OSCControl::visualSendHandler(handlerArgs) {
 int OSCControl::pongHandler(handlerArgs) {
     lo_address from = lo_message_get_source(msg);
 
-    if ((string)path == (string) "/WONDER/stream/render/pong") {
+    if ((std::string)path == (std::string) "/WONDER/stream/render/pong") {
         cwonder->renderStream.pong(argv[0]->i, from);
-    } else if ((string)path == (string) "/WONDER/stream/visual/pong") {
+    } else if ((std::string)path == (std::string) "/WONDER/stream/visual/pong") {
         cwonder->visualStream.pong(argv[0]->i, from);
-    } else if ((string)path == (string) "/WONDER/stream/timer/pong") {
+    } else if ((std::string)path == (std::string) "/WONDER/stream/timer/pong") {
         cwonder->timerStream.pong(argv[0]->i, from);
     }
 
