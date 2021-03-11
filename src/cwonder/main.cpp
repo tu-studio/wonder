@@ -35,7 +35,9 @@
 #include <thread>
 
 #include "cwonder.h"
+#include "timestamp.h"
 #include "cwonder_config.h"
+#include "wonder_path.h"
 #include "oscinctrl.h"
 
 void signalHandler(int signal) {

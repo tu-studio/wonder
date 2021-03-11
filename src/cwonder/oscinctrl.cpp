@@ -515,7 +515,7 @@ int OSCControl::renderStreamConnectHandler(handlerArgs) {
     } else {
         lo_address from = lo_message_get_source(msg);
 
-        string name = "";
+        std::string name = "";
 
         if (argc == 1) { name = &argv[0]->s; }
 

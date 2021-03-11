@@ -33,6 +33,14 @@
 #include <iostream>
 #include <sstream>
 
+#include "cwonder_config.h"
+#include "events.h"
+#include "timestamp.h"
+#include "liblo_extended.h"
+#include "oscstream.h"
+#include "project.h"
+#include "wonder_path.h"
+
 using std::exception;
 using std::ifstream;
 using std::ios_base;
