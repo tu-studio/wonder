@@ -1,8 +1,9 @@
-## CONFIGURATION
+## Locations
 
 |Files|Location|
 |---    |---    |
-|Starup Scripts |*/usr/share/wonder/scripts*|
+|Startup Scripts |*/usr/share/wonder/scripts*|
+|XML DTD |*/usr/share/wonder/dtd*|
 |Configuration files|*/etc/wonder*|
 
 ### Application configuration files
