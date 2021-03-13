@@ -5,6 +5,7 @@ nav:
   - Configuration: Config.md
   - About:
     - Authors: About/Authors.md
+    - License: About/License.md
 theme:
   name: material
   features:
