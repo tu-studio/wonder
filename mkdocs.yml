@@ -1,0 +1,11 @@
+site_name: WONDER
+nav:
+  - Home: index.md
+  - Build: Build.md
+  - Configuration: Config.md
+  - About:
+    - Authors: About/Authors.md
+theme:
+  name: material
+  features:
+    - navigation.tabs
