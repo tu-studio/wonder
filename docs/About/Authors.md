@@ -1,4 +1,19 @@
-## Work from HAW Hamburg
+## Technische Universität Berlin, Germany
+
+    Audio Communication Group
+    www.ak.tu-berlin.de
+    Copyright 2006-2008, 2020-2021
+
+- Marije Baalman
+- Tobias Blaschke
+- Torben Hohn
+- Thilo Koch
+- Eddie Mond
+- Daniel Plewe 
+- Simon Schampijer
+- Nils Tonnätt
+
+## HAW Hamburg
 The speaker configuration files and start-up scripts are for the I²AudioLab (https://i2audiolab.de) at the HAW Hamburg (https://haw-hamburg.de).
 Several bugfixes and changes have been applied to the code base of WONDER version 3.1.9 at the HAW.
 For a better portability the WONDER logging functionalities have been removed.
@@ -13,7 +28,4 @@ The code can be compiled on Linux and Windows.
 The SConstruct script for the compilation has been edited and compiles xwonder with Qt5 instead of Qt4 dependencies.
 
 **Note:** A compilation of xwonder with the SConstruct script on a Windows platforms is not implemented yet.
-
----
-
 
