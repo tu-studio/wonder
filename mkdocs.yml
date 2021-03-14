@@ -1,4 +1,5 @@
 site_name: WONDER
+repo_url: https://github.com/ntonnaett/wonder-lite/
 nav:
   - Home: index.md
   - Build: Build.md
