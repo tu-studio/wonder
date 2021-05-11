@@ -8,8 +8,8 @@ WantedBy=multi-user.target
 [Service]
 Type=forking
 PrivateTmp=true
-WorkingDirectory=/opt/wonder/current/scripts/twonder/
-ExecStart=/opt/wonder/current/scripts/twonder/start-twonder.sh
+WorkingDirectory=@share_dir@/scripts/twonder/
+ExecStart=@share_dir@/scripts/twonder/start-twonder.sh
 LimitRTPRIO=95
 LimitRTTIME=infinity
 LimitMEMLOCK=infinity

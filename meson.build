@@ -20,6 +20,7 @@ subdir('src/lib')
 subdir('src/cwonder')
 subdir('src/twonder')
 subdir('src/xwonder')
+subdir('services')
 
 fs = import('fs')
 config_dir = '/etc/wonder'
