@@ -24,7 +24,7 @@ subdir('src/xwonder')
 fs = import('fs')
 config_dir = '/etc/wonder'
 if not fs.exists(config_dir)
-	install_subdir('configs', strip_directory: true, install_dir : config_dir )
+	install_subdir('configs/EN325', strip_directory: true, install_dir : config_dir )
 else
 	message('/etc/wonder already exists. Remove directory if you want an example configuration!')
 endif
