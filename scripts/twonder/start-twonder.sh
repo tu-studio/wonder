@@ -1,10 +1,8 @@
 #!/bin/bash
 
-NODE=$1
-
 # Read config
 source /etc/wonder/cluster.conf
-source /etc/wonder/twonder_${NODE}.conf
+source /etc/wonder/twonder.conf
 
 i=1;
 
