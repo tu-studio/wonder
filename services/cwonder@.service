@@ -1,0 +1,16 @@
+[Unit]
+Description=CWonder
+After=network.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=simple
+PrivateTmp=true
+EnvironmentFile=/etc/wonder/cluster.conf
+ExecStart=/bin/bash '@bin_dir@/cwonder -c /etc/wonder/cwonder_config.xml -r $(($CWONDER_PING * $JACK_SAMPLERATE))'
+LimitRTPRIO=95
+LimitRTTIME=infinity
+LimitMEMLOCK=infinity
+User=%i
