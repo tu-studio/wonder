@@ -1,0 +1,10 @@
+[wrap-file]
+directory = libxml++-3.2.2
+
+source_url = https://download.gnome.org/sources/libxml++/3.2/libxml++-3.2.2.tar.xz
+source_filename = libxml++-3.2.2.tar.xz
+source_hash = a53d0af2c9bf566b4d5d57d1c6495b189555c54785941d7e3bef666728952f0b
+
+[provide]
+dependency_names = libxml++-3.0
+
