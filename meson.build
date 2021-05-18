@@ -19,7 +19,9 @@ inc = include_directories('src/include')
 subdir('src/lib')
 subdir('src/cwonder')
 subdir('src/twonder')
-subdir('src/xwonder')
+if get_option('xwonder') == true
+	subdir('src/xwonder')
+endif
 subdir('services')
 
 fs = import('fs')
