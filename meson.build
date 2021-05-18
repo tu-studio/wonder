@@ -7,7 +7,7 @@ qt5 = import('qt5')
 
 qt5_dep = dependency('qt5', modules: ['Core', 'Gui', 'Widgets', 'OpenGL', 'Xml'], include_type: 'system')
 thread_dep = dependency('threads')
-xml_dep = dependency('libxml++-3.0')
+xml_dep = dependency('libxml++-3.0', fallback: ['libxml++-3.0', 'xmlxx_dep'])
 jack_dep = dependency('jack')
 liblo_dep = dependency('liblo')
 # Xwonder dependencies
