@@ -217,6 +217,7 @@ DelayCoeff PlaneWave::getTargetDelayCoeff(const Speaker& speaker,
 }
 
 void PlaneWave::doInterpolationStep(wonder_frames_t blocksize) {
+    position.doInterpolationStep(blocksize);  // re-added by MB; august 2010
     angle.doInterpolationStep(blocksize);
 }
 
