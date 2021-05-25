@@ -36,6 +36,7 @@
 #include "delaycoeff.h"
 #include "delayline.h"
 #include "interpolat.h"
+#include "vector2d.h"
 #include "vector3d.h"
 
 class Speaker;
@@ -103,7 +104,7 @@ class PointSource : public PositionSource
   private:
     DelayCoeff calcDelayCoeff(const Speaker& spk, const Vector3D& vec);
 
-    bool isFocused(const Vector3D& src) const;
+    bool isFocused(const Vector3D& src);
     bool didFocusCalc;
     bool wasFocused;
 };

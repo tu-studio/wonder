@@ -29,46 +29,47 @@
 #include "source.h"
 
 #include "delaycoeff.h"
-#include "listener.h"
-#include "listener_array.h"
 #include "speaker.h"
 #include "twonder_config.h"
 
 Source::~Source() = default;
 
-PositionSource::PositionSource(const Vector3D& p) : position(p) {
-    // nothing
-}
+PositionSource::PositionSource(const Vector3D& p) : position(p) {}
 
-DelayCoeff PointSource::getDelayCoeff(const Speaker& speaker, ListenerArray& listeners) {
-    return calcDelayCoeff(speaker, position.getCurrentValue(), listeners);
+DelayCoeff PointSource::getDelayCoeff(const Speaker& speaker) {
+    return calcDelayCoeff(speaker, position.getCurrentValue());
 }
 
 DelayCoeff PointSource::getTargetDelayCoeff(const Speaker& speaker,
-                                            wonder_frames_t blocksize,
-                                            ListenerArray& listeners) {
-    return calcDelayCoeff(speaker, position.getTargetValue(blocksize), listeners);
+                                            wonder_frames_t blocksize) {
+    return calcDelayCoeff(speaker, position.getTargetValue(blocksize));
 }
 
 void PointSource::doInterpolationStep(wonder_frames_t blocksize) {
+    didFocusCalc = false;
     position.doInterpolationStep(blocksize);
 }
 
-DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker, const Vector3D& sourcePos,
-                                       ListenerArray& listeners) {
-    // rendering currently depends on the position of only one listener (listenerID = 0)
-    Listener* listener   = dynamic_cast<Listener*>(listeners.at(0));
-    Vector2D listenerPos = listener->getPos();
+float hanning(float x) { return 1 - (0.5 * cosf(M_PI * x) + 0.5); }
 
-    // calculate the distance between listener and speaker
-    Vector2D lisToSpkVec = speaker.getPos() - listenerPos;
-    float spkFocusLimit  = lisToSpkVec.length();
-
+/// NOTE: this "cleaned up"-version was scrubbed of some essential parts
+/// - slope correction
+/// - transition margin for focused sources (focus range -> focus limit) -> fixed now
+/// - global translate (necessary? --> was used for headphone modus, which could be
+/// interesting to re-implement)
+///
+DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
+                                       const Vector3D& sourcePos) {
     Vector3D srcToSpkVec   = speaker.get3DPos() - sourcePos;
     float normalProjection = srcToSpkVec * speaker.get3DNormal();
     float srcToSpkDistance = srcToSpkVec.length();
     float delay            = srcToSpkDistance;
     float cosphi           = normalProjection / srcToSpkDistance;
+    float window           = 1.0;  // used for interpolation out off focuslimit
+    float inFocus;  // variable to calculate whether within the focus margin
+
+#define focusAngularMax      0.75
+#define focusAngularMaxRange 0.1
 
     // define a circular area around the speakers in which we adjust the amplitude factor
     // to get a smooth transition when moving through the speakers ( e.g. from focussed to
@@ -77,23 +78,54 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker, const Vector3D& s
 
     // if source is in front of speaker
     if (normalProjection < 0.0) {
-        // don't render this source if the distance between source and speaker is bigger
-        // than the distance between listener and speaker
-        if (srcToSpkDistance > spkFocusLimit) { return DelayCoeff(0.0, 0.0); }
+        // don't render this source if it is outside of the defined maximum range
+        // for focussed sources
+        if (srcToSpkDistance > twonderConf->focusLimit) return DelayCoeff(0.0, 0.0);
+
+        if (cosphi > focusAngularMax)  // if angle too large with the speaker array, we
+                                       // don't play this back to avoid too early arriving
+                                       // contributions to the wave front
+            return DelayCoeff(0.0, 0.0);
+
+        inFocus = twonderConf->focusLimit - srcToSpkDistance;
+        if (inFocus < twonderConf->focusMargin) {  // fade out within (fadelimit -
+                                                   // fademargin up to fadelimit
+            window = hanning(inFocus / twonderConf->focusMargin);
+        }
+        inFocus = focusAngularMax - cosphi;
+        if (inFocus < focusAngularMaxRange) {  // fade out within (fadelimit - fademargin
+                                               // up to fadelimit
+            window = window * hanning(inFocus / focusAngularMaxRange);
+        }
 
         // don't render this source if it in front of a this speaker
         // but is not a focussed source
-        if ((!isFocused(sourcePos)) && (srcToSpkDistance > transitionRadius)) {
+        if ((!isFocused(sourcePos)) && (srcToSpkDistance > transitionRadius))
             return DelayCoeff(0.0, 0.0);
+        if (twonderConf->slope) {
+            // we need a slope correction in case the speaker array has a slope
+            Vector3D src3D(sourcePos[0], sourcePos[1],
+                           sourcePos[1] < twonderConf->elevationY1
+                               ? twonderConf->elevationZ1
+                               : (twonderConf->elevationZ1
+                                  + (sourcePos[1] - twonderConf->elevationY1)
+                                        * (twonderConf->slope)));
+            Vector3D diff3D  = speaker.get3DPos() - src3D;
+            normalProjection = diff3D * speaker.get3DNormal();
+            srcToSpkDistance = diff3D.length();
+            delay            = srcToSpkDistance;
         }
 
         // if rendering focussed sources we need to use a "negative delay",
         // i.e. make use of a certain amount of already added pre delay
         // and so we don't get any phase inversion we only use positve numbers
         // for our calculations
-        delay            = -delay;
-        cosphi           = -cosphi;
-        normalProjection = -normalProjection;
+        delay = -delay;  // yes, negative delay, will be substracted effectively from the
+                         // predelay
+                         // NOTE: I'm not sure if these should be negative... (MB)
+        cosphi = -cosphi;  // yes, this one is absolute
+        //   normalProjection = - normalProjection; // this one is not used anymore
+        //   further on
     }
 
     float amplitudeFactor = 0.0;
@@ -101,9 +133,12 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker, const Vector3D& s
     // calculate amplitudefactor according to being in- or outside the transition area
     // around the speakers
     if (srcToSpkDistance > transitionRadius) {
+        // delay is a signed version of srcSpkDistance
         amplitudeFactor =
-            (sqrtf(twonderConf->reference / (twonderConf->reference + normalProjection)))
+            (sqrtf(twonderConf->reference / (twonderConf->reference + delay)))
             * (cosphi / sqrtf(srcToSpkDistance));
+        // amplitudeFactor = ( sqrtf( twonderConf->reference / ( twonderConf->reference +
+        // normalProjection ) ) ) * ( cosphi / sqrtf( srcToSpkDistance ) );
     } else {
         float behind =
             sqrtf(twonderConf->reference / (twonderConf->reference + transitionRadius))
@@ -111,16 +146,17 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker, const Vector3D& s
         float focuss =
             sqrtf(twonderConf->reference / (twonderConf->reference - transitionRadius))
             / sqrtf(transitionRadius);
-
-        amplitudeFactor = behind
-                          + (transitionRadius - normalProjection) / (2 * transitionRadius)
-                                * (focuss - behind);
+        // delay is a signed version of srcSpkDistance, so the point is closer to focus
+        // when delay < 0
+        amplitudeFactor =
+            behind
+            + (transitionRadius - delay) / (2 * transitionRadius) * (focuss - behind);
     }
-
-    return DelayCoeff(delay, amplitudeFactor * speaker.getCosAlpha());
+    // speaker.getCosAlpha is the amplitude correction for the elevation compensation
+    return DelayCoeff(delay, amplitudeFactor * speaker.getCosAlpha() * window);
 }
 
-bool PointSource::isFocused(const Vector3D& sourcePos) const {
+bool PointSource::isFocused(const Vector3D& sourcePos) {
     if (twonderConf->ioMode == IOM_ALWAYSOUT) { return false; }
 
     if (twonderConf->ioMode == IOM_ALWAYSIN) { return true; }
@@ -166,16 +202,17 @@ bool PointSource::isFocused(const Vector3D& sourcePos) const {
         yold = ynew;
     }
 
+    didFocusCalc = true;
+    wasFocused   = inside;
     return inside;
 }
 
-DelayCoeff PlaneWave::getDelayCoeff(const Speaker& speaker, ListenerArray& listeners) {
+DelayCoeff PlaneWave::getDelayCoeff(const Speaker& speaker) {
     return calcDelayCoeff(speaker, angle.getCurrentValue());
 }
 
 DelayCoeff PlaneWave::getTargetDelayCoeff(const Speaker& speaker,
-                                          wonder_frames_t blocksize,
-                                          ListenerArray& listeners) {
+                                          wonder_frames_t blocksize) {
     return calcDelayCoeff(speaker, angle.getTargetValue(blocksize));
 }
 
