@@ -3,9 +3,6 @@ project('wonder', 'cpp',
         license: 'GPL-3.0-or-later',
         default_options: 'cpp_std=c++17')
 
-qt5 = import('qt5')
-
-qt5_dep = dependency('qt5', modules: ['Core', 'Gui', 'Widgets', 'OpenGL', 'Xml'], include_type: 'system')
 thread_dep = dependency('threads')
 xml_dep = dependency('libxml++-3.0', fallback: ['libxml++-3.0', 'xmlxx_dep'])
 jack_dep = dependency('jack')
@@ -20,6 +17,8 @@ subdir('src/lib')
 subdir('src/cwonder')
 subdir('src/twonder')
 if get_option('xwonder') == true
+	qt5 = import('qt5')
+	qt5_dep = dependency('qt5', modules: ['Core', 'Gui', 'Widgets', 'OpenGL', 'Xml'], include_type: 'system')
 	subdir('src/xwonder')
 endif
 subdir('services')
