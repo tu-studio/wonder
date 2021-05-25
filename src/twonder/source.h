@@ -36,7 +36,6 @@
 #include "delaycoeff.h"
 #include "delayline.h"
 #include "interpolat.h"
-#include "listener_array.h"
 #include "vector2d.h"
 #include "vector3d.h"
 
@@ -48,10 +47,9 @@ class Source
   public:
     virtual ~Source();
 
-    virtual DelayCoeff getDelayCoeff(const Speaker& spk, ListenerArray& listeners) = 0;
+    virtual DelayCoeff getDelayCoeff(const Speaker& spk) = 0;
 
-    virtual DelayCoeff getTargetDelayCoeff(const Speaker& spk, wonder_frames_t blocksize,
-                                           ListenerArray& listeners) = 0;
+    virtual DelayCoeff getTargetDelayCoeff(const Speaker& spk, wonder_frames_t blocksize) = 0;
 
     virtual void doInterpolationStep(wonder_frames_t blocksize) = 0;
 
@@ -91,22 +89,24 @@ class PointSource : public PositionSource
     PointSource(const Vector3D& p) : PositionSource(p) {
         type          = 1;
         dopplerEffect = true;
+        didFocusCalc  = false;
+        wasFocused    = false;
     }
     PointSource() = delete;
     ~PointSource() = default;
 
-    DelayCoeff getDelayCoeff(const Speaker& spk, ListenerArray& listeners);
+    DelayCoeff getDelayCoeff(const Speaker& spk);
 
-    DelayCoeff getTargetDelayCoeff(const Speaker& spk, wonder_frames_t blocksize,
-                                   ListenerArray& listeners);
+    DelayCoeff getTargetDelayCoeff(const Speaker& spk, wonder_frames_t blocksize);
 
     void doInterpolationStep(wonder_frames_t blocksize);
 
   private:
-    DelayCoeff calcDelayCoeff(const Speaker& spk, const Vector3D& vec,
-                              ListenerArray& listeners);
+    DelayCoeff calcDelayCoeff(const Speaker& spk, const Vector3D& vec);
 
-    bool isFocused(const Vector3D& src) const;
+    bool isFocused(const Vector3D& src);
+    bool didFocusCalc;
+    bool wasFocused;
 };
 
 class PlaneWave : public PositionSource
@@ -124,10 +124,9 @@ class PlaneWave : public PositionSource
         dopplerEffect = true;
     }
 
-    DelayCoeff getDelayCoeff(const Speaker& spk, ListenerArray& listeners);
+    DelayCoeff getDelayCoeff(const Speaker& spk);
 
-    DelayCoeff getTargetDelayCoeff(const Speaker& spk, wonder_frames_t blocksize,
-                                   ListenerArray& listeners);
+    DelayCoeff getTargetDelayCoeff(const Speaker& spk, wonder_frames_t blocksize);
 
     void doInterpolationStep(wonder_frames_t blocksize);
 

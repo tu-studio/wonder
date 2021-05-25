@@ -55,9 +55,6 @@
 #include "timestamp.h"
 #include "twonder_config.h"
 
-#define NUM_LISTENERS \
-    1  // Number of tracked listeners (currently just working for one listener)
-
 // global variables
 jack_client_t* jackClient;
 jack_port_t** jackInputs;
@@ -65,7 +62,6 @@ jack_port_t** jackOutputs;
 
 SpkArray* speakers;
 SourceArray* sources;
-ListenerArray* listeners;
 OSCServer* oscServer;
 RTCommandEngine* realtimeCommandEngine;
 
@@ -135,9 +131,9 @@ int process(jack_nframes_t nframes, void* arg) {
         // combination
         for (int j = 0; j < twonderConf->noSources; ++j) {
             DelayCoeff c =
-                (*sources)[j]->source->getDelayCoeff(*((*speakers)[i]), *listeners);
+                (*sources)[j]->source->getDelayCoeff(*((*speakers)[i]));
             DelayCoeff c2 = (*sources)[j]->source->getTargetDelayCoeff(
-                *((*speakers)[i]), nframes, *listeners);
+                *((*speakers)[i]), nframes);
 
             // mute a source if it is not active
             if (!(*sources)[j]->active) {
@@ -549,35 +545,6 @@ void DopplerChangeCommand::execute() {
 
 //----------------------------end of DopplerChangeCommand------------------------//
 
-//--------------------------------ListenerMoveCommand----------------------------//
-
-class ListenerMoveCommand : public Command
-{
-  public:
-    ListenerMoveCommand(float x, float y, int id = 0, TimeStamp timestamp = (float)0)
-        : Command(timestamp) {
-        destination_x = x;
-        destination_y = y;
-        listenerId    = id;
-    }
-
-    void execute();
-
-  private:
-    float destination_x;
-    float destination_y;
-    unsigned int listenerId;
-};
-
-void ListenerMoveCommand::execute() {
-    if (listenerId < listeners->size()) {
-        Listener* listener = dynamic_cast<Listener*>(listeners->at(listenerId));
-        listener->setPos(destination_x, destination_y);
-    }
-}
-
-//----------------------------end of ListenerMoveCommand----------------------//
-
 //----------------------------------OSC-handler-------------------------------//
 
 // arguments of the handler functions
@@ -773,22 +740,6 @@ int oscSrcDeactivateHandler(handlerArgs) {
     return 0;
 }
 
-int oscListenerPosHandler(handlerArgs) {
-    int listenerId = argv[0]->i;
-    float newX     = argv[1]->f;
-    float newY     = argv[2]->f;
-
-    if (twonderConf->verbose) {
-        std::cout << "listener-position: id=" << listenerId << " x=" << newX
-                  << " y=" << newY << std::endl;
-    }
-
-    ListenerMoveCommand* lisMoveCmd = new ListenerMoveCommand(newX, newY, listenerId);
-    realtimeCommandEngine->put(lisMoveCmd);
-
-    return 0;
-}
-
 int oscPingHandler(handlerArgs) {
     lo_send(twonderConf->cwonderAddr, "/WONDER/stream/render/pong", "i", argv[0]->i);
 
@@ -942,7 +893,6 @@ int main(int argc, char* argv[]) {
     oscServer->addMethod("/WONDER/source/angle", "ifff", oscSrcAngleHandler);
     oscServer->addMethod("/WONDER/source/dopplerEffect", "ii", oscSrcDopplerHandler);
     oscServer->addMethod("/WONDER/source/dopplerEffect", "iif", oscSrcDopplerHandler);
-    oscServer->addMethod("/WONDER/listener/position", "iff", oscListenerPosHandler);
     oscServer->addMethod("/WONDER/global/maxNoSources", "i", oscNoSourcesHandler);
     oscServer->addMethod("/WONDER/global/renderpolygon", nullptr,
                          oscRenderPolygonHandler);
@@ -969,8 +919,6 @@ int main(int argc, char* argv[]) {
         timeoutCounter++;
     }
 
-    // create the listener array (currently with only one listener)
-    listeners = new ListenerArray(NUM_LISTENERS);
 
     // Initialize JACK
     if (!initialize_jack()) {
