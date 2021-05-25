@@ -7,8 +7,6 @@ thread_dep = dependency('threads')
 xml_dep = dependency('libxml++-3.0', fallback: ['libxml++-3.0', 'xmlxx_dep'])
 jack_dep = dependency('jack')
 liblo_dep = dependency('liblo')
-# Xwonder dependencies
-glu_dep = dependency('glu')
 
 subdir('src/include')
 inc = include_directories('src/include')
@@ -19,6 +17,7 @@ subdir('src/twonder')
 if get_option('xwonder') == true
 	qt5 = import('qt5')
 	qt5_dep = dependency('qt5', modules: ['Core', 'Gui', 'Widgets', 'OpenGL', 'Xml'], include_type: 'system')
+	glu_dep = dependency('glu')
 	subdir('src/xwonder')
 endif
 subdir('services')
