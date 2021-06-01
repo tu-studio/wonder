@@ -1147,11 +1147,10 @@ int Cwonder::setGroupPosition(lo_address from, int groupID, float x, float y) {
 }
 
 int Cwonder::renderStreamConnect(string host, string port, string name) {
-    int ret                     = renderStream.connect(host, port, name);
-    lo_address newClientAddress = (--renderStream.end())->address;
+    lo_address address           = renderStream.connect(host, port, name);
 
     // send number of allowed sources
-    lo_send(newClientAddress, "/WONDER/global/maxNoSources", "i",
+    lo_send(address, "/WONDER/global/maxNoSources", "i",
             cwonderConf->maxNoSources);
 
     // send renderpolygon
@@ -1172,7 +1171,7 @@ int Cwonder::renderStreamConnect(string host, string port, string name) {
         lo_message_add_float(renderPolygonMessage, (*it)[2]);
     }
 
-    lo_send_message(newClientAddress, "/WONDER/global/renderpolygon",
+    lo_send_message(address, "/WONDER/global/renderpolygon",
                     renderPolygonMessage);
     lo_message_free(renderPolygonMessage);
 
@@ -1180,7 +1179,7 @@ int Cwonder::renderStreamConnect(string host, string port, string name) {
     // values
     if (cwonderConf->basicMode) {
         for (int i = 0; i < cwonderConf->maxNoSources; i++) {
-            lo_send(newClientAddress, "/WONDER/source/activate", "i", i);
+            lo_send(address, "/WONDER/source/activate", "i", i);
         }
     } else {
         // send the current status of the sources (even though the host is (still) on the
@@ -1190,19 +1189,19 @@ int Cwonder::renderStreamConnect(string host, string port, string name) {
                 Source* source = &(scenario->sourcesVector[i]);
 
                 if (source->active) {
-                    lo_send(newClientAddress, "/WONDER/source/activate", "i", i);
-                    lo_send(newClientAddress, "/WONDER/source/type", "ii", i,
+                    lo_send(address, "/WONDER/source/activate", "i", i);
+                    lo_send(address, "/WONDER/source/type", "ii", i,
                             source->type);
-                    lo_send(newClientAddress, "/WONDER/source/angle", "if", i,
+                    lo_send(address, "/WONDER/source/angle", "if", i,
                             source->angle);
-                    lo_send(newClientAddress, "/WONDER/source/position", "iff", i,
+                    lo_send(address, "/WONDER/source/position", "iff", i,
                             source->pos[0], source->pos[1]);
-                    lo_send(newClientAddress, "/WONDER/source/position3D", "ifff", i,
+                    lo_send(address, "/WONDER/source/position3D", "ifff", i,
                             source->pos[0], source->pos[1], source->pos[2]);
-                    lo_send(newClientAddress, "/WONDER/source/dopplerEffect", "ii", i,
+                    lo_send(address, "/WONDER/source/dopplerEffect", "ii", i,
                             (int)source->dopplerEffect);
                 } else {
-                    lo_send(newClientAddress, "/WONDER/source/deactivate", "i", i);
+                    lo_send(address, "/WONDER/source/deactivate", "i", i);
                 }
             }
         }
@@ -1210,12 +1209,6 @@ int Cwonder::renderStreamConnect(string host, string port, string name) {
 
     // send information about newly connected stream client on the visual stream
     notifyVisualStreamOfNewStreamClient(host, port, name);
-
-    if (ret == 1) {
-        returnString = "reconnected";
-    } else {
-        returnString = "ok";
-    }
 
     return 0;
 }
@@ -1227,11 +1220,10 @@ int Cwonder::visualStreamConnect(string host, string port, string name) {
         return -1;
     }
 
-    int ret                     = visualStream.connect(host, port, name);
-    lo_address newClientAddress = (--visualStream.end())->address;
+    lo_address address = visualStream.connect(host, port, name);
 
     // send number of allowed sources
-    lo_send(newClientAddress, "/WONDER/global/maxNoSources", "i",
+    lo_send(address, "/WONDER/global/maxNoSources", "i",
             cwonderConf->maxNoSources);
 
     // send renderpolygon
@@ -1252,7 +1244,7 @@ int Cwonder::visualStreamConnect(string host, string port, string name) {
         lo_message_add_float(renderPolygonMessage, (*it)[2]);
     }
 
-    lo_send_message(newClientAddress, "/WONDER/global/renderPolygon",
+    lo_send_message(address, "/WONDER/global/renderPolygon",
                     renderPolygonMessage);
     lo_message_free(renderPolygonMessage);
 
@@ -1262,7 +1254,7 @@ int Cwonder::visualStreamConnect(string host, string port, string name) {
     // send information about the whole project
     // TODO: this may exceed the sizelimit of an OSC message, slice it up
     string p = project.show();
-    lo_send(newClientAddress, "/WONDER/project/xmlDump", "is", p.empty(), p.c_str());
+    lo_send(address, "/WONDER/project/xmlDump", "is", p.empty(), p.c_str());
 
     // send information about newly connected client on the visual stream
     notifyVisualStreamOfNewStreamClient(host, port, name);
@@ -1271,44 +1263,32 @@ int Cwonder::visualStreamConnect(string host, string port, string name) {
     // visual stream client
     for (streamIter = renderStream.begin(); streamIter != renderStream.end();
          ++streamIter) {
-        sendStreamClientDataTo(newClientAddress, *streamIter);
+        sendStreamClientDataTo(address, *streamIter);
     }
 
     for (streamIter = visualStream.begin(); streamIter != visualStream.end();
          ++streamIter) {
-        if (!issame(newClientAddress, streamIter->address)) {
-            sendStreamClientDataTo(newClientAddress, *streamIter);
+        if (!issame(address, streamIter->address)) {
+            sendStreamClientDataTo(address, *streamIter);
         }
     }
 
     for (streamIter = timerStream.begin(); streamIter != timerStream.end();
          ++streamIter) {
-        sendStreamClientDataTo(newClientAddress, *streamIter);
-    }
-
-    if (ret == 1) {
-        returnString = "reconnected";
-    } else {
-        returnString = "ok";
+        sendStreamClientDataTo(address, *streamIter);
     }
 
     return 0;
 }
 
 int Cwonder::timerStreamConnect(string host, string port, string name) {
-    int ret = timerStream.connect(host, port, name);
+    lo_address address = timerStream.connect(host, port, name);
 
     // send the actual frametime
-    lo_send((--timerStream.end())->address, "/WONDER/frametime", "i", nowTime.getTime());
+    lo_send(address, "/WONDER/frametime", "i", nowTime.getTime());
 
     // send information about newly connected stream client on the visual stream
     notifyVisualStreamOfNewStreamClient(host, port, name);
-
-    if (ret == 1) {
-        returnString = "reconnected";
-    } else {
-        returnString = "ok";
-    }
 
     return 0;
 }

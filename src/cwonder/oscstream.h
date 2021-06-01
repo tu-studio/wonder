@@ -61,7 +61,7 @@ class OSCStream
     OSCStream& operator=(OSCStream&&) = delete;
     OSCStream& operator=(const OSCStream&) = delete;
 
-    int connect(std::string host, std::string port, std::string name);
+    lo_address connect(std::string host, std::string port, std::string name);
     void disconnect(lo_address b);
 
     void ping(std::list<OSCStreamClient>& deadClients);

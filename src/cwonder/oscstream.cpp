@@ -47,14 +47,13 @@ OSCStream::~OSCStream() {
     if (pingList) { delete pingList; }
 }
 
-int OSCStream::connect(string host, string port, string name) {
+lo_address OSCStream::connect(string host, string port, string name) {
     lo_address address = lo_address_new(host.c_str(), port.c_str());
 
     // check whether client is already connected
     for (clientsIter = begin(); clientsIter != end(); ++clientsIter) {
         if (issame(clientsIter->address, address)) {
-            lo_address_free(address);
-            return 1;
+            return address;
         }
     }
 
@@ -62,11 +61,11 @@ int OSCStream::connect(string host, string port, string name) {
     clients.push_back(OSCStreamClient(host, port, name, address));
 
     // add to list of pings
-    int ret = pingList->add(address, name);
+    pingList->add(address, name);
 
     // wonderlog->print(LOG_INFO, "[V-OSCStream" + name + "] connect host=" + (string)
     // host + " port=" + (string) port);
-    return ret;
+    return address;
 }
 
 void OSCStream::disconnect(lo_address a) {
