@@ -6,7 +6,7 @@ After=network.target
 WantedBy=multi-user.target
 
 [Service]
-Type=simple
+Type=notify
 PrivateTmp=true
 EnvironmentFile=/etc/wonder/cluster.conf
 ExecStart=@bin_dir@/cwonder -c /etc/wonder/cwonder_config.xml -r 2 -b
