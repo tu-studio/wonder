@@ -1,1 +1,2 @@
 option('xwonder', type : 'boolean', value : false)
+option('systemd', type : 'feature', value : 'auto')

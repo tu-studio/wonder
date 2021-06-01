@@ -7,6 +7,7 @@ thread_dep = dependency('threads')
 xml_dep = dependency('libxml++-3.0', fallback: ['libxml++-3.0', 'xmlxx_dep'])
 jack_dep = dependency('jack')
 liblo_dep = dependency('liblo')
+systemd_dep = dependency('systemd', required: get_option('systemd'))
 
 subdir('src/include')
 inc = include_directories('src/include')
@@ -20,7 +21,10 @@ if get_option('xwonder') == true
 	glu_dep = dependency('glu')
 	subdir('src/xwonder')
 endif
-subdir('services')
+
+if systemd_dep.found()
+	subdir('services')
+endif
 
 fs = import('fs')
 config_dir = '/etc/wonder'
