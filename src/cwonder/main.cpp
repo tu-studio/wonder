@@ -33,6 +33,7 @@
 #include <iostream>
 #include <sstream>
 #include <thread>
+#include <systemd/sd-daemon.h>
 
 #include "cwonder.h"
 #include "timestamp.h"
@@ -95,6 +96,8 @@ int main(int argc, char* argv[]) {
     std::signal(SIGINT, signalHandler);
 #endif
 
+    // Notify systemd that we are ready
+    sd_notify(0, "READY=1");
     // now wait for incoming OSC messages
     while (true) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
 
