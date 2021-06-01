@@ -1,6 +1,6 @@
 [Unit]
 Description=TWonder
-After=cwonder.target network.target
+After=network.target
 
 [Install]
 WantedBy=multi-user.target
