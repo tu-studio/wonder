@@ -905,13 +905,15 @@ int main(int argc, char* argv[]) {
             twonderConf->name.c_str());
 
     // wait for cwonder to send setup data
-    // exit, if it does not work
+    // reconnect if it doesn't work
     while (twonderConf->noSources == 0) {
         static int timeoutCounter = 0;
         std::this_thread::sleep_for(std::chrono::seconds(1));
 
         if (timeoutCounter == 15) {
             std::cerr << "Cannot connect to cwonder...\n";
+            lo_send(twonderConf->cwonderAddr, "/WONDER/stream/render/connect", "s",
+            twonderConf->name.c_str());
         }
         timeoutCounter++;
     }
