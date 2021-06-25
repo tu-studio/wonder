@@ -109,6 +109,8 @@ class SourceGroup
     // do the sources have the same id
     bool operator==(SourceGroup const& other) const { return (id == other.id); }
 
+    SourceGroup() = default;
+    SourceGroup(SourceGroup const&) = default;
     // assignement copies only data, not the node
     SourceGroup& operator=(SourceGroup const& other);
 
