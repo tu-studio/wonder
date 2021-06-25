@@ -552,9 +552,10 @@ void DopplerChangeCommand::execute() {
 //----------------------------------OSC-handler-------------------------------//
 
 // arguments of the handler functions
-// #define handlerArgs                                                               \
-//     const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, \
-//         void *user_data
+/* #define handlerArgs                                                               \
+ *     const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, \
+ *         void *user_data
+ */
 
 int oscSrcPositionHandler(const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, void *user_data) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return -1; }
