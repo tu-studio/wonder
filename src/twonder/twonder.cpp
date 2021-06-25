@@ -100,7 +100,7 @@ void exitCleanupFunction() {
 }
 
 // Shutdown callback process if the server shuts down or disconnects this jack client
-void jack_shutdown(void* arg) {
+void jack_shutdown(void*  /*arg*/) {
     std::cerr << "[JACK]: JACK server was shut down or disconnected this JACK client - "
                  "exiting now!\n";
     std::exit(EXIT_FAILURE);
@@ -108,7 +108,7 @@ void jack_shutdown(void* arg) {
 
 //-------------------------------Audio processing----------------------------//
 
-int process(jack_nframes_t nframes, void* arg) {
+int process(jack_nframes_t nframes, void*  /*arg*/) {
     // process incoming commands
     realtimeCommandEngine->evaluateCommands((wonder_frames_t)10);
 
@@ -557,7 +557,7 @@ void DopplerChangeCommand::execute() {
  *         void *user_data
  */
 
-int oscSrcPositionHandler(const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, void *user_data) {
+int oscSrcPositionHandler(const char * /*path*/, const char * /*types*/, lo_arg **argv, int argc, lo_message  /*msg*/, void * /*user_data*/) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return -1; }
 
     if (!sources->at(argv[0]->i)->active) { return 0; }
@@ -592,7 +592,7 @@ int oscSrcPositionHandler(const char *path, const char *types, lo_arg **argv, in
     return 0;
 }
 
-int oscSrcPositionHandler3D(const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, void *user_data) {
+int oscSrcPositionHandler3D(const char * /*path*/, const char * /*types*/, lo_arg **argv, int argc, lo_message  /*msg*/, void * /*user_data*/) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return -1; }
 
     if (!sources->at(argv[0]->i)->active) { return 0; }
@@ -627,7 +627,7 @@ int oscSrcPositionHandler3D(const char *path, const char *types, lo_arg **argv, 
     return 0;
 }
 
-int oscSrcAngleHandler(const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, void *user_data) {
+int oscSrcAngleHandler(const char * /*path*/, const char * /*types*/, lo_arg **argv, int argc, lo_message  /*msg*/, void * /*user_data*/) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return -1; }
 
     if (!sources->at(argv[0]->i)->active) { return 0; }
@@ -662,7 +662,7 @@ int oscSrcAngleHandler(const char *path, const char *types, lo_arg **argv, int a
     return 0;
 }
 
-int oscSrcTypeHandler(const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, void *user_data) {
+int oscSrcTypeHandler(const char * /*path*/, const char * /*types*/, lo_arg **argv, int argc, lo_message  /*msg*/, void * /*user_data*/) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0) || (argv[1]->i < 0)
         || (argv[1]->i > 1)) {
         return -1;
@@ -690,7 +690,7 @@ int oscSrcTypeHandler(const char *path, const char *types, lo_arg **argv, int ar
     return 0;
 }
 
-int oscSrcDopplerHandler(const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, void *user_data) {
+int oscSrcDopplerHandler(const char * /*path*/, const char * /*types*/, lo_arg **argv, int argc, lo_message  /*msg*/, void * /*user_data*/) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return -1; }
 
     if (!sources->at(argv[0]->i)->active) { return 0; }
@@ -713,7 +713,7 @@ int oscSrcDopplerHandler(const char *path, const char *types, lo_arg **argv, int
     return 0;
 }
 
-int oscReplyHandler(const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, void *user_data) {
+int oscReplyHandler(const char * /*path*/, const char * /*types*/, lo_arg **argv, int  /*argc*/, lo_message  /*msg*/, void * /*user_data*/) {
     if (twonderConf->verbose) {
         std::cout << "[V-OSCServer] reply to: " << &argv[0]->s << " state=" << argv[1]->i
                   << " msg=" << &argv[2]->s << std::endl;
@@ -722,7 +722,7 @@ int oscReplyHandler(const char *path, const char *types, lo_arg **argv, int argc
     return 0;
 }
 
-int oscSrcActivateHandler(const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, void *user_data) {
+int oscSrcActivateHandler(const char * /*path*/, const char * /*types*/, lo_arg **argv, int  /*argc*/, lo_message  /*msg*/, void * /*user_data*/) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return 0; }
 
     if (twonderConf->verbose) { std::cout << "osc-activate " << argv[0]->i << std::endl; }
@@ -732,7 +732,7 @@ int oscSrcActivateHandler(const char *path, const char *types, lo_arg **argv, in
     return 0;
 }
 
-int oscSrcDeactivateHandler(const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, void *user_data) {
+int oscSrcDeactivateHandler(const char * /*path*/, const char * /*types*/, lo_arg **argv, int  /*argc*/, lo_message  /*msg*/, void * /*user_data*/) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return 0; }
 
     if (twonderConf->verbose) {
@@ -745,13 +745,13 @@ int oscSrcDeactivateHandler(const char *path, const char *types, lo_arg **argv, 
     return 0;
 }
 
-int oscPingHandler(const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, void *user_data) {
+int oscPingHandler(const char * /*path*/, const char * /*types*/, lo_arg **argv, int  /*argc*/, lo_message  /*msg*/, void * /*user_data*/) {
     lo_send(twonderConf->cwonderAddr, "/WONDER/stream/render/pong", "i", argv[0]->i);
 
     return 0;
 }
 
-int oscNoSourcesHandler(const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, void *user_data) {
+int oscNoSourcesHandler(const char * /*path*/, const char * /*types*/, lo_arg **argv, int  /*argc*/, lo_message  /*msg*/, void * /*user_data*/) {
     // this handler is only allowed to be called once and only with a valid value at
     // startup, so ignore further messages
     static bool noSourcesIsSet = false;
@@ -767,7 +767,7 @@ int oscNoSourcesHandler(const char *path, const char *types, lo_arg **argv, int 
     return 0;
 }
 
-int oscRenderPolygonHandler(const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, void *user_data) {
+int oscRenderPolygonHandler(const char * /*path*/, const char * /*types*/, lo_arg **argv, int  /*argc*/, lo_message  /*msg*/, void * /*user_data*/) {
     // parse incoming points
     // argv[0] is the roomname, drop it, we don't need that
     // get number of points
@@ -785,7 +785,7 @@ int oscRenderPolygonHandler(const char *path, const char *types, lo_arg **argv, 
     return 0;
 }
 
-int oscGenericHandler(const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, void *user_data) {
+int oscGenericHandler(const char *path, const char * /*types*/, lo_arg ** /*argv*/, int  /*argc*/, lo_message  /*msg*/, void * /*user_data*/) {
     if (twonderConf->verbose) {
         std::cout << "\n[twonder]: received unknown osc message: " << path << std::endl;
     }
