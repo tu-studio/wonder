@@ -110,7 +110,7 @@ int ListOSCPing::remove(lo_address b) {
     return 1;
 }
 
-int ListOSCPing::pong(int seq, lo_address from) {
+int ListOSCPing::pong(int /*seq*/, lo_address from) {
     for (clients = begin(); clients != end(); ++clients) {
         if (issame((*clients)->address, from)) {
             (*clients)->pong();
