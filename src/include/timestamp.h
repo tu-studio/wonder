@@ -52,7 +52,6 @@ class TimeStamp
 
     wonder_frames_t operator-(TimeStamp const& other) const;
     TimeStamp& operator-=(TimeStamp const& other);
-    TimeStamp& operator=(TimeStamp const& other);
     bool operator<(TimeStamp const& other) const;
     bool operator>=(TimeStamp const& other) const;
     bool operator==(TimeStamp const& other) const;

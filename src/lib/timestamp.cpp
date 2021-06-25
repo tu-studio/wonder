@@ -98,8 +98,6 @@ TimeStamp& TimeStamp::operator-=(TimeStamp const& other) {
     return *this;
 }
 
-TimeStamp& TimeStamp::operator=(TimeStamp const& other) = default;
-
 bool TimeStamp::operator>=(TimeStamp const& other) const { return (!(*this < other)); }
 
 bool TimeStamp::operator==(TimeStamp const& other) const { return time == other.time; }
