@@ -28,85 +28,85 @@
 
 #pragma once
 
-#include "types.h"
+#include <libxml++/libxml++.h>
 
-//----------------------------------TimeStamp--------------------------------//
+#include <vector>
 
-class TimeStamp
+#include "config.h"
+#include "vector3d.hpp"
+
+namespace xmlpp
+{
+class Node;
+}
+
+//-----------------------------------Segment---------------------------------//
+
+// A segment of speakers
+class Segment
 {
   public:
-    static void initSampleRate(int newSampleRate);
+    Segment(xmlpp::Node* node);
 
-    TimeStamp();
-    TimeStamp(wonder_frames_t time);
-    TimeStamp(float sec);
+    void syncToXML();
 
-    void setTime(wonder_frames_t time);
-
-    // get the time in samples
-    wonder_frames_t getTime() const;
-
-    float getTimeInSeconds();
-
-    void addsec(float sec);
-
-    wonder_frames_t operator-(TimeStamp const& other) const;
-    TimeStamp& operator-=(TimeStamp const& other);
-    bool operator<(TimeStamp const& other) const;
-    bool operator>=(TimeStamp const& other) const;
-    bool operator==(TimeStamp const& other) const;
-
-    void show(const char* name);
-
-  protected:
-    // the value of the timestamp in samples
-    wonder_frames_t time;
-
-    static int sampleRate;
-};
-
-//-------------------------------end of TimeStamp----------------------------//
-
-//---------------------------------TimeStampSc-------------------------------//
-
-// special timestamp class for the scoreplayer
-
-class TimeStampSc : public TimeStamp
-{
-  public:
-    TimeStampSc(int period);
-    TimeStampSc(wonder_frames_t time, int period);
-    TimeStampSc(float sec, int period, float scaleFact = 1.0);
-
-    bool operator<(TimeStampSc const& other) const;
-    bool operator>=(TimeStampSc const& other) const;
-    bool operator==(TimeStampSc const& other) const;
-
-    void setTime(wonder_frames_t time, int wraps);
-
-    void setPeriod(int period);
-
-    void setLastTime(int nowTime);
-
-    // Call this to update the timestamp at each period. This
-    // wraps around and increments a counter (called wraps) at each wrap.
-    // Use this function when you want to update the record  time.
-    void update(wonder_frames_t nowTime);
-
-    float getTimeInSeconds();
-
-    void show(char* name);
+    int id;
+    int noSpeakers;
+    float windowWidth;
+    Vector3D start;
+    Vector3D end;
+    Vector3D normal;
 
   private:
-    // since a uint_32 wraps at (4294967295U), only 27 hours (when using a sampling rate
-    // of 44100) can be recorded. To record longer scores the timestamp wraps are stored
-    // in wraps
-    int wraps;
+    void readFromXML();
 
-    int period;
-
-    // used in update
-    wonder_frames_t lastTime;
+    xmlpp::Node* node;
+    Glib::ustring nodeName;
 };
 
-//-----------------------------end of TimeStampSc----------------------------//
+//-------------------------------end of Segment------------------------------//
+
+//---------------------------------SegmentArray------------------------------//
+
+// Array of speaker segments
+class SegmentArray
+{
+  public:
+    SegmentArray(std::string fileName);
+    ~SegmentArray();
+
+    std::vector<Segment*> segments;
+
+  private:
+    void getSegments(xmlpp::Node* node, const Glib::ustring& xpath);
+
+    int readFromFile(std::string fileName);
+};
+
+//-----------------------------end of SegmentArray---------------------------//
+
+//-------------------------------SegmentArrayIter----------------------------//
+
+// An iterator for the dom representation of the segments of speakers.
+// This iterator is used to traverse the dom tree. If a segment is found, a new object of
+// type Segment gets constructed and initialised by the attributes of the xml-element.
+class SegmentArrayIter : public xmlpp::Node::NodeSet::iterator
+{
+  public:
+    SegmentArrayIter() : xmlpp::Node::NodeSet::iterator() {
+        // nothing
+    }
+
+    SegmentArrayIter(const xmlpp::Node::NodeSet::iterator& other)
+        : xmlpp::Node::NodeSet::iterator(other) {}
+
+    ~SegmentArrayIter() {
+        // nothing
+    }
+
+    /// construct a segment when the operator* is called
+    // XXX: maybe think this over... new in * is not so common...
+    Segment* operator*();
+};
+
+//---------------------------end of SegmentArrayIter-------------------------//

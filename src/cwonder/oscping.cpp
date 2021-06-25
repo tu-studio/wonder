@@ -31,7 +31,7 @@
 #include <iostream>
 
 #include "cwonder_config.h"
-#include "liblo_extended.h"
+#include "liblo_extended.hpp"
 #include "oscstream.h"
 
 using std::list;

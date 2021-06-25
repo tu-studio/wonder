@@ -26,7 +26,7 @@
  *                                                                                   *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include "jackringbuffer.h"
+#include "jackringbuffer.hpp"
 
 JackRingbuffer::JackRingbuffer(int size) { ringBuffer = jack_ringbuffer_create(size); }
 

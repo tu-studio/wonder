@@ -36,8 +36,8 @@
 #include "delaycoeff.h"
 #include "delayline.h"
 #include "interpolat.h"
-#include "vector2d.h"
-#include "vector3d.h"
+#include "vector2d.hpp"
+#include "vector3d.hpp"
 
 class Speaker;
 class DelayCoeff;

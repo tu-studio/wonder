@@ -34,7 +34,7 @@
 #include <filesystem>
 
 #include "cwonder_config.h"
-#include "liblo_extended.h"
+#include "liblo_extended.hpp"
 
 using std::ios;
 using std::list;

@@ -32,9 +32,9 @@
 #include <list>
 #include <thread>
 
-#include "jackringbuffer.h"
-#include "pthread.h"
-#include "timestamp.h"
+#include "jackringbuffer.hpp"
+// #include "pthread.h"
+#include "timestamp.hpp"
 
 class Command
 {

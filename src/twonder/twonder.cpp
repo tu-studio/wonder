@@ -48,11 +48,11 @@
 #include <utility>
 #include <vector>
 
-#include "oscin.h"
-#include "rtcommandengine.h"
+#include "oscin.hpp"
+#include "rtcommandengine.hpp"
 #include "source.h"
 #include "speaker.h"
-#include "timestamp.h"
+#include "timestamp.hpp"
 #include "twonder_config.h"
 
 // global variables

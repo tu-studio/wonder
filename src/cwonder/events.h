@@ -33,8 +33,8 @@
 #include <list>
 #include <string>
 
-#include "timestamp.h"
-#include "vector3d.h"
+#include "timestamp.hpp"
+#include "vector3d.hpp"
 
 using std::list;
 using std::string;

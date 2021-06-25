@@ -36,7 +36,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "wonder_path.h"
+#include "wonder_path.hpp"
 
 CwonderConfig* cwonderConf = nullptr;
 

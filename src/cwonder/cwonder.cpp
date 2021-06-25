@@ -35,11 +35,11 @@
 
 #include "cwonder_config.h"
 #include "events.h"
-#include "timestamp.h"
-#include "liblo_extended.h"
+#include "timestamp.hpp"
+#include "liblo_extended.hpp"
 #include "oscstream.h"
-#include "project.h"
-#include "wonder_path.h"
+#include "project.hpp"
+#include "wonder_path.hpp"
 
 using std::exception;
 using std::ifstream;

@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "oscin.h"
+#include "oscin.hpp"
 
 class Cwonder;
 

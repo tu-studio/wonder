@@ -26,7 +26,7 @@
  *                                                                                   *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include "rtcommandengine.h"
+#include "rtcommandengine.hpp"
 
 #include <algorithm>
 

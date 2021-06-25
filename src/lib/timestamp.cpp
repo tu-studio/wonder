@@ -26,11 +26,11 @@
  *                                                                                   *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include "timestamp.h"
+#include "timestamp.hpp"
 
 #include <iostream>
 
-#include "constants.h"
+#include "constants.hpp"
 
 //----------------------------------TimeStamp--------------------------------//
 

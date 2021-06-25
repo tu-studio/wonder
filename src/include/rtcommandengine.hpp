@@ -4,7 +4,7 @@
  *  http://swonder.sourceforge.net                                                   *
  *                                                                                   *
  *                                                                                   *
- *  Technische Universit‰t Berlin, Germany                                           *
+ *  Technische Universit√§t Berlin, Germany                                           *
  *  Audio Communication Group                                                        *
  *  www.ak.tu-berlin.de                                                              *
  *  Copyright 2006-2008                                                              *
@@ -28,85 +28,36 @@
 
 #pragma once
 
-#include <libxml++/libxml++.h>
+#include "commandqueue.hpp"
+#include "timestamp.hpp"
 
-#include <vector>
-
-#include "config.h"
-#include "vector3d.h"
-
-namespace xmlpp
-{
-class Node;
-}
-
-//-----------------------------------Segment---------------------------------//
-
-// A segment of speakers
-class Segment
+class RTCommandEngine
 {
   public:
-    Segment(xmlpp::Node* node);
+    RTCommandEngine();
+    ~RTCommandEngine();
 
-    void syncToXML();
+    // enqueue a Command, in order for it to be evaluated later on.
+    // the caller must not delete the Command object. This is done automatically via the
+    // freeQueue.
+    void put(Command* command);
 
-    int id;
-    int noSpeakers;
-    float windowWidth;
-    Vector3D start;
-    Vector3D end;
-    Vector3D normal;
+    void evaluateCommands(TimeStamp timeStamp);
 
   private:
-    void readFromXML();
+    CommandQueue commandQueue;
+    FreeQueue freeQueue;
 
-    xmlpp::Node* node;
-    Glib::ustring nodeName;
+    CommandList accumulatedCommands;
+    CommandList returnValueList;
+
+    CommandList* commandsToBeFreed;
+
+    void mergeIncomingCommands();
+
+    CommandList* getDueCommands(TimeStamp timeStamp);
+
+    void scheduleCommandListForDeletion(CommandList* commands);
+
+    static void processCommand(Command* command);
 };
-
-//-------------------------------end of Segment------------------------------//
-
-//---------------------------------SegmentArray------------------------------//
-
-// Array of speaker segments
-class SegmentArray
-{
-  public:
-    SegmentArray(std::string fileName);
-    ~SegmentArray();
-
-    std::vector<Segment*> segments;
-
-  private:
-    void getSegments(xmlpp::Node* node, const Glib::ustring& xpath);
-
-    int readFromFile(std::string fileName);
-};
-
-//-----------------------------end of SegmentArray---------------------------//
-
-//-------------------------------SegmentArrayIter----------------------------//
-
-// An iterator for the dom representation of the segments of speakers.
-// This iterator is used to traverse the dom tree. If a segment is found, a new object of
-// type Segment gets constructed and initialised by the attributes of the xml-element.
-class SegmentArrayIter : public xmlpp::Node::NodeSet::iterator
-{
-  public:
-    SegmentArrayIter() : xmlpp::Node::NodeSet::iterator() {
-        // nothing
-    }
-
-    SegmentArrayIter(const xmlpp::Node::NodeSet::iterator& other)
-        : xmlpp::Node::NodeSet::iterator(other) {}
-
-    ~SegmentArrayIter() {
-        // nothing
-    }
-
-    /// construct a segment when the operator* is called
-    // XXX: maybe think this over... new in * is not so common...
-    Segment* operator*();
-};
-
-//---------------------------end of SegmentArrayIter-------------------------//

@@ -26,7 +26,7 @@
  *                                                                                   *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include "liblo_extended.h"
+#include "liblo_extended.hpp"
 
 #include <cstring>
 

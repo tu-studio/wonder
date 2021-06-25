@@ -26,14 +26,14 @@
  *                                                                                   *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include "speakersegment.h"
+#include "speakersegment.hpp"
 
 #include <exception>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
-#include "wonder_path.h"
+#include "wonder_path.hpp"
 
 using std::exception;
 using std::ifstream;

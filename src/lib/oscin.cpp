@@ -26,7 +26,7 @@
  *                                                                                   *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include "oscin.h"
+#include "oscin.hpp"
 
 #include <sstream>
 

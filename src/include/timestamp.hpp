@@ -4,7 +4,7 @@
  *  http://swonder.sourceforge.net                                                   *
  *                                                                                   *
  *                                                                                   *
- *  Technische Universit√§t Berlin, Germany                                           *
+ *  Technische Universit‰t Berlin, Germany                                           *
  *  Audio Communication Group                                                        *
  *  www.ak.tu-berlin.de                                                              *
  *  Copyright 2006-2008                                                              *
@@ -28,36 +28,85 @@
 
 #pragma once
 
-#include "commandqueue.h"
-#include "timestamp.h"
+#include "types.hpp"
 
-class RTCommandEngine
+//----------------------------------TimeStamp--------------------------------//
+
+class TimeStamp
 {
   public:
-    RTCommandEngine();
-    ~RTCommandEngine();
+    static void initSampleRate(int newSampleRate);
 
-    // enqueue a Command, in order for it to be evaluated later on.
-    // the caller must not delete the Command object. This is done automatically via the
-    // freeQueue.
-    void put(Command* command);
+    TimeStamp();
+    TimeStamp(wonder_frames_t time);
+    TimeStamp(float sec);
 
-    void evaluateCommands(TimeStamp timeStamp);
+    void setTime(wonder_frames_t time);
+
+    // get the time in samples
+    wonder_frames_t getTime() const;
+
+    float getTimeInSeconds();
+
+    void addsec(float sec);
+
+    wonder_frames_t operator-(TimeStamp const& other) const;
+    TimeStamp& operator-=(TimeStamp const& other);
+    bool operator<(TimeStamp const& other) const;
+    bool operator>=(TimeStamp const& other) const;
+    bool operator==(TimeStamp const& other) const;
+
+    void show(const char* name);
+
+  protected:
+    // the value of the timestamp in samples
+    wonder_frames_t time;
+
+    static int sampleRate;
+};
+
+//-------------------------------end of TimeStamp----------------------------//
+
+//---------------------------------TimeStampSc-------------------------------//
+
+// special timestamp class for the scoreplayer
+
+class TimeStampSc : public TimeStamp
+{
+  public:
+    TimeStampSc(int period);
+    TimeStampSc(wonder_frames_t time, int period);
+    TimeStampSc(float sec, int period, float scaleFact = 1.0);
+
+    bool operator<(TimeStampSc const& other) const;
+    bool operator>=(TimeStampSc const& other) const;
+    bool operator==(TimeStampSc const& other) const;
+
+    void setTime(wonder_frames_t time, int wraps);
+
+    void setPeriod(int period);
+
+    void setLastTime(int nowTime);
+
+    // Call this to update the timestamp at each period. This
+    // wraps around and increments a counter (called wraps) at each wrap.
+    // Use this function when you want to update the record  time.
+    void update(wonder_frames_t nowTime);
+
+    float getTimeInSeconds();
+
+    void show(char* name);
 
   private:
-    CommandQueue commandQueue;
-    FreeQueue freeQueue;
+    // since a uint_32 wraps at (4294967295U), only 27 hours (when using a sampling rate
+    // of 44100) can be recorded. To record longer scores the timestamp wraps are stored
+    // in wraps
+    int wraps;
 
-    CommandList accumulatedCommands;
-    CommandList returnValueList;
+    int period;
 
-    CommandList* commandsToBeFreed;
-
-    void mergeIncomingCommands();
-
-    CommandList* getDueCommands(TimeStamp timeStamp);
-
-    void scheduleCommandListForDeletion(CommandList* commands);
-
-    static void processCommand(Command* command);
+    // used in update
+    wonder_frames_t lastTime;
 };
+
+//-----------------------------end of TimeStampSc----------------------------//

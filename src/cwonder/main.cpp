@@ -36,9 +36,9 @@
 #include <systemd/sd-daemon.h>
 
 #include "cwonder.h"
-#include "timestamp.h"
+#include "timestamp.hpp"
 #include "cwonder_config.h"
-#include "wonder_path.h"
+#include "wonder_path.hpp"
 #include "oscinctrl.h"
 
 sig_atomic_t stopFlag = 0;

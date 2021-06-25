@@ -32,9 +32,9 @@
 
 #include <vector>
 
-#include "speakersegment.h"
-#include "vector2d.h"
-#include "vector3d.h"
+#include "speakersegment.hpp"
+#include "vector2d.hpp"
+#include "vector3d.hpp"
 
 class Speaker
 {
