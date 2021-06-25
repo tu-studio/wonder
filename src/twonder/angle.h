@@ -37,6 +37,7 @@ class Angle
     Angle(const Angle& other);
 
     const Angle& operator=(float angle);
+    const Angle& operator=(const Angle& angle);
 
     Angle operator+(float addAngle) const;
     Angle operator+(const Angle& other) const;

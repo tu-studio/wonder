@@ -51,6 +51,14 @@ const Angle& Angle::operator=(float angle) {
     return *this;
 }
 
+const Angle& Angle::operator=(const Angle& angle) {
+    this->angle =
+        (angle < 0) ? (2 * M_PI + fmodf(angle, 2 * M_PI)) : (fmodf(angle, 2 * M_PI));
+
+    return *this;
+}
+
+
 Angle Angle::operator-(const Angle& other) const { return Angle(angle - other.angle); }
 
 Angle Angle::operator+(float addAngle) const { return Angle(angle + addAngle); }
