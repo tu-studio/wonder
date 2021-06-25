@@ -36,6 +36,8 @@ class Vector3D
     Vector3D();
     Vector3D(const Vector3D& initValues);
     Vector3D(float x, float y, float z);
+
+    Vector3D& operator=(const Vector3D&) = default;
     float& operator[](int i) { return (i == 0) ? v0 : ((i == 1) ? v1 : v2); }
 
     float operator[](int i) const { return (i == 0) ? v0 : ((i == 1) ? v1 : v2); }
