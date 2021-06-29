@@ -30,7 +30,11 @@ endif
 fs = import('fs')
 config_dir = '/etc/wonder'
 if not fs.exists(config_dir)
-	install_subdir('configs/EN325', strip_directory: true, install_dir : config_dir )
+	if get_option('location') == 'EN325'
+		install_subdir('configs/EN325', strip_directory: true, install_dir : config_dir )
+	elif get_option('location') == 'HUFO'
+		install_subdir('configs/HuFo', strip_directory: true, install_dir : config_dir )
+	endif
 else
 	message('/etc/wonder already exists. Remove directory if you want an example configuration!')
 endif
