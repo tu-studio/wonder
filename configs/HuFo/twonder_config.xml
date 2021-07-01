@@ -33,6 +33,6 @@
 <!-- original values (TU): limit = 2.8, margin = 0.5, distance = 0.1, refence=3.3-->
 
 <twonder_config>
-    <focus limit="2.8" margin="0.5" />
-    <speakers distance="0.1" reference="3.3" /> 
+    <focus limit="5.0" margin="0.5" />
+    <speakers distance="0.1" reference="5.5" />
 </twonder_config>
