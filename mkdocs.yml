@@ -9,6 +9,7 @@ nav:
   - Build: Build.md
   - Configuration: Config.md
   - About:
+    - Wave Field Synthesis: About/WFS.md
     - Authors: About/Authors.md
     - License: About/License.md
 theme:
