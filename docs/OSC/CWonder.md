@@ -1,3 +1,8 @@
+---
+hide:
+  - toc
+---
+
 # CWonder
 
 | Command|Parameters |content         >|...|...|...|...|...|
