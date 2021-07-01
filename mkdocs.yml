@@ -6,6 +6,11 @@ nav:
     - CWonder: Manual/CWonder.md
     - TWonder: Manual/TWonder.md
     - XWonder: Manual/XWonder.md
+  - OSC Commands:
+    - Generic: OSC/OSC.md
+    - CWonder: OSC/CWonder.md
+    - TWonder: OSC/TWonder.md
+    - XWonder: OSC/XWonder.md
   - Build: Build.md
   - Configuration: Config.md
   - About:
