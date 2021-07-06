@@ -9,12 +9,14 @@ jack_dep = dependency('jack')
 liblo_dep = dependency('liblo')
 systemd_dep = dependency('systemd', required: get_option('systemd'))
 libsystemd_dep = dependency('libsystemd')
+fmt_dep = dependency('fmt')
 
 subdir('src/include')
 inc = include_directories('src/include')
 
 subdir('src/lib')
 subdir('src/cwonder')
+subdir('src/jfwonder')
 subdir('src/twonder')
 if get_option('xwonder') == true
 	qt5 = import('qt5')
