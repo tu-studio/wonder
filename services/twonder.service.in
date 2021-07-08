@@ -1,0 +1,15 @@
+[Unit]
+Description=TWonder
+After=network.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=forking
+PrivateTmp=true
+WorkingDirectory=@share_dir@/scripts/twonder/
+ExecStart=@share_dir@/scripts/twonder/start-twonder.sh
+LimitRTPRIO=95
+LimitRTTIME=infinity
+LimitMEMLOCK=infinity
