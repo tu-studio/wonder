@@ -1,0 +1,15 @@
+[Unit]
+Description=JFWonder
+After=network.target cwonder.service
+
+[Install]
+WantedBy=default.target
+
+[Service]
+Type=simple
+PrivateTmp=true
+# EnvironmentFile=/etc/wonder/cluster.conf
+ExecStart=@bin_dir@/jfwonder
+LimitRTPRIO=95
+LimitRTTIME=infinity
+LimitMEMLOCK=infinity
