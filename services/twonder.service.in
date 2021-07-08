@@ -3,7 +3,7 @@ Description=TWonder
 After=network.target
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
 
 [Service]
 Type=forking
