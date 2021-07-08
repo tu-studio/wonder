@@ -24,3 +24,10 @@ configure_file(input : 'cwonder.service.in',
                output : 'cwonder.service',
                configuration : conf_data2,
                install_dir : '/usr/lib/systemd/user')
+
+conf_data2 = configuration_data()
+conf_data2.set('bin_dir', get_option('prefix') / get_option('bindir'))
+configure_file(input : 'jfwonder.service.in',
+               output : 'jfwonder.service',
+               configuration : conf_data2,
+               install_dir : '/usr/lib/systemd/user')
