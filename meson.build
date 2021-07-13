@@ -29,16 +29,14 @@ if systemd_dep.found()
 	subdir('services')
 endif
 
-fs = import('fs')
 config_dir = '/etc/wonder'
-if not fs.exists(config_dir)
-	if get_option('location') == 'EN325'
-		install_subdir('configs/EN325', strip_directory: true, install_dir : config_dir )
-	elif get_option('location') == 'HUFO'
-		install_subdir('configs/HuFo', strip_directory: true, install_dir : config_dir )
-	endif
-else
-	message('/etc/wonder already exists. Remove directory if you want an example configuration!')
+if get_option('location') == 'none'
+	message('No location configuration selected.')
+elif get_option('location') == 'EN325'
+	install_subdir('configs/EN325', strip_directory: true, install_dir : config_dir )
+elif get_option('location') == 'HUFO'
+	install_subdir('configs/HuFo', strip_directory: true, install_dir : config_dir )
 endif
+
 install_subdir('scripts', install_dir: get_option('datadir') / 'wonder')
 install_subdir('dtd', install_dir: get_option('datadir') / 'wonder')
