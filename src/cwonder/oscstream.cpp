@@ -54,7 +54,7 @@ OSCStream::~OSCStream() {
         }
         statefile.close();
     } else {
-        std::cout << "Couldn't write OSC client list.";
+        std::cerr << "Couldn't write " << name << " client list.\n";
     }
 
     if (pingList) { delete pingList; }
