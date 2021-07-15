@@ -41,10 +41,12 @@
 #include "wonder_path.h"
 #include "oscinctrl.h"
 
+sig_atomic_t stopFlag = 0;
+
 void signalHandler(int signal) {
     std::cout << "[SIGNAL-HANDLER]: Received interrupt signal number " << signal
               << " - exiting now!" << std::endl;
-    std::exit(EXIT_SUCCESS);
+    stopFlag = 1;
 }
 
 int main(int argc, char* argv[]) {
@@ -99,7 +101,7 @@ int main(int argc, char* argv[]) {
     // Notify systemd that we are ready
     sd_notify(0, "READY=1");
     // now wait for incoming OSC messages
-    while (true) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
+    while (stopFlag == 0) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
 
     delete oscctrl;
     delete cwonderConf;
