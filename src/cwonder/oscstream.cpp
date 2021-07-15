@@ -55,7 +55,7 @@ OSCStream::OSCStream(string name)
             connect(host, port, name);
         }
     } else {
-        std::cout << "No " << name << " client list found.";
+        std::cout << "No " << name << " client list found.\n";
     }
 }
 
