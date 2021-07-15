@@ -31,6 +31,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <filesystem>
 
 #include "cwonder_config.h"
 #include "liblo_extended.h"
@@ -50,8 +51,11 @@ OSCStream::OSCStream(string name)
         while (std::getline(statefile, client)) {
             std::string host = client.substr(0, client.find(","));
             std::string port =
-                client.substr(client.find(","), client.rfind(",") - client.find(","));
-            std::string name = client.substr(client.rfind(","));
+                client.substr(client.find(",") + 1, client.rfind(",") - client.find(",") - 1);
+            std::string name = client.substr(client.rfind(",") + 1);
+            std::cout << "Host: " << host << "\n"
+                      << "Port: " << port << "\n"
+                      << "Name: " << name << "\n";
             connect(host, port, name);
         }
     } else {
@@ -60,16 +64,20 @@ OSCStream::OSCStream(string name)
 }
 
 OSCStream::~OSCStream() {
-    std::ofstream statefile(statefilename, ios::trunc);
+    std::filesystem::create_directories(statefilename.parent_path());
+    std::ofstream statefile(statefilename, ios::out | ios::trunc);
     if (statefile.is_open()) {
         for (clientsIter = begin(); clientsIter != end(); ++clientsIter) {
             statefile << clientsIter->host << "," << clientsIter->port << ","
                       << clientsIter->name << "\n";
-            if (clientsIter->address) { lo_address_free(clientsIter->address); }
         }
         statefile.close();
     } else {
-        std::cerr << "Couldn't write " << name << " client list.\n";
+        std::cerr << "Couldn't write " << name << " client list to " << statefilename << "\n";
+    }
+
+    for (clientsIter = begin(); clientsIter != end(); ++clientsIter) {
+        if (clientsIter->address) { lo_address_free(clientsIter->address); }
     }
 
     if (pingList) { delete pingList; }

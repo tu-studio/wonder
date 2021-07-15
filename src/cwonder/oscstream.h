@@ -32,6 +32,7 @@
 
 #include <list>
 #include <string>
+#include <filesystem>
 
 #include "oscping.h"
 
@@ -78,7 +79,7 @@ class OSCStream
   private:
     std::list<OSCStreamClient> clients;
     std::list<OSCStreamClient>::iterator clientsIter;
-    std::string statefilename;
+    std::filesystem::path statefilename;
 
     std::string name;
     ListOSCPing* pingList;
