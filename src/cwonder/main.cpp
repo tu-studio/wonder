@@ -44,7 +44,7 @@
 void signalHandler(int signal) {
     std::cout << "[SIGNAL-HANDLER]: Received interrupt signal number " << signal
               << " - exiting now!" << std::endl;
-    std::exit(EXIT_FAILURE);
+    std::exit(EXIT_SUCCESS);
 }
 
 int main(int argc, char* argv[]) {
@@ -61,9 +61,9 @@ int main(int argc, char* argv[]) {
     }
 
     // create the control application
-    Cwonder* cwonder     = new Cwonder();
-    cwonder->dtdPath     = join(DATA_DIR, "dtd");
-    cwonder->projectPath = cwonderConf->projectPath;
+    Cwonder cwonder;
+    cwonder.dtdPath     = join(DATA_DIR, "dtd");
+    cwonder.projectPath = cwonderConf->projectPath;
 
     OSCControl* oscctrl;
 
@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
     }
 
     // add the functions to the osc server
-    oscctrl->addReply(cwonder);
+    oscctrl->addReply(&cwonder);
     oscctrl->addMethods();
 
     // start the OSC receive thread
@@ -101,7 +101,6 @@ int main(int argc, char* argv[]) {
     // now wait for incoming OSC messages
     while (true) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
 
-    delete cwonder;
     delete oscctrl;
     delete cwonderConf;
 
