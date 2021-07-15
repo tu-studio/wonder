@@ -910,7 +910,7 @@ int main(int argc, char* argv[]) {
         static int timeoutCounter = 0;
         std::this_thread::sleep_for(std::chrono::seconds(1));
 
-        if (timeoutCounter == 15) {
+        if (timeoutCounter % 15 == 15) {
             std::cerr << "Cannot connect to cwonder...\n";
             lo_send(twonderConf->cwonderAddr, "/WONDER/stream/render/connect", "s",
             twonderConf->name.c_str());
