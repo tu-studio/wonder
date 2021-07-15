@@ -44,7 +44,7 @@ OSCStream::OSCStream(string name)
 
 OSCStream::~OSCStream() {
     std::string statefilename =
-        std::string(std::getenv("HOME")) + ".local/state/wonder/" + name + "clients.csv";
+        std::string(std::getenv("HOME")) + "/.local/state/wonder/" + name + "clients.csv";
     std::ofstream statefile(statefilename, ios::trunc);
     if (statefile.is_open()) {
         for (clientsIter = begin(); clientsIter != end(); ++clientsIter) {
