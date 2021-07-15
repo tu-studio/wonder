@@ -40,11 +40,26 @@ using std::list;
 using std::string;
 
 OSCStream::OSCStream(string name)
-    : name(name), pingList(new ListOSCPing("/WONDER/stream/" + name + "/ping")) {}
+    : statefilename(std::string(std::getenv("HOME")) + "/.local/state/wonder/" + name
+                    + "clients.csv")
+    , name(name)
+    , pingList(new ListOSCPing("/WONDER/stream/" + name + "/ping"))
+     {
+    std::ifstream statefile(statefilename);
+    if (statefile.is_open()) {
+        std::string client;
+        while (std::getline(statefile, client)) {
+            std::string host = client.substr(0,client.find(","));
+            std::string port = client.substr(client.find(","),client.rfind(",")-client.find(","));
+            std::string name = client.substr(client.rfind(","));
+            connect(host,port,name);
+        }
+    } else {
+        std::cout << "No " << name << " client list found.";
+    }
+}
 
 OSCStream::~OSCStream() {
-    std::string statefilename =
-        std::string(std::getenv("HOME")) + "/.local/state/wonder/" + name + "clients.csv";
     std::ofstream statefile(statefilename, ios::trunc);
     if (statefile.is_open()) {
         for (clientsIter = begin(); clientsIter != end(); ++clientsIter) {
