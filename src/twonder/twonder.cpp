@@ -311,6 +311,8 @@ bool initialize_jack() {
                     // Remove JACK client input ports that have no corresponding soundcard
                     // audio input (capture) port.
                     jack_port_unregister(jackClient, jackInputs[i]);
+                    // TODO This break is a workaround that this whole loop doesn't work.
+                    break;
                 }
             }
         }
@@ -345,6 +347,8 @@ bool initialize_jack() {
                     // Remove the JACK client output port that can not be connected to the
                     // soundcard audio output (playback) port.
                     jack_port_unregister(jackClient, jackOutputs[i]);
+                    // TODO This break is a workaround that this whole loop doesn't work.
+                    break;
                 }
             }
         }
