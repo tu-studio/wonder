@@ -28,11 +28,14 @@
 
 #include "oscstream.h"
 
+#include <cstdlib>
+#include <fstream>
 #include <iostream>
 
 #include "cwonder_config.h"
 #include "liblo_extended.h"
 
+using std::ios;
 using std::list;
 using std::string;
 
@@ -40,8 +43,18 @@ OSCStream::OSCStream(string name)
     : name(name), pingList(new ListOSCPing("/WONDER/stream/" + name + "/ping")) {}
 
 OSCStream::~OSCStream() {
-    for (clientsIter = begin(); clientsIter != end(); ++clientsIter) {
-        if (clientsIter->address) { lo_address_free(clientsIter->address); }
+    std::string statefilename =
+        std::string(std::getenv("HOME")) + ".local/state/wonder/" + name + "clients.csv";
+    std::ofstream statefile(statefilename, ios::trunc);
+    if (statefile.is_open()) {
+        for (clientsIter = begin(); clientsIter != end(); ++clientsIter) {
+            statefile << clientsIter->host << "," << clientsIter->port << ","
+                      << clientsIter->name << "\n";
+            if (clientsIter->address) { lo_address_free(clientsIter->address); }
+        }
+        statefile.close();
+    } else {
+        std::cout << "Couldn't write OSC client list.";
     }
 
     if (pingList) { delete pingList; }
@@ -52,9 +65,7 @@ lo_address OSCStream::connect(string host, string port, string name) {
 
     // check whether client is already connected
     for (clientsIter = begin(); clientsIter != end(); ++clientsIter) {
-        if (issame(clientsIter->address, address)) {
-            return address;
-        }
+        if (issame(clientsIter->address, address)) { return address; }
     }
 
     // add to list of stream clients
