@@ -1,5 +1,5 @@
 project('wonder', 'cpp',
-        version: '3.1.9',
+        version: '3.90.0',
         license: 'GPL-3.0-or-later',
         default_options: 'cpp_std=c++17')
 
