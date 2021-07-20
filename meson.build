@@ -41,5 +41,5 @@ endif
 install_subdir('scripts', install_dir: get_option('datadir') / 'wonder')
 install_subdir('dtd', install_dir: get_option('datadir') / 'wonder')
 
-summary({'CWonder': true, 'TWonder': true, 'XWonder': get_option('xwonder')}, bool_yn: true, section: 'Components')
+summary({'CWonder': true, 'TWonder': true, 'JFWonder': true, 'XWonder': get_option('xwonder')}, bool_yn: true, section: 'Components')
 summary({'Location': get_option('location'), 'Directory': config_dir}, section: 'Configuration')
