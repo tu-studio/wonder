@@ -1,3 +1,4 @@
 option('xwonder', type : 'boolean', value : false)
+option('jfwonder', type : 'boolean', value : true)
 option('systemd', type : 'feature', value : 'auto')
 option('location', type : 'combo', choices: ['none', 'EN325', 'HUFO'], value : 'none', description : 'Set location')
