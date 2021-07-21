@@ -34,17 +34,9 @@
 #include "delaycoeff.h"
 
 DelayLine::DelayLine(float maxDelay)
-    : maxDelay(maxDelay), writePos(0), readPos(0), readPosF(0.0) {
-    lineLength  = 65536;
-    lineLengthF = ((float)lineLength) - 0.5;
-
-    // create new array of fixed length and initialize all values with 0.0
-    line = new float[lineLength];
-
-    for (int i = 0; i < lineLength; ++i) { line[i] = 0.0; }
+    : maxDelay(maxDelay) {
+    line.fill(.0f);
 }
-
-DelayLine::~DelayLine() { delete[] line; }
 
 void DelayLine::put(float* samples, unsigned int nsamples) {
     // XXX: maybe use memcpy... or std::copy
@@ -204,7 +196,7 @@ void DelayLine::getInterp(DelayCoeff& coeff0, DelayCoeff& coeff1, float* samples
 
                 --readptr;
 
-                if (readptr < line) { readptr += lineLength; }
+                if (readptr < line.data()) { readptr += lineLength; }
 
                 out += (*readptr) * interpol;
                 interpol += interAdd;
@@ -220,11 +212,11 @@ void DelayLine::getInterp(DelayCoeff& coeff0, DelayCoeff& coeff1, float* samples
                 } else {
                     ++readptr;
 
-                    if (readptr >= (line + lineLength)) {
+                    if (readptr >= (line.data() + lineLength)) {
                         readptr -= lineLength;
 
                         // prevent crash, audible clicks are better than complete failure
-                        if (readptr >= (line + lineLength)) { readptr = line; }
+                        if (readptr >= (line.data() + lineLength)) { readptr = line.data(); }
                     }
                 }
 
@@ -247,11 +239,11 @@ void DelayLine::getInterp(DelayCoeff& coeff0, DelayCoeff& coeff1, float* samples
 
                 --readptr;
 
-                if (readptr < line) {
+                if (readptr < line.data()) {
                     readptr += lineLength;
 
                     // prevent crash, audible clicks are better than complete failure
-                    if (readptr < (line)) { readptr = line; }
+                    if (readptr < (line.data())) { readptr = line.data(); }
                 }
 
                 out += (*readptr) * interpol;
@@ -271,16 +263,16 @@ void DelayLine::getInterp(DelayCoeff& coeff0, DelayCoeff& coeff1, float* samples
 
                 readptr += sadd;
 
-                if (readptr < line) {
+                if (readptr < line.data()) {
                     readptr += lineLength;
 
                     // prevent crash, audible clicks are better than complete failure
-                    if (readptr < (line)) { readptr = line; }
-                } else if (readptr >= (line + lineLength)) {
+                    if (readptr < (line.data())) { readptr = line.data(); }
+                } else if (readptr >= (line.data() + lineLength)) {
                     readptr -= lineLength;
 
                     // prevent crash, audible clicks are better than complete failure
-                    if (readptr >= (line + lineLength)) { readptr = line; }
+                    if (readptr >= (line.data() + lineLength)) { readptr = line.data(); }
                 }
 
                 samples[i] += out * factor;
@@ -302,11 +294,11 @@ void DelayLine::getInterp(DelayCoeff& coeff0, DelayCoeff& coeff1, float* samples
 
                 ++readptr;
 
-                if (readptr >= (line + lineLength)) {
+                if (readptr >= (line.data() + lineLength)) {
                     readptr -= lineLength;
 
                     // prevent crash, audible clicks are better than complete failure
-                    if (readptr >= (line + lineLength)) { readptr = line; }
+                    if (readptr >= (line.data() + lineLength)) { readptr = line.data(); }
                 }
 
                 out += (*readptr) * interpol;
@@ -323,11 +315,11 @@ void DelayLine::getInterp(DelayCoeff& coeff0, DelayCoeff& coeff1, float* samples
                 } else {
                     --readptr;
 
-                    if (readptr < line) {
+                    if (readptr < line.data()) {
                         readptr += lineLength;
 
                         // prevent crash, audible clicks are better than complete failure
-                        if (readptr < (line)) { readptr = line; }
+                        if (readptr < (line.data())) { readptr = line.data(); }
                     }
                 }
 
@@ -350,11 +342,11 @@ void DelayLine::getInterp(DelayCoeff& coeff0, DelayCoeff& coeff1, float* samples
 
                 readptr++;
 
-                if (readptr >= (line + lineLength)) {
+                if (readptr >= (line.data() + lineLength)) {
                     readptr -= lineLength;
 
                     // prevent crash, audible clicks are better than complete failure
-                    if (readptr >= (line + lineLength)) { readptr = line; }
+                    if (readptr >= (line.data() + lineLength)) { readptr = line.data(); }
                 }
 
                 out += (*readptr) * interpol;
@@ -373,11 +365,11 @@ void DelayLine::getInterp(DelayCoeff& coeff0, DelayCoeff& coeff1, float* samples
 
                 readptr += sadd;
 
-                if (readptr >= (line + lineLength)) {
+                if (readptr >= (line.data() + lineLength)) {
                     readptr -= lineLength;
 
                     // prevent crash, audible clicks are better than complete failure
-                    if (readptr >= (line + lineLength)) { readptr = line; }
+                    if (readptr >= (line.data() + lineLength)) { readptr = line.data(); }
                 }
 
                 samples[i] += out * factor;

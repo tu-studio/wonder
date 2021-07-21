@@ -28,6 +28,8 @@
 
 #pragma once
 
+#include <array>
+
 class DelayCoeff;
 
 class DelayLine
@@ -46,7 +48,6 @@ class DelayLine
     // maxDelay is the maximum possible negative delay this DelayLine can handle. In
     // meters.
     DelayLine(float maxDelay = 10.0);
-    ~DelayLine();
 
     // XXX WARNING: must write power of 2 only;
     void put(float* samples, unsigned int nsamples);
@@ -66,14 +67,14 @@ class DelayLine
   private:
     // The length of this buffer in samples.
     // XXX WARNING: must be power of two.
-    int lineLength;
-    float lineLengthF;
+    constexpr static int lineLength{65536};
+    float lineLengthF{static_cast<float>(lineLength) - 0.5f};
 
     float maxDelay;
-    float* line;
-    int writePos;
-    int readPos;
-    float readPosF;
+    std::array<float, lineLength> line;
+    int writePos{0};
+    int readPos{0};
+    float readPosF{.0f};
 
     // arrays of actual blockSize ( determined at runtime ) containing
     // factors for crossfading with either a -3dB or -6dB crossover point
