@@ -37,26 +37,18 @@
 // factor calculation explode (in meters).
 const float deltaR = 30.0;
 
-class DelayCoeff
+struct DelayCoeff
 {
-  public:
-    DelayCoeff(float delay = 0.0, float factor = 0.0) : delay(delay), factor(factor) {}
+    float delay{0.0f};  // in meters
+    float factor{0.0f};
 
     float getDelay() { return delay; }
-
-    unsigned int getSampleDelayRounded(float preDelay);
-
-    float getSampleDelay(float preDelay);
-
-    void setDelay(float d) { delay = d; }
-
     float getFactor() { return factor; }
 
+    void setDelay(float d) { delay = d; }
     void setFactor(float c) { factor = c; }
 
+    unsigned int getSampleDelayRounded(float preDelay);
+    float getSampleDelay(float preDelay);
     void print();
-
-  private:
-    float delay;  // in meters
-    float factor;
 };

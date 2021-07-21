@@ -80,12 +80,12 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
     if (normalProjection < 0.0) {
         // don't render this source if it is outside of the defined maximum range
         // for focussed sources
-        if (srcToSpkDistance > twonderConf->focusLimit) return DelayCoeff(0.0, 0.0);
+        if (srcToSpkDistance > twonderConf->focusLimit) return DelayCoeff{0.0f, 0.0f};
 
         if (cosphi > focusAngularMax)  // if angle too large with the speaker array, we
                                        // don't play this back to avoid too early arriving
                                        // contributions to the wave front
-            return DelayCoeff(0.0, 0.0);
+            return DelayCoeff{0.0f, 0.0f};
 
         inFocus = twonderConf->focusLimit - srcToSpkDistance;
         if (inFocus < twonderConf->focusMargin) {  // fade out within (fadelimit -
@@ -101,7 +101,7 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
         // don't render this source if it in front of a this speaker
         // but is not a focussed source
         if ((!isFocused(sourcePos)) && (srcToSpkDistance > transitionRadius))
-            return DelayCoeff(0.0, 0.0);
+            return DelayCoeff{0.0f, 0.0f};
         if (twonderConf->slope) {
             // we need a slope correction in case the speaker array has a slope
             Vector3D src3D(sourcePos[0], sourcePos[1],
@@ -153,7 +153,7 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
             + (transitionRadius - delay) / (2 * transitionRadius) * (focuss - behind);
     }
     // speaker.getCosAlpha is the amplitude correction for the elevation compensation
-    return DelayCoeff(delay, amplitudeFactor * speaker.getCosAlpha() * window);
+    return DelayCoeff{delay, amplitudeFactor * speaker.getCosAlpha() * window};
 }
 
 bool PointSource::isFocused(const Vector3D& sourcePos) {
@@ -231,9 +231,9 @@ DelayCoeff PlaneWave::calcDelayCoeff(const Speaker& speaker, const Angle& ang) {
     float factor = speaker.get3DNormal() * ang.getNormal();
 
     if (factor <= 0.0) {
-        return DelayCoeff(0.0, 0.0);
+        return DelayCoeff{0.0f, 0.0f};
     } else {
-        return DelayCoeff(delay, factor * speaker.getCosAlpha() * twonderConf->planeComp);
+        return DelayCoeff{delay, factor * speaker.getCosAlpha() * twonderConf->planeComp};
     }
 }
 
