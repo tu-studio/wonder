@@ -10,6 +10,7 @@ This package contains the following components of WONDER:
 - **libwonder**: Library
 - **cwonder**: Managing Application
 - **twonder**: Rendering Application
+- **jfwonder**: Time Provider
 - **xwonder**: GUI Control Application (needs some work)
 
 ---
