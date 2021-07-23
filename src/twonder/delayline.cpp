@@ -35,7 +35,6 @@
 
 DelayLine::DelayLine(float maxDelay)
     : maxDelay(maxDelay) {
-    line.fill(.0f);
 }
 
 void DelayLine::put(float* samples, unsigned int nsamples) {

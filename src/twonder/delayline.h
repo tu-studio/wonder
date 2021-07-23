@@ -71,7 +71,7 @@ class DelayLine
     float lineLengthF{static_cast<float>(lineLength) - 0.5f};
 
     float maxDelay;
-    std::array<float, lineLength> line;
+    std::array<float, lineLength> line{};
     int writePos{0};
     int readPos{0};
     float readPosF{.0f};
