@@ -284,77 +284,7 @@ bool initialize_jack() {
         }
     }
 
-    // 9. Connect the audio inputs of the soundcard with the input ports of the JACK
-    // client (JACK calls them "output ports", because they are readable by the JACK
-    // client).
-    if (running) {
-        const char** ports = jack_get_ports(jackClient, nullptr, nullptr,
-                                            JackPortIsPhysical | JackPortIsOutput);
-
-        if (ports == nullptr) {
-            running = false;
-            std::cerr << "[JACK][ERROR]: No physical audio input (capture) ports are "
-                         "available!\n";
-        }
-
-        // Proceed only if the soundcard has physical audio input (capture) ports!
-        if (running) {
-            for (int i = 0; i < twonderConf->noSources; ++i) {
-                if (!((ports[i] == nullptr)
-                      || (jack_port_name(jackInputs[i])
-                          == nullptr))) {  // Do not connect to NULL ports
-                    // jack_connect(jackClient, ports[i], jack_port_name(jackInputs[i]));
-                    // // TODO: Disabled internal auto-connect in favor of external
-                    // startup script!
-                    available_inputs++;
-                } else {
-                    // Remove JACK client input ports that have no corresponding soundcard
-                    // audio input (capture) port.
-                    jack_port_unregister(jackClient, jackInputs[i]);
-                    // TODO This break is a workaround that this whole loop doesn't work.
-                    break;
-                }
-            }
-        }
-
-        jack_free(ports);  // Free the memory allocated by jack_get_ports(...)
-    }
-
-    // 10. Connect the output ports of the JACK client with the audio outputs of the
-    // soundcard (JACK calls them "input ports", because they are writable by the JACK
-    // client).
-    if (running) {
-        const char** ports = jack_get_ports(jackClient, nullptr, nullptr,
-                                            JackPortIsPhysical | JackPortIsInput);
-
-        if (ports == nullptr) {
-            running = false;
-            std::cerr << "[JACK][ERROR]: No physical audio output (playback) ports are "
-                         "available!\n";
-        }
-
-        // Proceed only if the soundcard has physical audio output (playback) ports and
-        // take care of the usable loudspeakers!
-        if (running) {
-            for (size_t i = 0; i < speakers->size(); ++i) {
-                if (!((jack_port_name(jackOutputs[i]) == nullptr)
-                      || (ports[i] == nullptr))) {  // Do not connect to NULL ports
-                    // jack_connect(jackClient, jack_port_name(jackOutputs[i]), ports[i]);
-                    // // TODO: Disabled internal auto-connect in favor of external
-                    // startup script!
-                    available_outputs++;
-                } else {
-                    // Remove the JACK client output port that can not be connected to the
-                    // soundcard audio output (playback) port.
-                    jack_port_unregister(jackClient, jackOutputs[i]);
-                    // TODO This break is a workaround that this whole loop doesn't work.
-                    break;
-                }
-            }
-        }
-
-        jack_free(ports);  // Free the memory allocated by jack_get_ports(...)
-    }
+    // 9. and 10. removed. They connected hardware inputs and outputs.
 
     // 11. Everything is set up correctly, now print a final message with the parameters
     // of the JACK client.
