@@ -165,8 +165,6 @@ int process(jack_nframes_t nframes, void* arg) {
 
 bool initialize_jack() {
     bool running          = false;  // Initialization status
-    int available_inputs  = 0;      // Number of physically available inputs
-    int available_outputs = 0;      // Number of physically available outputs
 
     const char* client_name = twonderConf->jackName;  // Get name from twonderConfig
     const char* server_name = nullptr;  // Without a JACK server name the default server
@@ -290,22 +288,6 @@ bool initialize_jack() {
     // of the JACK client.
     if (running) {
         std::cout << "\n" << std::endl;
-
-        // Correct the number of available sources (inputs).
-        if (twonderConf->noSources != available_inputs) {
-            std::cout << "[JACK][WARNING]: Total number of sources changed from "
-                      << twonderConf->noSources << " to " << available_inputs
-                      << " due to input limitations of the soundcard!" << std::endl;
-            twonderConf->noSources = available_inputs;
-        }
-
-        // Correct the number of available speakers (outputs).
-        if (static_cast<int>(speakers->size()) != available_outputs) {
-            std::cout << "[JACK][WARNING]: Total number of speakers changed from "
-                      << speakers->size() << " to " << available_outputs
-                      << " due to output limitations of the soundcard!" << std::endl;
-            speakers->resize(available_outputs);
-        }
 
         std::chrono::duration<float, std::milli> delay_msec(
             1.0 / jack_get_sample_rate(jackClient) * jack_get_buffer_size(jackClient)
