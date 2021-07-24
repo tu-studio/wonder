@@ -93,9 +93,7 @@ class SegmentArray
 class SegmentArrayIter : public xmlpp::Node::NodeSet::iterator
 {
   public:
-    SegmentArrayIter() : xmlpp::Node::NodeSet::iterator() {
-        // nothing
-    }
+    SegmentArrayIter() = default;
 
     SegmentArrayIter(const xmlpp::Node::NodeSet::iterator& other)
         : xmlpp::Node::NodeSet::iterator(other) {}
