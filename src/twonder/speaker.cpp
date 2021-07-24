@@ -60,9 +60,9 @@ SpkArray::SpkArray(std::string filename) {
 }
 
 SpkArray::~SpkArray() {
-    while (!empty()) {
-        delete back();
-        pop_back();
+    while (!array.empty()) {
+        delete array.back();
+        array.pop_back();
     }
 }
 
@@ -86,7 +86,7 @@ void SpkArray::addSpeakers(Segment* segment) {
         Speaker* spk = new Speaker(speakerPosition[0], speakerPosition[1],
                                    speakerPosition[2], segment->normal[0],
                                    segment->normal[1], segment->normal[2], cosAlpha);
-        push_back(spk);
+        array.push_back(spk);
         speakerPosition += speakerSpacing;
     }
 }

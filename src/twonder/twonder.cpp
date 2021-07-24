@@ -122,18 +122,20 @@ int process(jack_nframes_t nframes, void* arg) {
     }
 
     // get the output buffers of the soundcard and mute them first
-    for (unsigned int i = 0; i < speakers->size(); ++i) {
-        float* output =
+    for (unsigned int i = 0; i < speakers->array.size(); ++i) {
+        speakers->array.data()[i]->outPtr =
             static_cast<float*>(jack_port_get_buffer(jackOutputs[i], nframes));
-        std::memset(output, 0, nframes * sizeof(jack_default_audio_sample_t));
+        std::memset(speakers->array.data()[i]->outPtr, 0, nframes * sizeof(jack_default_audio_sample_t));
+    }
 
+    for (auto* speaker: speakers->array) {
         // calculate the delay coefficients for every source-to-speaker-to-listener
         // combination
         for (int j = 0; j < twonderConf->noSources; ++j) {
             DelayCoeff c =
-                (*sources)[j]->source->getDelayCoeff(*((*speakers)[i]));
-            DelayCoeff c2 = (*sources)[j]->source->getTargetDelayCoeff(
-                *((*speakers)[i]), nframes);
+                (*sources)[j]->source->getDelayCoeff(*speaker);
+            DelayCoeff c2 =
+                (*sources)[j]->source->getTargetDelayCoeff(*speaker, nframes);
 
             // mute a source if it is not active
             if (!(*sources)[j]->active) {
@@ -143,9 +145,9 @@ int process(jack_nframes_t nframes, void* arg) {
 
             // interpolate the delayline with Doppler effect or use a fade-jump
             if ((*sources)[j]->source->hasDopplerEffect()) {
-                (*sources)[j]->inputline->getInterp(c, c2, output, nframes);
+                (*sources)[j]->inputline->getInterp(c, c2, speaker->outPtr, nframes);
             } else {
-                (*sources)[j]->inputline->getFadej(c, c2, output, nframes,
+                (*sources)[j]->inputline->getFadej(c, c2, speaker->outPtr, nframes,
                                                    DelayLine::dB3);
             }
         }
@@ -226,7 +228,7 @@ bool initialize_jack() {
         jackInputs = static_cast<jack_port_t**>(
             std::calloc(twonderConf->noSources, sizeof(jack_port_t*)));
         jackOutputs = static_cast<jack_port_t**>(
-            std::calloc(speakers->size(), sizeof(jack_port_t*)));
+            std::calloc(speakers->array.size(), sizeof(jack_port_t*)));
     }
 
     // 5. Name the input ports of the JACK client (sources).
@@ -252,7 +254,7 @@ bool initialize_jack() {
     if (running) {
         std::string port_name;
 
-        for (int i = 0; i < static_cast<int>(speakers->size()); ++i) {
+        for (int i = 0; i < static_cast<int>(speakers->array.size()); ++i) {
             port_name = "speaker";
             port_name.append(std::to_string(i + 1));
             jackOutputs[i] =

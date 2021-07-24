@@ -42,6 +42,8 @@ class Speaker
     Speaker(float x, float y, float z, float normalx, float normaly, float normalz,
             float cosAlpha);
 
+    float* outPtr;
+
     const Vector2D& getPos() const { return pos; }
 
     const Vector3D& get3DPos() const { return pos3D; }
@@ -60,12 +62,13 @@ class Speaker
     float cosAlpha;
 };
 
-class SpkArray : public std::vector<Speaker*>
+class SpkArray
 {
   public:
     SpkArray(std::string filename);
-
     ~SpkArray();
+
+    std::vector<Speaker*> array;
 
   private:
     void addSpeakers(Segment* segment);
