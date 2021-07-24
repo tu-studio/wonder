@@ -121,14 +121,15 @@ int process(jack_nframes_t nframes, void* arg) {
         (*sources)[i]->inputline->put(input, nframes);
     }
 
-    // get the output buffers of the soundcard and mute them first
+    // get the output buffers of the soundcard
     for (unsigned int i = 0; i < speakers->array.size(); ++i) {
         speakers->array.data()[i]->outPtr =
             static_cast<float*>(jack_port_get_buffer(jackOutputs[i], nframes));
-        std::memset(speakers->array.data()[i]->outPtr, 0, nframes * sizeof(jack_default_audio_sample_t));
     }
 
     for (auto* speaker: speakers->array) {
+        // Mute output first
+        std::memset(speaker->outPtr, 0, nframes * sizeof(jack_default_audio_sample_t));
         // calculate the delay coefficients for every source-to-speaker-to-listener
         // combination
         for (int j = 0; j < twonderConf->noSources; ++j) {
