@@ -9,7 +9,7 @@ jack_dep = dependency('jack')
 liblo_dep = dependency('liblo')
 systemd_dep = dependency('systemd', required: get_option('systemd'))
 libsystemd_dep = dependency('libsystemd')
-fmt_dep = dependency('fmt')
+fmt_dep = dependency('fmt', include_type: 'system')
 
 subdir('src/include')
 inc = include_directories('src/include')
