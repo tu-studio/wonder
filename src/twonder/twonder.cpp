@@ -137,6 +137,13 @@ void process_speakers(SpkArray* const speakers, jack_nframes_t nframes) {
     }
 }
 
+void interpolate_sources(SourceArray* const sources, jack_nframes_t nframes) {
+    // interpolate all source positions
+    for (auto* aggregate: sources->array) {
+        aggregate->source->doInterpolationStep(nframes);
+    }
+}
+
 int process(jack_nframes_t nframes, void* arg) {
     // process incoming commands
     realtimeCommandEngine->evaluateCommands((wonder_frames_t)10);
@@ -157,11 +164,7 @@ int process(jack_nframes_t nframes, void* arg) {
     }
 
     process_speakers(speakers, nframes);
-
-    // interpolate all source positions
-    for (auto* aggregate: sources->array) {
-        aggregate->source->doInterpolationStep(nframes);
-    }
+    interpolate_sources(sources, nframes);
 
     return EXIT_SUCCESS;
 }
