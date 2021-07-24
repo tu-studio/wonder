@@ -122,7 +122,7 @@ void DelayLine::get(DelayCoeff& coeff0, DelayCoeff& coeff1, float* samples,
     float factorsDelta = (coeff1.getFactor() - coeff0.getFactor()) / (nsamples - 1);
 
     for (unsigned int i = 0; i < nsamples; ++i) {
-        samples[i] += line[lround(readPosF)] * factor;
+        samples[i] += line[std::lround(readPosF)] * factor;
 
         readPosF += readPosStepSize;
         factor += factorsDelta;
@@ -457,6 +457,6 @@ void DelayLine::initFadeBuffers(const unsigned int blockSize) {
         float scaleFactor6dB = i * stepSize;
 
         fadeIn6dB[i] = scaleFactor6dB;
-        fadeIn3dB[i] = sqrt(scaleFactor6dB);
+        fadeIn3dB[i] = std::sqrt(scaleFactor6dB);
     }
 }
