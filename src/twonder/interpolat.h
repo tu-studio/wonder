@@ -38,18 +38,15 @@ class Interpolat
 {
   public:
     Interpolat(const T& value)
-        : currentValue(value), targetValue(value), targetTime(0.f) {}
+        : currentValue(value), targetValue(value), targetTime(0.F) {}
 
     const T& getCurrentValue() const { return currentValue; }
 
     T getTargetValue(wonder_frames_t blocksize) const {
-        if (targetTime == (wonder_frames_t)0) {
-            return targetValue;
-        } else {
-            return currentValue
-                   + (targetValue - currentValue)
-                         * ((float)blocksize / (float)targetTime.getTime());
-        }
+        if (targetTime == (wonder_frames_t)0) { return targetValue; }
+        return currentValue
+               + (targetValue - currentValue)
+                     * ((float)blocksize / (float)targetTime.getTime());
     }
 
     void doInterpolationStep(wonder_frames_t blocksize) {
@@ -63,7 +60,7 @@ class Interpolat
         }
     }
 
-    void setTargetValue(const T& value, TimeStamp transitionTime = 0.f) {
+    void setTargetValue(const T& value, TimeStamp transitionTime = 0.F) {
         targetValue = value;
         targetTime  = transitionTime;
     }

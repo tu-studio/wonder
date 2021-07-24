@@ -78,8 +78,8 @@ class PositionSource : public Source
     PositionSource(const Vector3D& position);
 
     void reset() override {
-        position.setCurrentValue(Vector3D(0.0f, 0.0f, 0.0f));
-        position.setTargetValue(Vector3D(0.0f, 0.0f, 0.0f));
+        position.setCurrentValue(Vector3D(0.0F, 0.0F, 0.0F));
+        position.setTargetValue(Vector3D(0.0F, 0.0F, 0.0F));
         Source::reset();
     }
 };
@@ -104,7 +104,7 @@ class PointSource : public PositionSource
   private:
     DelayCoeff calcDelayCoeff(const Speaker& speaker, const Vector3D& sourcePos) const;
 
-    bool isFocused(const Vector3D& sourcePos) const;
+    static bool isFocused(const Vector3D& sourcePos);
 };
 
 class PlaneWave : public PositionSource
@@ -130,8 +130,8 @@ class PlaneWave : public PositionSource
     void doInterpolationStep(wonder_frames_t blocksize) override;
 
     void reset() override {
-        angle.setCurrentValue(0.0f);
-        angle.setTargetValue(0.0f);
+        angle.setCurrentValue(0.0F);
+        angle.setTargetValue(0.0F);
         PositionSource::reset();
     }
 

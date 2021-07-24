@@ -72,28 +72,28 @@ void exitCleanupFunction() {
     std::free(jackInputs);
     std::free(jackOutputs);
 
-    if (oscServer) {
+    if (oscServer != nullptr) {
         oscServer->stop();
         delete oscServer;
         oscServer = nullptr;
     }
 
-    if (twonderConf) {
+    if (twonderConf != nullptr) {
         delete twonderConf;
         twonderConf = nullptr;
     }
 
-    if (speakers) {
+    if (speakers != nullptr) {
         delete speakers;
         speakers = nullptr;
     }
 
-    if (sources) {
+    if (sources != nullptr) {
         delete sources;
         sources = nullptr;
     }
 
-    if (realtimeCommandEngine) {
+    if (realtimeCommandEngine != nullptr) {
         delete realtimeCommandEngine;
         realtimeCommandEngine = nullptr;
     }
@@ -157,7 +157,7 @@ int process(jack_nframes_t nframes, void* arg) {
 
     // get the output buffers of the soundcard
     for (unsigned int i = 0; i < speakers->array.size(); ++i) {
-        speakers->array.data()[i]->outPtr =
+        speakers->array[i]->outPtr =
             static_cast<float*>(jack_port_get_buffer(jackOutputs[i], nframes));
     }
 
@@ -192,7 +192,7 @@ bool initialize_jack() {
             << "[JACK][ERROR]: Unable to open the JACK client! Failed with status: 0x"
             << std::hex << status << std::dec << '\n';
 
-        if (status & JackServerFailed) {
+        if ((status & JackServerFailed) != 0) {
             std::cerr << "[JACK][ERROR]: Unable to connect to the JACK server!\n";
         }
     }
@@ -201,14 +201,14 @@ bool initialize_jack() {
     if (running) {
         // Print the name of the JACK server if it was not the default one from the
         // .jackdrc file.
-        if (status & JackServerStarted) {
+        if ((status & JackServerStarted) != 0) {
             std::cout << "\n[JACK]: Connection to the default JACK server established!"
                       << std::endl;
         }
 
         // Print the new JACK client name if it was not unique and has been been replaced
         // by the JACK server.
-        if (status & JackNameNotUnique) {
+        if ((status & JackNameNotUnique) != 0) {
             client_name = jack_get_client_name(jackClient);
 
             if (client_name == nullptr) {
@@ -284,7 +284,7 @@ bool initialize_jack() {
     // 8. Activate the JACK client - this starts the real-time callback by the JACK server
     // and enables the interconnection of the ports of the JACK client.
     if (running) {
-        if (jack_activate(jackClient)) {
+        if (jack_activate(jackClient) != 0) {
             running = false;
             std::cerr << "[JACK][ERROR]: Unable to activate and start the JACK client!\n";
         }
@@ -342,7 +342,7 @@ void MoveCommand::execute() {
         PositionSource* positionSource =
             dynamic_cast<PositionSource*>(sources->array.at(sourceId)->source);
 
-        if (positionSource) {
+        if (positionSource != nullptr) {
             if (positionSource->getType() == 0) {  // is a plane wave
                 positionSource->position.setCurrentValue(destination);
             } else {  // is a point source
@@ -380,7 +380,7 @@ void AngleCommand::execute() {
         PlaneWave* planeWave =
             dynamic_cast<PlaneWave*>(sources->array.at(sourceId)->source);
 
-        if (planeWave) {
+        if (planeWave != nullptr) {
             planeWave->angle.setTargetValue(angle * M_PI * 2 / 360.0, duration);
         }
     }
@@ -393,7 +393,7 @@ void AngleCommand::execute() {
 class TypeChangeCommand : public Command
 {
   public:
-    TypeChangeCommand(int id, int type, TimeStamp ts = (float)0);
+    TypeChangeCommand(int id, int type, TimeStamp timestamp = (float)0);
     ~TypeChangeCommand() override;
 
     void execute() override;
@@ -435,7 +435,7 @@ void TypeChangeCommand::execute() {
 }
 
 TypeChangeCommand::~TypeChangeCommand() {
-    if (srcPtr) {
+    if (srcPtr != nullptr) {
         delete srcPtr;
         srcPtr = nullptr;
     }
@@ -448,7 +448,7 @@ TypeChangeCommand::~TypeChangeCommand() {
 class DopplerChangeCommand : public Command
 {
   public:
-    DopplerChangeCommand(int id, bool dopplerOn, TimeStamp ts = (float)0);
+    DopplerChangeCommand(int id, bool dopplerOn, TimeStamp timestamp = (float)0);
 
     void execute() override;
 

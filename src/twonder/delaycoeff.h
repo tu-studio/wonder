@@ -39,8 +39,8 @@ const float deltaR = 30.0;
 
 struct DelayCoeff
 {
-    float delay{0.0f};  // in meters
-    float factor{0.0f};
+    float delay{0.0F};  // in meters
+    float factor{0.0F};
 
     float getDelay() const { return delay; }
     float getFactor() const { return factor; }
@@ -50,5 +50,5 @@ struct DelayCoeff
 
     unsigned int getSampleDelayRounded(float preDelay) const;
     float getSampleDelay(float preDelay) const;
-    void print();
+    void print() const;
 };

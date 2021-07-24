@@ -82,7 +82,7 @@ TwonderConfig::TwonderConfig(int argc, char* argv[]) {
 }
 
 TwonderConfig::~TwonderConfig() {
-    if (cwonderAddr) {
+    if (cwonderAddr != nullptr) {
         lo_address_free(cwonderAddr);
         cwonderAddr = nullptr;
     }
@@ -233,7 +233,7 @@ int TwonderConfig::readConfig() {
         if (parser) {
             xmlpp::Node* root = parser.get_document()->get_root_node();
 
-            if (root) {
+            if (root != nullptr) {
                 // validate the current dom representation but first find the dtd
                 const std::string dtdPath = join(DATA_DIR, "dtd/twonder_config.dtd");
                 fin.open(dtdPath, std::ios_base::in);
@@ -243,7 +243,7 @@ int TwonderConfig::readConfig() {
                 }
 
                 try {
-                    xmlpp::DtdValidator validator(dtdPath.c_str());
+                    xmlpp::DtdValidator validator(dtdPath);
                     validator.validate(parser.get_document());
                     //// std::cout << "[V-wonderconfig] Validation successfull" <<
                     /// std::endl << std::endl;
@@ -270,7 +270,7 @@ int TwonderConfig::readConfig() {
 void TwonderConfig::getFocus(xmlpp::Node* node) {
     auto nset = node->find("/twonder_config/focus");
 
-    if (nset.size() > 0) {
+    if (!nset.empty()) {
         if (const xmlpp::Element* nodeElement =
                 dynamic_cast<const xmlpp::Element*>(*nset.begin())) {
             for (auto const& attribute : nodeElement->get_attributes()) {
@@ -291,7 +291,7 @@ void TwonderConfig::getFocus(xmlpp::Node* node) {
 void TwonderConfig::getSpeakers(xmlpp::Node* node) {
     auto nset = node->find("/twonder_config/speakers");
 
-    if (nset.size() > 0) {
+    if (!nset.empty()) {
         if (const xmlpp::Element* nodeElement =
                 dynamic_cast<const xmlpp::Element*>(*nset.begin())) {
             for (auto const& attribute : nodeElement->get_attributes()) {

@@ -37,7 +37,7 @@ class DelayLine
   public:
     // This function must be called before instantiating any DelayLine objects in order
     // to setup the crossfade factors according to the runtime audio blocksize !
-    static void initFadeBuffers(const unsigned int blockSize);
+    static void initFadeBuffers(unsigned int blockSize);
 
     enum CrossfadeType
     {
@@ -68,13 +68,13 @@ class DelayLine
     // The length of this buffer in samples.
     // XXX WARNING: must be power of two.
     constexpr static int lineLength{65536};
-    float lineLengthF{static_cast<float>(lineLength) - 0.5f};
+    float lineLengthF{static_cast<float>(lineLength) - 0.5F};
 
     float maxDelay;
     std::array<float, lineLength> line{};
     int writePos{0};
     int readPos{0};
-    float readPosF{.0f};
+    float readPosF{.0F};
 
     // arrays of actual blockSize ( determined at runtime ) containing
     // factors for crossfading with either a -3dB or -6dB crossover point

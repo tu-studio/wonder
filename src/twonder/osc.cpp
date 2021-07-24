@@ -37,7 +37,7 @@ using std::exception;
 OSCServer::OSCServer(const char* port) {
     serverThread = lo_server_thread_new(port, nullptr);
 
-    if (!serverThread) {
+    if (serverThread == nullptr) {
         cerr << "Warning !!! Could not create OSC Server thread " << endl;
         throw exception();
     }

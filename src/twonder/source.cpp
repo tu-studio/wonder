@@ -79,12 +79,15 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
     if (normalProjection < 0.0) {
         // don't render this source if it is outside of the defined maximum range
         // for focussed sources
-        if (srcToSpkDistance > twonderConf->focusLimit) return DelayCoeff{0.0f, 0.0f};
+        if (srcToSpkDistance > twonderConf->focusLimit) {
+            return DelayCoeff{0.0F, 0.0F};
+        };
 
-        if (cosphi > focusAngularMax)  // if angle too large with the speaker array, we
-                                       // don't play this back to avoid too early arriving
-                                       // contributions to the wave front
-            return DelayCoeff{0.0f, 0.0f};
+        if (cosphi > focusAngularMax) {  // if angle too large with the speaker array, we
+                                         // don't play this back to avoid too early
+                                         // arriving contributions to the wave front
+            return DelayCoeff{0.0F, 0.0F};
+        };
 
         inFocus = twonderConf->focusLimit - srcToSpkDistance;
         if (inFocus < twonderConf->focusMargin) {  // fade out within (fadelimit -
@@ -99,11 +102,12 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
 
         // don't render this source if it in front of a this speaker
         // but is not a focussed source
-        if ((!isFocused(sourcePos)) && (srcToSpkDistance > transitionRadius))
-            return DelayCoeff{0.0f, 0.0f};
+        if ((!isFocused(sourcePos)) && (srcToSpkDistance > transitionRadius)) {
+            return DelayCoeff{0.0F, 0.0F};
+        };
 
         // TODO slope is a float and shouldn't be compared with == or !=
-        if (twonderConf->slope) {
+        if (twonderConf->slope != 0.0f) {
             // we need a slope correction in case the speaker array has a slope
             Vector3D src3D(sourcePos[0], sourcePos[1],
                            sourcePos[1] < twonderConf->elevationY1
@@ -156,7 +160,7 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
     return DelayCoeff{delay, amplitudeFactor * speaker.getCosAlpha() * window};
 }
 
-bool PointSource::isFocused(const Vector3D& sourcePos) const {
+bool PointSource::isFocused(const Vector3D& sourcePos) {
     if (twonderConf->ioMode == IOM_ALWAYSOUT) { return false; }
 
     if (twonderConf->ioMode == IOM_ALWAYSIN) { return true; }
@@ -228,11 +232,8 @@ DelayCoeff PlaneWave::calcDelayCoeff(const Speaker& speaker, const Angle& ang) c
     // wave
     float factor = speaker.get3DNormal() * ang.getNormal();
 
-    if (factor <= 0.0) {
-        return DelayCoeff{0.0f, 0.0f};
-    } else {
-        return DelayCoeff{delay, factor * speaker.getCosAlpha() * twonderConf->planeComp};
-    }
+    if (factor <= 0.0) { return DelayCoeff{0.0F, 0.0F}; }
+    return DelayCoeff{delay, factor * speaker.getCosAlpha() * twonderConf->planeComp};
 }
 
 SourceAggregate::SourceAggregate(const Vector3D& initialPos, float negDelay) {
@@ -249,12 +250,12 @@ SourceAggregate::~SourceAggregate() {
 
 void SourceAggregate::reset() {
     source->reset();
-    angle = 0.0f;
+    angle = 0.0F;
 }
 
 SourceArray::SourceArray(int noSources, float negDelay) {
     for (int i = 0; i < noSources; ++i) {
-        Vector3D defaultSourcePos(0.0f, 1.0f, 2.0f);
+        Vector3D defaultSourcePos(0.0F, 1.0F, 2.0F);
         SourceAggregate* temp = new SourceAggregate(defaultSourcePos, negDelay);
         array.push_back(temp);
     }

@@ -26,27 +26,22 @@
  *                                                                                   *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include <cmath>
 #include "delaycoeff.h"
 
+#include <cmath>
+
 unsigned int DelayCoeff::getSampleDelayRounded(float preDelay) const {
-    if (delay + preDelay < 0) {
-        return 0;
-    } else {
-        return std::lround((delay + preDelay)
-                                  * (twonderConf->sampleRate / twonderConf->soundSpeed));
-    }
+    if (delay + preDelay < 0) { return 0; }
+    return std::lround((delay + preDelay)
+                       * (twonderConf->sampleRate / twonderConf->soundSpeed));
 }
 
 float DelayCoeff::getSampleDelay(float preDelay) const {
-    if (delay + preDelay < 0) {
-        return 0;
-    } else {
-        return (delay + preDelay) * (twonderConf->sampleRate / twonderConf->soundSpeed);
-    }
+    if (delay + preDelay < 0) { return 0; }
+    return (delay + preDelay) * (twonderConf->sampleRate / twonderConf->soundSpeed);
 }
 
-void DelayCoeff::print() {
+void DelayCoeff::print() const {
     std::cout << "delay: " << getDelay()
               << " [m] | SampleDelay = " << getSampleDelay(twonderConf->negDelayInit)
               << " | Amplitudefactor: " << getFactor() << std::endl;
