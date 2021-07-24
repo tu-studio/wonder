@@ -45,9 +45,9 @@ jfwonderConfig::jfwonderConfig( int argc, char **argv )
     daemon        = 0;
 	controlRate   = 1024;
     listeningPort = "58600";
-    user          = NULL;
+    user          = nullptr;
 
-    cwonderAddr  = NULL;
+    cwonderAddr  = nullptr;
     cwonderHost  = "127.0.0.1";
     cwonderPort  = "58100";
 
@@ -61,7 +61,7 @@ jfwonderConfig::~jfwonderConfig()
     if( cwonderAddr )
     {
         lo_address_free( cwonderAddr );
-        cwonderAddr = NULL;
+        cwonderAddr = nullptr;
     }
 }
 
@@ -70,20 +70,20 @@ void jfwonderConfig::parse_args( int argc, char **argv )
 {
     int c;
 
-    while( 1 )
+    while( true )
     {
         static struct option long_options[] =
             {
-                {"daemon",         no_argument,        0, 'd'},
-                {"user",           required_argument,  0, 'u'},
-                {"listeningport",  required_argument,  0, 'o'},
-                {"cwonderhost",    required_argument,  0, 'i'},
-                {"cwonderport",    required_argument,  0, 'p'},
-				{"controlrate",    required_argument,  0, 'c'},
-                {"verbose",        no_argument,        0, 'v'},
-                {"jfverbose",      no_argument,        0, 'f'},
-                {"help",           no_argument,        0, 'h'},
-                { 0, 0, 0, 0 }
+                {"daemon",         no_argument,        nullptr, 'd'},
+                {"user",           required_argument,  nullptr, 'u'},
+                {"listeningport",  required_argument,  nullptr, 'o'},
+                {"cwonderhost",    required_argument,  nullptr, 'i'},
+                {"cwonderport",    required_argument,  nullptr, 'p'},
+				{"controlrate",    required_argument,  nullptr, 'c'},
+                {"verbose",        no_argument,        nullptr, 'v'},
+                {"jfverbose",      no_argument,        nullptr, 'f'},
+                {"help",           no_argument,        nullptr, 'h'},
+                { nullptr, 0, nullptr, 0 }
             };
 
         int option_index = 0;
@@ -163,4 +163,4 @@ void jfwonderConfig::parse_args( int argc, char **argv )
 }
 
 
-jfwonderConfig* jfConf = NULL;
+jfwonderConfig* jfConf = nullptr;
