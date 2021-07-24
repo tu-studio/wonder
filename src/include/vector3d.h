@@ -34,7 +34,7 @@ class Vector3D
 {
   public:
     Vector3D();
-    Vector3D(const Vector3D& initValues);
+    Vector3D(const Vector3D& src);
     Vector3D(float x, float y, float z);
     float& operator[](int i) { return (i == 0) ? v0 : ((i == 1) ? v1 : v2); }
 
@@ -48,11 +48,11 @@ class Vector3D
         v2 = z;
     }
 
-    float x() { return v0; }
+    float x() const { return v0; }
 
-    float y() { return v1; }
+    float y() const { return v1; }
 
-    float z() { return v2; }
+    float z() const { return v2; }
 
   private:
     float v0, v1, v2;

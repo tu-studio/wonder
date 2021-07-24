@@ -29,7 +29,7 @@
 #include <cmath>
 #include "delaycoeff.h"
 
-unsigned int DelayCoeff::getSampleDelayRounded(float preDelay) {
+unsigned int DelayCoeff::getSampleDelayRounded(float preDelay) const {
     if (delay + preDelay < 0) {
         return 0;
     } else {
@@ -38,7 +38,7 @@ unsigned int DelayCoeff::getSampleDelayRounded(float preDelay) {
     }
 }
 
-float DelayCoeff::getSampleDelay(float preDelay) {
+float DelayCoeff::getSampleDelay(float preDelay) const {
     if (delay + preDelay < 0) {
         return 0;
     } else {

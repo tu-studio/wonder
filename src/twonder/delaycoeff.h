@@ -42,8 +42,8 @@ struct DelayCoeff
     float delay{0.0f};  // in meters
     float factor{0.0f};
 
-    float getDelay() { return delay; }
-    float getFactor() { return factor; }
+    float getDelay() const { return delay; }
+    float getFactor() const { return factor; }
 
     void setDelay(float d) { delay = d; }
     void setFactor(float c) { factor = c; }

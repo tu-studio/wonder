@@ -35,7 +35,7 @@
 
 DelayLine::DelayLine(float maxDelay) : maxDelay(maxDelay) {}
 
-void DelayLine::put(float* samples, unsigned int nsamples) {
+void DelayLine::put(const float* samples, unsigned int nsamples) {
     // XXX: maybe use memcpy... or std::copy
     for (unsigned int i = 0; i < nsamples; ++i) {
         line[writePos] = samples[i];

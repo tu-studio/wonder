@@ -54,9 +54,9 @@ class Source
 
     virtual void doInterpolationStep(wonder_frames_t blocksize) = 0;
 
-    int getType() { return type; }
+    int getType() const { return type; }
 
-    bool hasDopplerEffect() { return dopplerEffect; }
+    bool hasDopplerEffect() const { return dopplerEffect; }
 
     void setDopplerEffect(bool useDoppler) { dopplerEffect = useDoppler; }
 
@@ -94,17 +94,17 @@ class PointSource : public PositionSource
     PointSource()           = delete;
     ~PointSource() override = default;
 
-    DelayCoeff getDelayCoeff(const Speaker& spk) override;
+    DelayCoeff getDelayCoeff(const Speaker& speaker) override;
 
-    DelayCoeff getTargetDelayCoeff(const Speaker& spk,
+    DelayCoeff getTargetDelayCoeff(const Speaker& speaker,
                                    wonder_frames_t blocksize) override;
 
     void doInterpolationStep(wonder_frames_t blocksize) override;
 
   private:
-    DelayCoeff calcDelayCoeff(const Speaker& spk, const Vector3D& vec) const;
+    DelayCoeff calcDelayCoeff(const Speaker& speaker, const Vector3D& sourcePos) const;
 
-    bool isFocused(const Vector3D& src) const;
+    bool isFocused(const Vector3D& sourcePos) const;
 };
 
 class PlaneWave : public PositionSource
@@ -122,9 +122,9 @@ class PlaneWave : public PositionSource
         dopplerEffect = true;
     }
 
-    DelayCoeff getDelayCoeff(const Speaker& spk) override;
+    DelayCoeff getDelayCoeff(const Speaker& speaker) override;
 
-    DelayCoeff getTargetDelayCoeff(const Speaker& spk,
+    DelayCoeff getTargetDelayCoeff(const Speaker& speaker,
                                    wonder_frames_t blocksize) override;
 
     void doInterpolationStep(wonder_frames_t blocksize) override;
@@ -136,7 +136,7 @@ class PlaneWave : public PositionSource
     }
 
   private:
-    DelayCoeff calcDelayCoeff(const Speaker& spk, const Angle& angle) const;
+    DelayCoeff calcDelayCoeff(const Speaker& speaker, const Angle& angle) const;
 };
 
 class SourceAggregate

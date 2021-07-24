@@ -42,7 +42,7 @@ class Interpolat
 
     const T& getCurrentValue() const { return currentValue; }
 
-    const T getTargetValue(wonder_frames_t blocksize) const {
+    T getTargetValue(wonder_frames_t blocksize) const {
         if (targetTime == (wonder_frames_t)0) {
             return targetValue;
         } else {
