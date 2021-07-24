@@ -89,8 +89,6 @@ class PointSource : public PositionSource
     PointSource(const Vector3D& p) : PositionSource(p) {
         type          = 1;
         dopplerEffect = true;
-        didFocusCalc  = false;
-        wasFocused    = false;
     }
     PointSource() = delete;
     ~PointSource() = default;
@@ -102,11 +100,9 @@ class PointSource : public PositionSource
     void doInterpolationStep(wonder_frames_t blocksize);
 
   private:
-    DelayCoeff calcDelayCoeff(const Speaker& spk, const Vector3D& vec);
+    DelayCoeff calcDelayCoeff(const Speaker& spk, const Vector3D& vec) const;
 
-    bool isFocused(const Vector3D& src);
-    bool didFocusCalc;
-    bool wasFocused;
+    bool isFocused(const Vector3D& src) const;
 };
 
 class PlaneWave : public PositionSource
@@ -137,7 +133,7 @@ class PlaneWave : public PositionSource
     }
 
   private:
-    DelayCoeff calcDelayCoeff(const Speaker& spk, const Angle& angle);
+    DelayCoeff calcDelayCoeff(const Speaker& spk, const Angle& angle) const;
 };
 
 class SourceAggregate

@@ -46,7 +46,6 @@ DelayCoeff PointSource::getTargetDelayCoeff(const Speaker& speaker,
 }
 
 void PointSource::doInterpolationStep(wonder_frames_t blocksize) {
-    didFocusCalc = false;
     position.doInterpolationStep(blocksize);
 }
 
@@ -59,7 +58,7 @@ float hanning(float x) { return 1 - (0.5 * cosf(M_PI * x) + 0.5); }
 /// interesting to re-implement)
 ///
 DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
-                                       const Vector3D& sourcePos) {
+                                       const Vector3D& sourcePos) const {
     Vector3D srcToSpkVec   = speaker.get3DPos() - sourcePos;
     float normalProjection = srcToSpkVec * speaker.get3DNormal();
     float srcToSpkDistance = srcToSpkVec.length();
@@ -156,7 +155,7 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
     return DelayCoeff{delay, amplitudeFactor * speaker.getCosAlpha() * window};
 }
 
-bool PointSource::isFocused(const Vector3D& sourcePos) {
+bool PointSource::isFocused(const Vector3D& sourcePos) const {
     if (twonderConf->ioMode == IOM_ALWAYSOUT) { return false; }
 
     if (twonderConf->ioMode == IOM_ALWAYSIN) { return true; }
@@ -202,8 +201,6 @@ bool PointSource::isFocused(const Vector3D& sourcePos) {
         yold = ynew;
     }
 
-    didFocusCalc = true;
-    wasFocused   = inside;
     return inside;
 }
 
@@ -221,7 +218,7 @@ void PlaneWave::doInterpolationStep(wonder_frames_t blocksize) {
     angle.doInterpolationStep(blocksize);
 }
 
-DelayCoeff PlaneWave::calcDelayCoeff(const Speaker& speaker, const Angle& ang) {
+DelayCoeff PlaneWave::calcDelayCoeff(const Speaker& speaker, const Angle& ang) const {
     Vector3D diff = speaker.get3DPos() - position.getCurrentValue();
     float cospsi  = (ang.getNormal() * diff) / diff.length();
     float delay   = diff.length() * cospsi;
