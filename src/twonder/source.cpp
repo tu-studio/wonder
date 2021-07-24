@@ -110,7 +110,6 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
                                   + (sourcePos[1] - twonderConf->elevationY1)
                                         * (twonderConf->slope)));
             Vector3D diff3D  = speaker.get3DPos() - src3D;
-            normalProjection = diff3D * speaker.get3DNormal();
             srcToSpkDistance = diff3D.length();
             delay            = srcToSpkDistance;
         }
