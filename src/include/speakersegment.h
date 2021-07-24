@@ -100,9 +100,7 @@ class SegmentArrayIter : public xmlpp::Node::NodeSet::iterator
     SegmentArrayIter(const xmlpp::Node::NodeSet::iterator& other)
         : xmlpp::Node::NodeSet::iterator(other) {}
 
-    ~SegmentArrayIter() {
-        // nothing
-    }
+    ~SegmentArrayIter() = default;
 
     /// construct a segment when the operator* is called
     // XXX: maybe think this over... new in * is not so common...
