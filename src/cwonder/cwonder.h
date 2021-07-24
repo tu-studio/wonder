@@ -36,9 +36,9 @@
 
 #include "cwonder_config.h"
 #include "events.h"
-#include "timestamp.h"
 #include "oscstream.h"
 #include "project.h"
+#include "timestamp.h"
 
 class Cwonder
 {

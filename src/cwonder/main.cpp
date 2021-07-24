@@ -26,6 +26,8 @@
  *                                                                                   *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+#include <systemd/sd-daemon.h>
+
 #include <chrono>
 #include <csignal>
 #include <cstdlib>
@@ -33,13 +35,12 @@
 #include <iostream>
 #include <sstream>
 #include <thread>
-#include <systemd/sd-daemon.h>
 
 #include "cwonder.h"
-#include "timestamp.h"
 #include "cwonder_config.h"
-#include "wonder_path.h"
 #include "oscinctrl.h"
+#include "timestamp.h"
+#include "wonder_path.h"
 
 sig_atomic_t stopFlag = 0;
 

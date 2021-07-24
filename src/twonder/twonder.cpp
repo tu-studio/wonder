@@ -109,16 +109,14 @@ void jack_shutdown(void* arg) {
 //-------------------------------Audio processing----------------------------//
 
 void process_speakers(SpkArray* const speakers, jack_nframes_t nframes) {
-    for (auto* speaker: speakers->array) {
+    for (auto* speaker : speakers->array) {
         // Mute output first
         std::memset(speaker->outPtr, 0, nframes * sizeof(jack_default_audio_sample_t));
         // calculate the delay coefficients for every source-to-speaker-to-listener
         // combination
-        for (auto* aggregate: sources->array) {
-            DelayCoeff c =
-                aggregate->source->getDelayCoeff(*speaker);
-            DelayCoeff c2 =
-                aggregate->source->getTargetDelayCoeff(*speaker, nframes);
+        for (auto* aggregate : sources->array) {
+            DelayCoeff c  = aggregate->source->getDelayCoeff(*speaker);
+            DelayCoeff c2 = aggregate->source->getTargetDelayCoeff(*speaker, nframes);
 
             // mute a source if it is not active
             if (!aggregate->active) {
@@ -131,7 +129,7 @@ void process_speakers(SpkArray* const speakers, jack_nframes_t nframes) {
                 aggregate->inputline->getInterp(c, c2, speaker->outPtr, nframes);
             } else {
                 aggregate->inputline->getFadej(c, c2, speaker->outPtr, nframes,
-                                                   DelayLine::dB3);
+                                               DelayLine::dB3);
             }
         }
     }
@@ -139,7 +137,7 @@ void process_speakers(SpkArray* const speakers, jack_nframes_t nframes) {
 
 void interpolate_sources(SourceArray* const sources, jack_nframes_t nframes) {
     // interpolate all source positions
-    for (auto* aggregate: sources->array) {
+    for (auto* aggregate : sources->array) {
         aggregate->source->doInterpolationStep(nframes);
     }
 }
@@ -174,7 +172,7 @@ int process(jack_nframes_t nframes, void* arg) {
 //-----------------------------JACK initialization---------------------------//
 
 bool initialize_jack() {
-    bool running          = false;  // Initialization status
+    bool running = false;  // Initialization status
 
     const char* client_name = twonderConf->jackName;  // Get name from twonderConfig
     const char* server_name = nullptr;  // Without a JACK server name the default server
@@ -379,7 +377,8 @@ class AngleCommand : public Command
 
 void AngleCommand::execute() {
     if (sourceId < sources->array.size()) {
-        PlaneWave* planeWave = dynamic_cast<PlaneWave*>(sources->array.at(sourceId)->source);
+        PlaneWave* planeWave =
+            dynamic_cast<PlaneWave*>(sources->array.at(sourceId)->source);
 
         if (planeWave) {
             planeWave->angle.setTargetValue(angle * M_PI * 2 / 360.0, duration);
@@ -410,7 +409,8 @@ TypeChangeCommand::TypeChangeCommand(int id, int t, TimeStamp timestamp)
     sourceId = id;
     type     = t;
 
-    PositionSource* temp = dynamic_cast<PositionSource*>(sources->array.at(sourceId)->source);
+    PositionSource* temp =
+        dynamic_cast<PositionSource*>(sources->array.at(sourceId)->source);
 
     if (type == 1) {
         srcPtr = new PointSource(temp->position.getCurrentValue());
@@ -839,7 +839,7 @@ int main(int argc, char* argv[]) {
         if (timeoutCounter % 15 == 15) {
             std::cerr << "Cannot connect to cwonder...\n";
             lo_send(twonderConf->cwonderAddr, "/WONDER/stream/render/connect", "s",
-            twonderConf->name.c_str());
+                    twonderConf->name.c_str());
         }
         timeoutCounter++;
     }

@@ -35,10 +35,10 @@
 
 #include "cwonder_config.h"
 #include "events.h"
-#include "timestamp.h"
 #include "liblo_extended.h"
 #include "oscstream.h"
 #include "project.h"
+#include "timestamp.h"
 #include "wonder_path.h"
 
 using std::exception;
@@ -1147,11 +1147,10 @@ int Cwonder::setGroupPosition(lo_address from, int groupID, float x, float y) {
 }
 
 int Cwonder::renderStreamConnect(string host, string port, string name) {
-    lo_address address           = renderStream.connect(host, port, name);
+    lo_address address = renderStream.connect(host, port, name);
 
     // send number of allowed sources
-    lo_send(address, "/WONDER/global/maxNoSources", "i",
-            cwonderConf->maxNoSources);
+    lo_send(address, "/WONDER/global/maxNoSources", "i", cwonderConf->maxNoSources);
 
     // send renderpolygon
     // XXX:(CAREFUL! this might easily exceed the allowed messagesize of liblo,
@@ -1171,8 +1170,7 @@ int Cwonder::renderStreamConnect(string host, string port, string name) {
         lo_message_add_float(renderPolygonMessage, (*it)[2]);
     }
 
-    lo_send_message(address, "/WONDER/global/renderpolygon",
-                    renderPolygonMessage);
+    lo_send_message(address, "/WONDER/global/renderpolygon", renderPolygonMessage);
     lo_message_free(renderPolygonMessage);
 
     // if in basic mode activate all sources for rendering and let them use their default
@@ -1190,12 +1188,10 @@ int Cwonder::renderStreamConnect(string host, string port, string name) {
 
                 if (source->active) {
                     lo_send(address, "/WONDER/source/activate", "i", i);
-                    lo_send(address, "/WONDER/source/type", "ii", i,
-                            source->type);
-                    lo_send(address, "/WONDER/source/angle", "if", i,
-                            source->angle);
-                    lo_send(address, "/WONDER/source/position", "iff", i,
-                            source->pos[0], source->pos[1]);
+                    lo_send(address, "/WONDER/source/type", "ii", i, source->type);
+                    lo_send(address, "/WONDER/source/angle", "if", i, source->angle);
+                    lo_send(address, "/WONDER/source/position", "iff", i, source->pos[0],
+                            source->pos[1]);
                     lo_send(address, "/WONDER/source/position3D", "ifff", i,
                             source->pos[0], source->pos[1], source->pos[2]);
                     lo_send(address, "/WONDER/source/dopplerEffect", "ii", i,
@@ -1223,8 +1219,7 @@ int Cwonder::visualStreamConnect(string host, string port, string name) {
     lo_address address = visualStream.connect(host, port, name);
 
     // send number of allowed sources
-    lo_send(address, "/WONDER/global/maxNoSources", "i",
-            cwonderConf->maxNoSources);
+    lo_send(address, "/WONDER/global/maxNoSources", "i", cwonderConf->maxNoSources);
 
     // send renderpolygon
     // XXX:(CAREFUL! this might easily exceed the allowed messagesize of liblo,
@@ -1244,8 +1239,7 @@ int Cwonder::visualStreamConnect(string host, string port, string name) {
         lo_message_add_float(renderPolygonMessage, (*it)[2]);
     }
 
-    lo_send_message(address, "/WONDER/global/renderPolygon",
-                    renderPolygonMessage);
+    lo_send_message(address, "/WONDER/global/renderPolygon", renderPolygonMessage);
     lo_message_free(renderPolygonMessage);
 
     // write scenario to DOM

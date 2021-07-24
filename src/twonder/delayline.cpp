@@ -33,9 +33,7 @@
 
 #include "delaycoeff.h"
 
-DelayLine::DelayLine(float maxDelay)
-    : maxDelay(maxDelay) {
-}
+DelayLine::DelayLine(float maxDelay) : maxDelay(maxDelay) {}
 
 void DelayLine::put(float* samples, unsigned int nsamples) {
     // XXX: maybe use memcpy... or std::copy
@@ -215,7 +213,9 @@ void DelayLine::getInterp(DelayCoeff& coeff0, DelayCoeff& coeff1, float* samples
                         readptr -= lineLength;
 
                         // prevent crash, audible clicks are better than complete failure
-                        if (readptr >= (line.data() + lineLength)) { readptr = line.data(); }
+                        if (readptr >= (line.data() + lineLength)) {
+                            readptr = line.data();
+                        }
                     }
                 }
 
