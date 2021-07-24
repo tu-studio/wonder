@@ -101,6 +101,8 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
         // but is not a focussed source
         if ((!isFocused(sourcePos)) && (srcToSpkDistance > transitionRadius))
             return DelayCoeff{0.0f, 0.0f};
+
+        // TODO slope is a float and shouldn't be compared with == or !=
         if (twonderConf->slope) {
             // we need a slope correction in case the speaker array has a slope
             Vector3D src3D(sourcePos[0], sourcePos[1],
