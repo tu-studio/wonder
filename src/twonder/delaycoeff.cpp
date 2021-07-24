@@ -26,15 +26,15 @@
  *                                                                                   *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+#include <cmath>
 #include "delaycoeff.h"
 
 unsigned int DelayCoeff::getSampleDelayRounded(float preDelay) {
     if (delay + preDelay < 0) {
         return 0;
     } else {
-        return (unsigned int)((delay + preDelay)
-                                  * (twonderConf->sampleRate / twonderConf->soundSpeed)
-                              + 0.5);
+        return std::lround((delay + preDelay)
+                                  * (twonderConf->sampleRate / twonderConf->soundSpeed));
     }
 }
 

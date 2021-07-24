@@ -122,7 +122,7 @@ void DelayLine::get(DelayCoeff& coeff0, DelayCoeff& coeff1, float* samples,
     float factorsDelta = (coeff1.getFactor() - coeff0.getFactor()) / (nsamples - 1);
 
     for (unsigned int i = 0; i < nsamples; ++i) {
-        samples[i] += line[(unsigned int)(readPosF + 0.5)] * factor;
+        samples[i] += line[lround(readPosF)] * factor;
 
         readPosF += readPosStepSize;
         factor += factorsDelta;
