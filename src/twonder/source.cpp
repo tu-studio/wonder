@@ -233,7 +233,7 @@ DelayCoeff PlaneWave::calcDelayCoeff(const Speaker& speaker, const Angle& ang) c
     }
 }
 
-SourceAggregate::SourceAggregate(Vector3D initialPos, float negDelay) {
+SourceAggregate::SourceAggregate(const Vector3D& initialPos, float negDelay) {
     source    = new PointSource(initialPos);
     inputline = new DelayLine(negDelay);
     active    = false;

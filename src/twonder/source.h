@@ -142,7 +142,7 @@ class PlaneWave : public PositionSource
 class SourceAggregate
 {
   public:
-    SourceAggregate(Vector3D initialPos, float negDelay);
+    SourceAggregate(const Vector3D& initialPos, float negDelay);
 
     ~SourceAggregate();
 
