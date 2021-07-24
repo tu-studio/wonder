@@ -46,7 +46,7 @@ public:
     int jfverbose;
     int daemon;
 
-	int controlRate;
+	  unsigned int controlRate;
 
     const char* listeningPort;
 
