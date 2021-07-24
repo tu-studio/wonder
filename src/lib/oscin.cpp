@@ -37,15 +37,15 @@ OSCServer::OSCServer(const char* port) {
 }
 
 OSCServer::~OSCServer() {
-    if (serverThread) { lo_server_thread_free(serverThread); }
+    if (serverThread != nullptr) { lo_server_thread_free(serverThread); }
 }
 
-void OSCServer::start() { lo_server_thread_start(serverThread); }
+void OSCServer::start() const { lo_server_thread_start(serverThread); }
 
-void OSCServer::stop() { lo_server_thread_stop(serverThread); }
+void OSCServer::stop() const { lo_server_thread_stop(serverThread); }
 
 void OSCServer::addMethod(const char* path, const char* types, lo_method_handler h,
-                          void* user_data) {
+                          void* user_data) const {
     lo_server_thread_add_method(serverThread, path, types, h, user_data);
 }
 

@@ -58,7 +58,7 @@ class CommandList : public std::list<Command*>
 {
   public:
     CommandList();
-    CommandList(Command* commandd);
+    CommandList(Command* cmd);
 
     ~CommandList();
 };

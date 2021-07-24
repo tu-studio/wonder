@@ -174,7 +174,7 @@ int SegmentArray::readFromFile(string fileName) {
         if (parser) {
             xmlpp::Node* root = parser.get_document()->get_root_node();
 
-            if (root) {
+            if (root != nullptr) {
                 // validate the current dom representation, but first find the dtd
                 string dtdPath;
                 dtdPath = join(DATA_DIR, "dtd/twonder_speakerarray.dtd");
@@ -186,7 +186,7 @@ int SegmentArray::readFromFile(string fileName) {
                 }
 
                 try {
-                    xmlpp::DtdValidator validator(dtdPath.c_str());
+                    xmlpp::DtdValidator validator(dtdPath);
                     validator.validate(parser.get_document());
                     //// cout << "[V-wonderconfig] Validation successfull" << endl <<
                     /// endl;

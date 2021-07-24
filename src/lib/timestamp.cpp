@@ -38,7 +38,7 @@ int TimeStamp::sampleRate = 0;
 
 void TimeStamp::initSampleRate(int newSampleRate) { sampleRate = newSampleRate; }
 
-TimeStamp::TimeStamp() : time(0) {}
+TimeStamp::TimeStamp() {}
 
 TimeStamp::TimeStamp(wonder_frames_t time) : time(time) {}
 
@@ -48,7 +48,7 @@ void TimeStamp::setTime(wonder_frames_t time) { this->time = time; }
 
 wonder_frames_t TimeStamp::getTime() const { return time; }
 
-float TimeStamp::getTimeInSeconds() {
+float TimeStamp::getTimeInSeconds() const {
     if (sampleRate == 0) { return 0.0; }
 
     return ((float)time) / sampleRate;
@@ -104,7 +104,7 @@ bool TimeStamp::operator>=(TimeStamp const& other) const { return (!(*this < oth
 
 bool TimeStamp::operator==(TimeStamp const& other) const { return time == other.time; }
 
-void TimeStamp::show(const char* name) {
+void TimeStamp::show(const char* name) const {
     std::cout << name << "timestamp in samples: " << time
               << "  in seconds: " << (float)time / sampleRate << std::endl;
 }
@@ -133,14 +133,11 @@ TimeStampSc::TimeStampSc(float sec, int period, float scaleFactor)
 }
 
 bool TimeStampSc::operator<(TimeStampSc const& other) const {
-    if (this->wraps < other.wraps) {
+    if (this->wraps < other.wraps) { return true; }
+    if (time < other.time) {
         return true;
     } else {
-        if (time < other.time) {
-            return true;
-        } else {
-            return false;
-        }
+        return false;
     }
 }
 

@@ -77,7 +77,7 @@ class Source
     Vector3D pos;
 
     // angle of the source, when source is a plane wave
-    float angle{0.f};
+    float angle{0.F};
 
     // id of group the source belongs to ( 0 if no group )
     int groupID{0};
@@ -242,7 +242,7 @@ class Project
     // the linebreaks will be messed up in the xml file which will be written by
     // Document::write_to_file_formatted().
     // calls readProjectFromDOM()
-    void readFromFile(Glib::ustring);
+    void readFromFile(Glib::ustring /*filepath*/);
 
     // write the DOM representation to a xml file
     void writeToFile(std::string fileName);
@@ -277,7 +277,7 @@ class Project
     // get scenario/snapshot specific data from the DOM representation.
     //  this allocates memory for new Scenarios and calls their constructor which
     //  reads data (through Scenario::readFromDOM()) from the given node.
-    void readSnapshotsFromDOM(xmlpp::Node* node, const Glib::ustring& xpath);
+    void readSnapshotsFromDOM(xmlpp::Node* node, const Glib::ustring& xmlPath);
 
     // validates the DOM representation against a DTD
     int validate();

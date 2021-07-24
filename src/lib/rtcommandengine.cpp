@@ -30,13 +30,9 @@
 
 #include <algorithm>
 
-RTCommandEngine::RTCommandEngine() : commandQueue(), freeQueue(), accumulatedCommands() {
-    commandsToBeFreed = nullptr;
-}
+RTCommandEngine::RTCommandEngine() { commandsToBeFreed = nullptr; }
 
-RTCommandEngine::~RTCommandEngine() {
-    if (commandsToBeFreed) { delete commandsToBeFreed; }
-}
+RTCommandEngine::~RTCommandEngine() { delete commandsToBeFreed; }
 
 void RTCommandEngine::put(Command* cmd) {
     commandQueue.put(cmd);
@@ -74,9 +70,9 @@ CommandList* RTCommandEngine::getDueCommands(TimeStamp timeStamp) {
             returnValueList.splice(returnValueList.end(), accumulatedCommands,
                                    accumulatedCommands.begin(), it);
             return &returnValueList;
-        } else {
-            return nullptr;
         }
+        return nullptr;
+
     } else {
         return nullptr;
     }
@@ -94,7 +90,7 @@ void RTCommandEngine::evaluateCommands(TimeStamp timeStamp) {
 
     CommandList* commandList = getDueCommands(timeStamp);
 
-    if (commandList) {
+    if (commandList != nullptr) {
         // XXX: evaluate commands that came in first first, basically what a queue should
         // do,
         //      but the queue used here is actually a LIFO ringbuffer, so we have to

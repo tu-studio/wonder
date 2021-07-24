@@ -68,7 +68,7 @@ Project::Project(int maxNoSources) {
 
 Project::~Project() {
     if (!fromFile) {
-        if (doc) {
+        if (doc != nullptr) {
             delete doc;
             doc = nullptr;
         }
@@ -101,7 +101,7 @@ int Project::createScenario() {
     Scenario* newSnapshot = new Scenario(maxNoSources);
     newSnapshot->id       = 0;  // 0 is default, but just to make sure
 
-    if (rootNode) {
+    if (rootNode != nullptr) {
         newSnapshot->node =
             dynamic_cast<xmlpp::Element*>(rootNode)->add_child_element("scenario");
 
@@ -111,19 +111,15 @@ int Project::createScenario() {
         scenario = newSnapshot;
 
         return 0;
-    } else {
-        delete newSnapshot;
     }
+    delete newSnapshot;
 
     return 1;  // cannot get root node
 }
 
 Scenario* Project::getScenario() {
-    if (!snapshots.empty()) {
-        return snapshots.front();
-    } else {
-        return nullptr;
-    }
+    if (!snapshots.empty()) { return snapshots.front(); }
+    return nullptr;
 }
 
 void Project::writeProjectToDOM() {
@@ -154,7 +150,7 @@ void Project::writeProjectToDOM() {
 void Project::readProjectFromDOM() {
     name = "";
 
-    if (rootNode) {
+    if (rootNode != nullptr) {
         const Element::AttributeList& attributes = rootNode->get_attributes();
 
         Element::AttributeList::const_iterator attribIter;
@@ -176,7 +172,7 @@ void Project::readProjectFromDOM() {
             // that first and then rethrow this exception
             clearSnaphots();
 
-            if (doc) {
+            if (doc != nullptr) {
                 doc      = nullptr;
                 rootNode = nullptr;
             }
@@ -207,7 +203,7 @@ void Project::readFromFile(Glib::ustring filepath) {
         rootNode = parser.get_document()->get_root_node();
 
         if (rootNode != nullptr) {
-            if (fromFile == false) { delete doc; }
+            if (!fromFile) { delete doc; }
 
             fromFile = true;
             doc      = parser.get_document();
@@ -222,7 +218,7 @@ void Project::readFromFile(Glib::ustring filepath) {
                 Node* snapshotNode = *it;
 
                 if (snapshotNode->get_name() == "text") {
-                    rootNode->remove_node(snapshotNode);
+                    xmlpp::Element::remove_node(snapshotNode);
                 } else {
                     Node::NodeList childNodeList = snapshotNode->get_children();
                     Node::NodeList::iterator it;
@@ -231,7 +227,7 @@ void Project::readFromFile(Glib::ustring filepath) {
                         Node* sourceOrGroupNode = *it;
 
                         if (sourceOrGroupNode->get_name() == "text") {
-                            snapshotNode->remove_node(sourceOrGroupNode);
+                            xmlpp::Node::remove_node(sourceOrGroupNode);
                         }
                     }
                 }
@@ -245,11 +241,11 @@ void Project::readFromFile(Glib::ustring filepath) {
 void Project::writeToFile(string filename) {
     writeProjectToDOM();
 
-    if (doc) { doc->write_to_file_formatted(filename.c_str()); }
+    if (doc != nullptr) { doc->write_to_file_formatted(filename); }
 }
 
 string Project::show() {
-    if (doc) {
+    if (doc != nullptr) {
         writeProjectToDOM();
 
         // return complete DOM representation without snapshot source data
@@ -264,7 +260,7 @@ string Project::show() {
                     Node::NodeList childList;
                     childList = nodeElement->get_children();
 
-                    for (auto& srcIt : childList) { nodeElement->remove_node(srcIt); }
+                    for (auto& srcIt : childList) { xmlpp::Element::remove_node(srcIt); }
                 }
             }
         }
@@ -305,7 +301,7 @@ int Project::takeSnapshot(int snapshotID, string name) {
     // add a new snapshot
     if (!overwrite) {
         // Add snapshot to the Dom representation and list of snapshots
-        if (rootNode) {
+        if (rootNode != nullptr) {
             // construct new node for new snapshot
             Element* snapshotElement =
                 dynamic_cast<xmlpp::Element*>(rootNode)->add_child_element("snapshot");
@@ -446,7 +442,7 @@ int Project::deleteSnapshot(int snapshotID) {
             for (auto& niter : nList) { (*iter)->node->remove_node(niter); }
 
             // remove snapshot from the dom representation
-            rootNode->remove_node((*iter)->node);
+            xmlpp::Element::remove_node((*iter)->node);
 
             // delete snapshot and remove it from the snapshots list
             delete *iter;
@@ -481,7 +477,7 @@ int Project::copySnapshot(int fromID, int toID) {
             }
 
             // Add snapshot to the Dom representation and list of snapshots
-            if (rootNode) {
+            if (rootNode != nullptr) {
                 // construct new node for new snapshot
                 Element* newSnapshotElement = nullptr;
                 ostringstream os;
@@ -518,9 +514,8 @@ int Project::renameSnapshot(int snapshotID, string name) {
 
             if (validate() == 1) {
                 return 2;  // error validating
-            } else {
-                return 0;
             }
+            return 0;
         }
     }
 
@@ -643,7 +638,7 @@ void Scenario::readFromDOM() {
                     const Element::AttributeList& srcAttribs =
                         childElement->get_attributes();
 
-                    for (auto attribute : srcAttribs) {
+                    for (auto* attribute : srcAttribs) {
                         attribName = attribute->get_name();
                         istringstream is(attribute->get_value());
 
@@ -733,7 +728,7 @@ void Scenario::readFromDOM() {
                     const Element::AttributeList& grpAttribs =
                         childElement->get_attributes();
 
-                    for (auto attribute : grpAttribs) {
+                    for (auto* attribute : grpAttribs) {
                         attribName = attribute->get_name();
                         istringstream is(attribute->get_value());
 
@@ -1062,7 +1057,9 @@ void Scenario::deactivateSource(int id) {
 
             temp->dopplerEffect = true;
 
-            if (i.node && node != nullptr) { node->remove_node(i.node); }
+            if ((i.node != nullptr) && node != nullptr) {
+                xmlpp::Node::remove_node(i.node);
+            }
 
             i.node = nullptr;
         }
@@ -1092,8 +1089,8 @@ void Scenario::deactivateSource(int id) {
 
             temp->dopplerEffect = true;
 
-            if (sourcesVector[id].node && node != nullptr) {
-                node->remove_node(sourcesVector[id].node);
+            if ((sourcesVector[id].node != nullptr) && node != nullptr) {
+                xmlpp::Node::remove_node(sourcesVector[id].node);
             }
 
             sourcesVector[id].node = nullptr;
@@ -1150,8 +1147,8 @@ void Scenario::deactivateGroup(int groupID) {
     if ((id >= 0) && (id < (int)sourceGroupsVector.size())) {
         sourceGroupsVector[id].active = false;
 
-        if (sourceGroupsVector[id].node && node != nullptr) {
-            node->remove_node(sourceGroupsVector[id].node);
+        if ((sourceGroupsVector[id].node != nullptr) && node != nullptr) {
+            xmlpp::Node::remove_node(sourceGroupsVector[id].node);
         }
 
         sourceGroupsVector[id].node = nullptr;

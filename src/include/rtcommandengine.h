@@ -40,7 +40,7 @@ class RTCommandEngine
     // enqueue a Command, in order for it to be evaluated later on.
     // the caller must not delete the Command object. This is done automatically via the
     // freeQueue.
-    void put(Command* command);
+    void put(Command* cmd);
 
     void evaluateCommands(TimeStamp timeStamp);
 
@@ -57,7 +57,7 @@ class RTCommandEngine
 
     CommandList* getDueCommands(TimeStamp timeStamp);
 
-    void scheduleCommandListForDeletion(CommandList* commands);
+    void scheduleCommandListForDeletion(CommandList* commandList);
 
     static void processCommand(Command* command);
 };

@@ -46,7 +46,7 @@ class TimeStamp
     // get the time in samples
     wonder_frames_t getTime() const;
 
-    float getTimeInSeconds();
+    float getTimeInSeconds() const;
 
     void addsec(float sec);
 
@@ -57,11 +57,11 @@ class TimeStamp
     bool operator>=(TimeStamp const& other) const;
     bool operator==(TimeStamp const& other) const;
 
-    void show(const char* name);
+    void show(const char* name) const;
 
   protected:
     // the value of the timestamp in samples
-    wonder_frames_t time;
+    wonder_frames_t time{0};
 
     static int sampleRate;
 };

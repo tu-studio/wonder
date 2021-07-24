@@ -34,7 +34,7 @@ Command::~Command() = default;
 
 void Command::execute() {}
 
-Command::Command() : timeStamp(0.f) {}
+Command::Command() : timeStamp(0.F) {}
 
 Command::Command(TimeStamp timeStamp) : timeStamp(timeStamp) {}
 
@@ -46,9 +46,9 @@ TimeStamp Command::getTimeStamp() const { return timeStamp; }
 
 //-------------------------------CommandList----------------------------------//
 
-CommandList::CommandList() : std::list<Command*>() {}
+CommandList::CommandList() {}
 
-CommandList::CommandList(Command* cmd) : std::list<Command*>() { push_back(cmd); }
+CommandList::CommandList(Command* cmd) { push_back(cmd); }
 
 CommandList::~CommandList() {
     while (!empty()) {

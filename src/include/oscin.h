@@ -39,12 +39,13 @@ class OSCServer
     OSCServer(const char* port = "58200");
     ~OSCServer();
 
-    void start();
-    void stop();
+    void start() const;
+    void stop() const;
 
     void addMethod(const char* path, const char* types, lo_method_handler h,
-                   void* user_data = nullptr);
-    std::string getContent(const char* path, const char* types, lo_arg** argv, int argc);
+                   void* user_data = nullptr) const;
+    static std::string getContent(const char* path, const char* types, lo_arg** argv,
+                                  int argc);
 
     lo_server_thread serverThread;
 

@@ -38,7 +38,7 @@ bool isabs(string s) { return s.at(0) == '/'; }
 string join(string a, string b) {
     string path = a;
 
-    if (path == "" || path.at((path.length() - 1)) == '/') {
+    if (path.empty() || path.at((path.length() - 1)) == '/') {
         path += b;
     } else {
         path += (string) "/" += b;
@@ -56,9 +56,9 @@ string pathsplit(string name, int part) {
             name = name.substr(0, n);
             n    = name.find_last_of("/");
             return name.substr(0, n + 1);
-        } else {
-            return name.substr(0, n + 1);
         }
+        return name.substr(0, n + 1);
+
     } else if (part == 1) {  // tail
         return name.substr(n + 1);
     }
@@ -78,7 +78,8 @@ bool pathexists(string name) {
 }
 
 int makedirs(string name, mode_t mode = 0777) {
-    string head, tail;
+    string head;
+    string tail;
 
     head = pathsplit(name, 0);
     tail = pathsplit(name, 1);
