@@ -258,13 +258,13 @@ SourceArray::SourceArray(int noSources, float negDelay) {
     for (int i = 0; i < noSources; ++i) {
         Vector3D defaultSourcePos(0.0f, 1.0f, 2.0f);
         SourceAggregate* temp = new SourceAggregate(defaultSourcePos, negDelay);
-        push_back(temp);
+        array.push_back(temp);
     }
 }
 
 SourceArray::~SourceArray() {
-    while (!empty()) {
-        delete back();
-        pop_back();
+    while (!array.empty()) {
+        delete array.back();
+        array.pop_back();
     }
 }

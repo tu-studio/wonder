@@ -108,6 +108,35 @@ void jack_shutdown(void* arg) {
 
 //-------------------------------Audio processing----------------------------//
 
+void process_speakers(SpkArray* const speakers, jack_nframes_t nframes) {
+    for (auto* speaker: speakers->array) {
+        // Mute output first
+        std::memset(speaker->outPtr, 0, nframes * sizeof(jack_default_audio_sample_t));
+        // calculate the delay coefficients for every source-to-speaker-to-listener
+        // combination
+        for (auto* aggregate: sources->array) {
+            DelayCoeff c =
+                aggregate->source->getDelayCoeff(*speaker);
+            DelayCoeff c2 =
+                aggregate->source->getTargetDelayCoeff(*speaker, nframes);
+
+            // mute a source if it is not active
+            if (!aggregate->active) {
+                c.setFactor(0.0);
+                c2.setFactor(0.0);
+            }
+
+            // interpolate the delayline with Doppler effect or use a fade-jump
+            if (aggregate->source->hasDopplerEffect()) {
+                aggregate->inputline->getInterp(c, c2, speaker->outPtr, nframes);
+            } else {
+                aggregate->inputline->getFadej(c, c2, speaker->outPtr, nframes,
+                                                   DelayLine::dB3);
+            }
+        }
+    }
+}
+
 int process(jack_nframes_t nframes, void* arg) {
     // process incoming commands
     realtimeCommandEngine->evaluateCommands((wonder_frames_t)10);
@@ -118,7 +147,7 @@ int process(jack_nframes_t nframes, void* arg) {
     // a source
     for (int i = 0; i < twonderConf->noSources; ++i) {
         float* input = static_cast<float*>(jack_port_get_buffer(jackInputs[i], nframes));
-        (*sources)[i]->inputline->put(input, nframes);
+        sources->array[i]->inputline->put(input, nframes);
     }
 
     // get the output buffers of the soundcard
@@ -127,36 +156,11 @@ int process(jack_nframes_t nframes, void* arg) {
             static_cast<float*>(jack_port_get_buffer(jackOutputs[i], nframes));
     }
 
-    for (auto* speaker: speakers->array) {
-        // Mute output first
-        std::memset(speaker->outPtr, 0, nframes * sizeof(jack_default_audio_sample_t));
-        // calculate the delay coefficients for every source-to-speaker-to-listener
-        // combination
-        for (int j = 0; j < twonderConf->noSources; ++j) {
-            DelayCoeff c =
-                (*sources)[j]->source->getDelayCoeff(*speaker);
-            DelayCoeff c2 =
-                (*sources)[j]->source->getTargetDelayCoeff(*speaker, nframes);
-
-            // mute a source if it is not active
-            if (!(*sources)[j]->active) {
-                c.setFactor(0.0);
-                c2.setFactor(0.0);
-            }
-
-            // interpolate the delayline with Doppler effect or use a fade-jump
-            if ((*sources)[j]->source->hasDopplerEffect()) {
-                (*sources)[j]->inputline->getInterp(c, c2, speaker->outPtr, nframes);
-            } else {
-                (*sources)[j]->inputline->getFadej(c, c2, speaker->outPtr, nframes,
-                                                   DelayLine::dB3);
-            }
-        }
-    }
+    process_speakers(speakers, nframes);
 
     // interpolate all source positions
-    for (int i = 0; i < twonderConf->noSources; i++) {
-        (*sources)[i]->source->doInterpolationStep(nframes);
+    for (auto* aggregate: sources->array) {
+        aggregate->source->doInterpolationStep(nframes);
     }
 
     return EXIT_SUCCESS;
@@ -333,9 +337,9 @@ class MoveCommand : public Command
 };
 
 void MoveCommand::execute() {
-    if (sourceId < sources->size()) {
+    if (sourceId < sources->array.size()) {
         PositionSource* positionSource =
-            dynamic_cast<PositionSource*>(sources->at(sourceId)->source);
+            dynamic_cast<PositionSource*>(sources->array.at(sourceId)->source);
 
         if (positionSource) {
             if (positionSource->getType() == 0) {  // is a plane wave
@@ -371,8 +375,8 @@ class AngleCommand : public Command
 };
 
 void AngleCommand::execute() {
-    if (sourceId < sources->size()) {
-        PlaneWave* planeWave = dynamic_cast<PlaneWave*>(sources->at(sourceId)->source);
+    if (sourceId < sources->array.size()) {
+        PlaneWave* planeWave = dynamic_cast<PlaneWave*>(sources->array.at(sourceId)->source);
 
         if (planeWave) {
             planeWave->angle.setTargetValue(angle * M_PI * 2 / 360.0, duration);
@@ -403,14 +407,14 @@ TypeChangeCommand::TypeChangeCommand(int id, int t, TimeStamp timestamp)
     sourceId = id;
     type     = t;
 
-    PositionSource* temp = dynamic_cast<PositionSource*>(sources->at(sourceId)->source);
+    PositionSource* temp = dynamic_cast<PositionSource*>(sources->array.at(sourceId)->source);
 
     if (type == 1) {
         srcPtr = new PointSource(temp->position.getCurrentValue());
         srcPtr->setDopplerEffect(temp->hasDopplerEffect());
     } else if (type == 0) {
         srcPtr = new PlaneWave(temp->position.getCurrentValue(),
-                               sources->at(sourceId)->angle * M_PI * 2 / 360.0);
+                               sources->array.at(sourceId)->angle * M_PI * 2 / 360.0);
         srcPtr->setDopplerEffect(temp->hasDopplerEffect());
     } else {
         srcPtr = nullptr;
@@ -418,10 +422,10 @@ TypeChangeCommand::TypeChangeCommand(int id, int t, TimeStamp timestamp)
 }
 
 void TypeChangeCommand::execute() {
-    if (sourceId < sources->size()) {
-        Source* tmp = sources->at(sourceId)->source;
+    if (sourceId < sources->array.size()) {
+        Source* tmp = sources->array.at(sourceId)->source;
 
-        sources->at(sourceId)->source = srcPtr;
+        sources->array.at(sourceId)->source = srcPtr;
 
         srcPtr = tmp;
     }
@@ -457,8 +461,8 @@ DopplerChangeCommand::DopplerChangeCommand(int id, bool dopplerOn, TimeStamp tim
 }
 
 void DopplerChangeCommand::execute() {
-    if (sourceId < sources->size()) {
-        sources->at(sourceId)->source->setDopplerEffect(useDoppler);
+    if (sourceId < sources->array.size()) {
+        sources->array.at(sourceId)->source->setDopplerEffect(useDoppler);
     }
 }
 
@@ -474,7 +478,7 @@ void DopplerChangeCommand::execute() {
 int oscSrcPositionHandler(handlerArgs) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return -1; }
 
-    if (!sources->at(argv[0]->i)->active) { return 0; }
+    if (!sources->array.at(argv[0]->i)->active) { return 0; }
 
     int sourceId   = argv[0]->i;
     float newX     = argv[1]->f;
@@ -509,7 +513,7 @@ int oscSrcPositionHandler(handlerArgs) {
 int oscSrcPositionHandler3D(handlerArgs) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return -1; }
 
-    if (!sources->at(argv[0]->i)->active) { return 0; }
+    if (!sources->array.at(argv[0]->i)->active) { return 0; }
 
     int sourceId   = argv[0]->i;
     float newX     = argv[1]->f;
@@ -544,7 +548,7 @@ int oscSrcPositionHandler3D(handlerArgs) {
 int oscSrcAngleHandler(handlerArgs) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return -1; }
 
-    if (!sources->at(argv[0]->i)->active) { return 0; }
+    if (!sources->array.at(argv[0]->i)->active) { return 0; }
 
     int sourceId   = argv[0]->i;
     float newAngle = argv[1]->f;
@@ -569,8 +573,8 @@ int oscSrcAngleHandler(handlerArgs) {
 
     // preserve angle information for type switching of sources if source is of type
     // pointsource
-    if (sources->at(sourceId)->source->getType() == 0) {
-        sources->at(sourceId)->angle = newAngle;
+    if (sources->array.at(sourceId)->source->getType() == 0) {
+        sources->array.at(sourceId)->angle = newAngle;
     }
 
     return 0;
@@ -582,14 +586,14 @@ int oscSrcTypeHandler(handlerArgs) {
         return -1;
     }
 
-    if (!sources->at(argv[0]->i)->active) { return 0; }
+    if (!sources->array.at(argv[0]->i)->active) { return 0; }
 
     int sourceId = argv[0]->i;
     int newType  = argv[1]->i;
     float time   = 0.0;
 
     // if targeted source is already of the requested type, then nothing has to be done
-    if (argv[1]->i == sources->at(sourceId)->source->getType()) { return 0; }
+    if (argv[1]->i == sources->array.at(sourceId)->source->getType()) { return 0; }
 
     if (argc == 3) { time = argv[2]->f; }
 
@@ -607,7 +611,7 @@ int oscSrcTypeHandler(handlerArgs) {
 int oscSrcDopplerHandler(handlerArgs) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return -1; }
 
-    if (!sources->at(argv[0]->i)->active) { return 0; }
+    if (!sources->array.at(argv[0]->i)->active) { return 0; }
 
     int sourceId    = argv[0]->i;
     bool useDoppler = (bool)argv[1]->i;
@@ -641,7 +645,7 @@ int oscSrcActivateHandler(handlerArgs) {
 
     if (twonderConf->verbose) { std::cout << "osc-activate " << argv[0]->i << std::endl; }
 
-    sources->at(argv[0]->i)->active = true;
+    sources->array.at(argv[0]->i)->active = true;
 
     return 0;
 }
@@ -653,8 +657,8 @@ int oscSrcDeactivateHandler(handlerArgs) {
         std::cout << "osc-deactivate " << argv[0]->i << std::endl;
     }
 
-    sources->at(argv[0]->i)->active = false;
-    sources->at(argv[0]->i)->reset();
+    sources->array.at(argv[0]->i)->active = false;
+    sources->array.at(argv[0]->i)->reset();
 
     return 0;
 }

@@ -155,10 +155,11 @@ class SourceAggregate
     float angle;  // for preserving angle when type of source is changed back and forth
 };
 
-class SourceArray : public std::vector<SourceAggregate*>
+class SourceArray
 {
   public:
     SourceArray(int noSources, float negDelay);
-
     ~SourceArray();
+
+    std::vector<SourceAggregate*> array;
 };
