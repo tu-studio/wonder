@@ -50,7 +50,7 @@ class DelayLine
     DelayLine(float maxDelay = 10.0);
 
     // XXX WARNING: must write power of 2 only;
-    void put(float* samples, unsigned int nsamples);
+    void put(const float* samples, unsigned int nsamples);
 
     // read samples from this delayLine, make sure to set the contents of samples to 0.0
     // before

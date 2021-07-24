@@ -48,7 +48,7 @@ struct DelayCoeff
     void setDelay(float d) { delay = d; }
     void setFactor(float c) { factor = c; }
 
-    unsigned int getSampleDelayRounded(float preDelay);
-    float getSampleDelay(float preDelay);
+    unsigned int getSampleDelayRounded(float preDelay) const;
+    float getSampleDelay(float preDelay) const;
     void print();
 };
