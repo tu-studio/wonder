@@ -331,7 +331,7 @@ class MoveCommand : public Command
         duration    = durationInSamples;
     }
 
-    void execute();
+    void execute() override;
 
   private:
     Vector3D destination;
@@ -369,7 +369,7 @@ class AngleCommand : public Command
         duration = durationInSamples;
     }
 
-    void execute();
+    void execute() override;
 
   private:
     float angle;
@@ -395,9 +395,9 @@ class TypeChangeCommand : public Command
 {
   public:
     TypeChangeCommand(int id, int type, TimeStamp ts = (float)0);
-    ~TypeChangeCommand();
+    ~TypeChangeCommand() override;
 
-    void execute();
+    void execute() override;
 
   private:
     unsigned int sourceId;
@@ -450,7 +450,7 @@ class DopplerChangeCommand : public Command
   public:
     DopplerChangeCommand(int id, bool dopplerOn, TimeStamp ts = (float)0);
 
-    void execute();
+    void execute() override;
 
   private:
     unsigned int sourceId;

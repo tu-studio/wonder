@@ -40,7 +40,7 @@
 #include "vector3d.h"
 
 class Speaker;
-class DelayCoeff;
+struct DelayCoeff;
 
 class Source
 {
@@ -76,7 +76,7 @@ class PositionSource : public Source
 
     PositionSource(const Vector3D& position);
 
-    virtual void reset() {
+    void reset() override {
         position.setCurrentValue(Vector3D(0.0f, 0.0f, 0.0f));
         position.setTargetValue(Vector3D(0.0f, 0.0f, 0.0f));
         Source::reset();
@@ -91,13 +91,13 @@ class PointSource : public PositionSource
         dopplerEffect = true;
     }
     PointSource() = delete;
-    ~PointSource() = default;
+    ~PointSource() override = default;
 
-    DelayCoeff getDelayCoeff(const Speaker& spk);
+    DelayCoeff getDelayCoeff(const Speaker& spk) override;
 
-    DelayCoeff getTargetDelayCoeff(const Speaker& spk, wonder_frames_t blocksize);
+    DelayCoeff getTargetDelayCoeff(const Speaker& spk, wonder_frames_t blocksize) override;
 
-    void doInterpolationStep(wonder_frames_t blocksize);
+    void doInterpolationStep(wonder_frames_t blocksize) override;
 
   private:
     DelayCoeff calcDelayCoeff(const Speaker& spk, const Vector3D& vec) const;
@@ -113,20 +113,20 @@ class PlaneWave : public PositionSource
     Interpolat<Angle> angle;
 
     PlaneWave() = delete;
-    ~PlaneWave() = default;
+    ~PlaneWave() override = default;
     PlaneWave(const Vector3D& position, float angle)
         : PositionSource(position), angle(angle) {
         type          = 0;
         dopplerEffect = true;
     }
 
-    DelayCoeff getDelayCoeff(const Speaker& spk);
+    DelayCoeff getDelayCoeff(const Speaker& spk) override;
 
-    DelayCoeff getTargetDelayCoeff(const Speaker& spk, wonder_frames_t blocksize);
+    DelayCoeff getTargetDelayCoeff(const Speaker& spk, wonder_frames_t blocksize) override;
 
-    void doInterpolationStep(wonder_frames_t blocksize);
+    void doInterpolationStep(wonder_frames_t blocksize) override;
 
-    virtual void reset() {
+    void reset() override {
         angle.setCurrentValue(0.0f);
         angle.setTargetValue(0.0f);
         PositionSource::reset();

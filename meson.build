@@ -4,7 +4,7 @@ project('wonder', 'cpp',
         default_options: 'cpp_std=c++17')
 
 thread_dep = dependency('threads')
-xml_dep = dependency('libxml++-3.0', fallback: ['libxml++-3.0', 'xmlxx_dep'])
+xml_dep = dependency('libxml++-3.0', fallback: ['libxml++-3.0', 'xmlxx_dep'], include_type: 'system')
 jack_dep = dependency('jack')
 liblo_dep = dependency('liblo')
 systemd_dep = dependency('systemd', required: get_option('systemd'))

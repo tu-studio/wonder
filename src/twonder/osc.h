@@ -40,7 +40,7 @@ class OSCServer
     ~OSCServer();
 
     void addMethod(const char* path, const char* typespec, lo_method_handler h,
-                   void* user_data = NULL);
+                   void* user_data = nullptr);
 
     void start();
 

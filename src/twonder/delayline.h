@@ -30,7 +30,7 @@
 
 #include <array>
 
-class DelayCoeff;
+struct DelayCoeff;
 
 class DelayLine
 {
