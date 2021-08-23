@@ -46,7 +46,7 @@ class OSCControl : public OSCServer
 
     OSCControl(OSCControl&&) = delete;
     OSCControl& operator=(OSCControl&&) = delete;
-    OSCControl(const OSCControl&) = delete;
+    OSCControl(const OSCControl&)       = delete;
     OSCControl& operator=(const OSCControl&) = delete;
 
     // add the reply message /WONDER/reply to the known messages

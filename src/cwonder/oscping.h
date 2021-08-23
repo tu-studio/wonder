@@ -82,7 +82,7 @@ class ListOSCPing : public std::list<OSCPing*>
 
     ListOSCPing(ListOSCPing&&) = delete;
     ListOSCPing& operator=(ListOSCPing&&) = delete;
-    ListOSCPing(const ListOSCPing&) = delete;
+    ListOSCPing(const ListOSCPing&)       = delete;
     ListOSCPing& operator=(const ListOSCPing&) = delete;
 
     int add(lo_address a, std::string name = "", int pingSpan = 3,

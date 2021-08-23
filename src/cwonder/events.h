@@ -77,7 +77,7 @@ class Timeline
 
     Timeline(Timeline&&) = default;
     Timeline& operator=(Timeline&&) = default;
-    Timeline(const Timeline&) = default;
+    Timeline(const Timeline&)       = default;
     Timeline& operator=(const Timeline&) = default;
 
     void addevent(Event* event);

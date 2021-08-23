@@ -29,9 +29,9 @@
 #include "oscstream.h"
 
 #include <cstdlib>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <filesystem>
 
 #include "cwonder_config.h"
 #include "liblo_extended.hpp"
@@ -50,8 +50,8 @@ OSCStream::OSCStream(string name)
         std::string client;
         while (std::getline(statefile, client)) {
             std::string host = client.substr(0, client.find(","));
-            std::string port =
-                client.substr(client.find(",") + 1, client.rfind(",") - client.find(",") - 1);
+            std::string port = client.substr(client.find(",") + 1,
+                                             client.rfind(",") - client.find(",") - 1);
             std::string name = client.substr(client.rfind(",") + 1);
             std::cout << "Host: " << host << "\n"
                       << "Port: " << port << "\n"
@@ -73,7 +73,8 @@ OSCStream::~OSCStream() {
         }
         statefile.close();
     } else {
-        std::cerr << "Couldn't write " << name << " client list to " << statefilename << "\n";
+        std::cerr << "Couldn't write " << name << " client list to " << statefilename
+                  << "\n";
     }
 
     for (clientsIter = begin(); clientsIter != end(); ++clientsIter) {

@@ -49,7 +49,8 @@ class Source
 
     virtual DelayCoeff getDelayCoeff(const Speaker& spk) = 0;
 
-    virtual DelayCoeff getTargetDelayCoeff(const Speaker& spk, wonder_frames_t blocksize) = 0;
+    virtual DelayCoeff getTargetDelayCoeff(const Speaker& spk,
+                                           wonder_frames_t blocksize) = 0;
 
     virtual void doInterpolationStep(wonder_frames_t blocksize) = 0;
 
@@ -92,7 +93,7 @@ class PointSource : public PositionSource
         didFocusCalc  = false;
         wasFocused    = false;
     }
-    PointSource() = delete;
+    PointSource()  = delete;
     ~PointSource() = default;
 
     DelayCoeff getDelayCoeff(const Speaker& spk);
@@ -116,7 +117,7 @@ class PlaneWave : public PositionSource
     // from PositionSource.
     Interpolat<Angle> angle;
 
-    PlaneWave() = delete;
+    PlaneWave()  = delete;
     ~PlaneWave() = default;
     PlaneWave(const Vector3D& position, float angle)
         : PositionSource(position), angle(angle) {

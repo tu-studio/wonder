@@ -48,7 +48,7 @@ class Element;
 class Source
 {
   public:
-    Source() = default;
+    Source()  = default;
     ~Source() = default;
 
     Source(Source&&) = default;
@@ -83,7 +83,7 @@ class Source
     int groupID{0};
 
     // color in RGB ( values from 0 to 255 )
-    int color[3] {0,255,0};
+    int color[3]{0, 255, 0};
 
     // simulate doppler effect
     bool dopplerEffect{true};
@@ -109,7 +109,7 @@ class SourceGroup
     // do the sources have the same id
     bool operator==(SourceGroup const& other) const { return (id == other.id); }
 
-    SourceGroup() = default;
+    SourceGroup()                   = default;
     SourceGroup(SourceGroup const&) = default;
     // assignement copies only data, not the node
     SourceGroup& operator=(SourceGroup const& other);

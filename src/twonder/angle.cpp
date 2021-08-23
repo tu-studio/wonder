@@ -58,7 +58,6 @@ const Angle& Angle::operator=(const Angle& angle) {
     return *this;
 }
 
-
 Angle Angle::operator-(const Angle& other) const { return Angle(angle - other.angle); }
 
 Angle Angle::operator+(float addAngle) const { return Angle(angle + addAngle); }
