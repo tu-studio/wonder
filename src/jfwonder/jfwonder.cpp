@@ -44,9 +44,9 @@
 
 #include <lo/lo.h>
 
-#include "jackringbuffer.h"
+#include "jackringbuffer.hpp"
 #include "config.h"
-#include "wonder_path.h"
+#include "wonder_path.hpp"
 #include "jfwonder_config.h"
 
 using namespace std;
