@@ -74,7 +74,7 @@ class FrameQueue : private JackRingbuffer
 public:
     FrameQueue()
     {
-        pthread_mutex_init( &mutex, NULL );
+        pthread_mutex_init( &mutex, nullptr );
     }
 
     ~FrameQueue()
@@ -152,7 +152,7 @@ int startDaemon()
     // get pid of parent process
     spid << getpid();
 
-    if( jfConf->user == NULL )
+    if( jfConf->user == nullptr )
         path_pidfile = path + "/jfwonder." + spid.str() + ".pid";
     else
         path_pidfile = path + "/jfwonder." + ( string ) jfConf->user + ".pid";
@@ -192,7 +192,7 @@ int cleanDaemon()
 }
 
 
-int genericHandler( const char* path, const char* types, lo_arg** argv, int argc, lo_message data, void* user_data )
+int genericHandler( const char* path, const char* types, lo_arg**  /*argv*/, int argc, lo_message data, void*  /*user_data*/ )
 {
     int i;
 
@@ -209,7 +209,7 @@ int genericHandler( const char* path, const char* types, lo_arg** argv, int argc
 }
 
 
-int connectHandler( const char* path, const char* types, lo_arg** argv, int argc, lo_message data, void* user_data )
+int connectHandler( const char*  /*path*/, const char*  /*types*/, lo_arg**  /*argv*/, int  /*argc*/, lo_message  /*data*/, void*  /*user_data*/ )
 {
     start = true;
     fmt::print( "[V-Wonder] Cwonder is up. Start sending the frametime.\n" );
@@ -237,7 +237,7 @@ void showTime()
 }
 
 
-void jackShutdown( void* arg )
+void jackShutdown( void*  /*arg*/ )
 {
     lo_send( jfConf->cwonderAddr, "/WONDER/jfwonder/error", "s", "the jack server has been shutdown." );
 
@@ -249,7 +249,7 @@ void jackShutdown( void* arg )
 }
 
 
-void signalHandler( int signal )
+void signalHandler( int  /*signal*/ )
 {
     jack_client_close( jackClient );
 
@@ -263,7 +263,7 @@ void signalHandler( int signal )
 }
 
 
-int jackProcess( jack_nframes_t nframes, void* arg )
+int jackProcess( jack_nframes_t  /*nframes*/, void*  /*arg*/ )
 {
     jack_position_t pos;
     jack_nframes_t  frame;
@@ -302,7 +302,7 @@ int main( int argc, char* argv[] )
         }
     }
 
-    if ( ( jackClient = jack_client_open( "showtime", JackNullOption, nullptr ) ) == 0 )
+    if ( ( jackClient = jack_client_open( "showtime", JackNullOption, nullptr ) ) == nullptr )
     {
         fmt::print( "[E-Jack] jack server not running?\n" );
         cerr << "[E-Jack] jack server not running? exiting now..." << endl;
@@ -317,9 +317,9 @@ int main( int argc, char* argv[] )
     signal( SIGHUP,  signalHandler );
     signal( SIGINT,  signalHandler );
 
-    jack_on_shutdown( jackClient, jackShutdown, 0 );
+    jack_on_shutdown( jackClient, jackShutdown, nullptr );
 
-    jack_set_process_callback( jackClient, jackProcess, NULL );
+    jack_set_process_callback( jackClient, jackProcess, nullptr );
 
     if( jack_activate( jackClient ) )
     {
@@ -327,20 +327,20 @@ int main( int argc, char* argv[] )
         if( frameQueue )
         {
             delete frameQueue;
-            frameQueue = NULL;
+            frameQueue = nullptr;
         }
 
     cleanDaemon();
         return 1;
     }
 
-    lo_server_thread loServer = lo_server_thread_new( jfConf->listeningPort, NULL );
+    lo_server_thread loServer = lo_server_thread_new( jfConf->listeningPort, nullptr );
 
     if( loServer )
     {
         // add the methods to the osc server
-        lo_server_thread_add_method( loServer, "/WONDER/jfwonder/connect", "", connectHandler, NULL);
-        lo_server_thread_add_method( loServer, NULL, NULL, genericHandler, NULL);
+        lo_server_thread_add_method( loServer, "/WONDER/jfwonder/connect", "", connectHandler, nullptr);
+        lo_server_thread_add_method( loServer, nullptr, nullptr, genericHandler, nullptr);
 
         // start the osc server
         lo_server_thread_start( loServer );
