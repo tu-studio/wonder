@@ -48,6 +48,7 @@ OSCStream::OSCStream(string name)
     std::ifstream statefile(statefilename);
     if (statefile.is_open()) {
         std::string client;
+        std::cout << "Read twonders from last run:\n";
         while (std::getline(statefile, client)) {
             std::string host = client.substr(0, client.find(","));
             std::string port =
@@ -67,7 +68,10 @@ OSCStream::~OSCStream() {
     std::filesystem::create_directories(statefilename.parent_path());
     std::ofstream statefile(statefilename, ios::out | ios::trunc);
     if (statefile.is_open()) {
+        std::cout << "Save currently running twonders:\n";
         for (clientsIter = begin(); clientsIter != end(); ++clientsIter) {
+            std::cout << clientsIter->name << ": "
+                      << clientsIter->host << ":" << clientsIter->port << "\n";
             statefile << clientsIter->host << "," << clientsIter->port << ","
                       << clientsIter->name << "\n";
         }
