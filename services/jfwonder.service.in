@@ -1,6 +1,7 @@
 [Unit]
 Description=JFWonder
-After=network.target cwonder.service
+After=network.target
+Requires=network.target
 
 [Install]
 WantedBy=default.target
