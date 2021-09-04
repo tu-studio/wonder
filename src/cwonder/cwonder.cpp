@@ -54,7 +54,7 @@ int Cwonder::createProject(string path) {
     // add fileextension ".xml" if it was not passed in path
     string::size_type i = path.find(".xml");
 
-    if (i == path.npos) { path.append(".xml"); }
+    if (i == std::string::npos) { path.append(".xml"); }
 
     // check if an absolute filepath or just a filename were sent
     // and construct projectname and -path accordingly
@@ -121,7 +121,7 @@ int Cwonder::loadProject(string path) {
     // add fileextension ".xml" if it was not passed in path
     string::size_type i = path.find(".xml");
 
-    if (i == path.npos) { path.append(".xml"); }
+    if (i == std::string::npos) { path.append(".xml"); }
 
     // check if an absolute filepath of just a filename were sent
     // and construct projectname and -path accordingly
@@ -214,7 +214,7 @@ int Cwonder::saveProjectAs(string path) {
     // add fileextension ".xml" if it was not passed in path
     string::size_type i = path.find(".xml");
 
-    if (i == path.npos) { path.append(".xml"); }
+    if (i == std::string::npos) { path.append(".xml"); }
 
     // check if an absolute filepath of just a filename were sent
     // and construct projectname and -path accordingly
