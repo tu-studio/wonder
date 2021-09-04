@@ -84,7 +84,7 @@ class Cwonder
     void notifyVisualStreamOfDeadStreamClients(
         std::list<OSCStreamClient>& deadStreamClients);
 
-    void sendStreamClientDataTo(lo_address targetAdress, OSCStreamClient& clientData);
+    static void sendStreamClientDataTo(lo_address targetAdress, OSCStreamClient& clientData);
 
     void scheduler(int currtime);
     TimeStamp nowTime;
