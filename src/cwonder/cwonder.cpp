@@ -1300,12 +1300,8 @@ void Cwonder::sendStreamClientDataTo(lo_address targetAdress,
             clientData.port.c_str(), clientData.name.c_str());
 }
 
-void Cwonder::notifyVisualStreamOfDeadStreamClients(
-    list<OSCStreamClient>& deadStreamClients) {
-    // send information about dead stream clients on the visual stream
-    list<OSCStreamClient>::iterator clients;
-
-    for (clients = deadStreamClients.begin(); clients != deadStreamClients.end();
+void Cwonder::notifyVisualStreamOfDeadStreamClients() {
+    for (auto clients = deadStreamClients.begin(); clients != deadStreamClients.end();
          ++clients) {
         for (streamIter = visualStream.begin(); streamIter != visualStream.end();
              ++streamIter) {
@@ -1432,7 +1428,7 @@ void Cwonder::scheduler(int currtime) {
 
             // send information about dead clients to visual stream
             if (!deadStreamClients.empty()) {
-                notifyVisualStreamOfDeadStreamClients(deadStreamClients);
+                notifyVisualStreamOfDeadStreamClients();
             }
 
             deadStreamClients.clear();
@@ -1448,7 +1444,7 @@ void Cwonder::scheduler(int currtime) {
 
             // send information about dead clients to visual stream
             if (!deadStreamClients.empty()) {
-                notifyVisualStreamOfDeadStreamClients(deadStreamClients);
+                notifyVisualStreamOfDeadStreamClients();
             }
 
             deadStreamClients.clear();
@@ -1464,7 +1460,7 @@ void Cwonder::scheduler(int currtime) {
 
             // send information about dead clients to visual stream
             if (!deadStreamClients.empty()) {
-                notifyVisualStreamOfDeadStreamClients(deadStreamClients);
+                notifyVisualStreamOfDeadStreamClients();
             }
 
             deadStreamClients.clear();

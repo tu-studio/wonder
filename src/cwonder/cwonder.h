@@ -81,8 +81,7 @@ class Cwonder
 
     void notifyVisualStreamOfNewStreamClient(std::string host, std::string port,
                                              std::string name);
-    void notifyVisualStreamOfDeadStreamClients(
-        std::list<OSCStreamClient>& deadStreamClients);
+    void notifyVisualStreamOfDeadStreamClients();
 
     static void sendStreamClientDataTo(lo_address targetAdress, OSCStreamClient& clientData);
 
