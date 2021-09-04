@@ -1555,7 +1555,7 @@ void Cwonder::sendScenario() {
         // send to stream receivers (visual)
         for (streamIter = visualStream.begin(); streamIter != visualStream.end();
              ++streamIter) {
-            lo_address address = streamIter->address;
+            address = streamIter->address;
             int id             = group.id;
 
             // (de)activate group
