@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
     if (ret != 0) { std::exit(EXIT_FAILURE); }
 
     // make default project path
-    if (makedirs(cwonderConf->projectPath.c_str(), mode_t(0700)) != 0) {
+    if (makedirs(cwonderConf->projectPath, mode_t(0700)) != 0) {
         std::cout << "[OSCServer][WARNING]: Could not create default project path!"
                   << std::endl;
     }
