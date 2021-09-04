@@ -30,7 +30,6 @@
 
 #include <iostream>
 
-#include "cwonder_config.h"
 using std::cout;
 using std::endl;
 

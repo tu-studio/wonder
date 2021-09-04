@@ -29,12 +29,10 @@
 #include "oscinctrl.h"
 
 #include <iostream>
-#include <sstream>
 
 #include "cwonder.h"
 #include "cwonder_config.h"
 #include "liblo_extended.hpp"
-#include "oscstream.h"
 
 // XXX:these have to be set at runtime
 Cwonder* OSCControl::cwonder        = nullptr;

@@ -30,7 +30,6 @@
 
 #include <exception>
 #include <iostream>
-#include <sstream>
 
 #include "wonder_path.hpp"
 

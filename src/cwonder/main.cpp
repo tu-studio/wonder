@@ -33,13 +33,11 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
-#include <sstream>
 #include <thread>
 
 #include "cwonder.h"
 #include "cwonder_config.h"
 #include "oscinctrl.h"
-#include "timestamp.hpp"
 #include "wonder_path.hpp"
 
 sig_atomic_t stopFlag = 0;

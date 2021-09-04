@@ -31,7 +31,6 @@
 #include <exception>
 #include <fstream>
 #include <iostream>
-#include <sstream>
 
 #include "cwonder_config.h"
 #include "events.h"

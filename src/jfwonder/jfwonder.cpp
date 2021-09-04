@@ -32,7 +32,6 @@
 #include <lo/lo.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <syslog.h>
 #include <unistd.h>
 
 #include <csignal>
@@ -42,10 +41,8 @@
 #include <sstream>
 #include <string>
 
-#include "config.h"
 #include "jackringbuffer.hpp"
 #include "jfwonder_config.h"
-#include "wonder_path.hpp"
 
 using namespace std;
 

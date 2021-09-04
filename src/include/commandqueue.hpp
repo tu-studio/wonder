@@ -33,7 +33,6 @@
 #include <thread>
 
 #include "jackringbuffer.hpp"
-// #include "pthread.h"
 #include "timestamp.hpp"
 
 class Command

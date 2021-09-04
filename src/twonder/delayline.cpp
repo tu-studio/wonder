@@ -29,7 +29,6 @@
 #include "delayline.h"
 
 #include <cmath>
-#include <cstdio>
 
 #include "delaycoeff.h"
 

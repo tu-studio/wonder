@@ -33,7 +33,6 @@
 #include <fstream>
 #include <iostream>
 
-#include "cwonder_config.h"
 #include "liblo_extended.hpp"
 
 using std::ios;

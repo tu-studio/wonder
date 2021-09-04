@@ -27,25 +27,15 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include <jack/jack.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 
-#include <algorithm>
 #include <chrono>
 #include <csignal>
-#include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <fstream>
-#include <functional>
-#include <iomanip>
 #include <iostream>
-#include <memory>
 #include <ratio>
-#include <sstream>
 #include <string>
 #include <thread>
-#include <utility>
 #include <vector>
 
 #include "oscin.hpp"
