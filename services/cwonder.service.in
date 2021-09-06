@@ -1,7 +1,6 @@
 [Unit]
 Description=CWonder
 After=network.target
-Wants=network.target
 
 [Install]
 WantedBy=default.target
