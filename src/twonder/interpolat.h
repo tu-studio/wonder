@@ -30,8 +30,8 @@
 
 #include <iostream>
 
-#include "commandqueue.h"
-#include "types.h"
+#include "commandqueue.hpp"
+#include "types.hpp"
 
 template<class T>
 class Interpolat

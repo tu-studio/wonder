@@ -4,7 +4,7 @@
  *  http://swonder.sourceforge.net                                                   *
  *                                                                                   *
  *                                                                                   *
- *  Technische Universit‰t Berlin, Germany                                           *
+ *  Technische Universit√§t Berlin, Germany                                           *
  *  Audio Communication Group                                                        *
  *  www.ak.tu-berlin.de                                                              *
  *  Copyright 2006-2008                                                              *
@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "oscin.h"
+#include "oscin.hpp"
 
 class Cwonder;
 
@@ -46,7 +46,7 @@ class OSCControl : public OSCServer
 
     OSCControl(OSCControl&&) = delete;
     OSCControl& operator=(OSCControl&&) = delete;
-    OSCControl(const OSCControl&) = delete;
+    OSCControl(const OSCControl&)       = delete;
     OSCControl& operator=(const OSCControl&) = delete;
 
     // add the reply message /WONDER/reply to the known messages

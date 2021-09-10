@@ -4,7 +4,7 @@
  *  http://swonder.sourceforge.net                                                   *
  *                                                                                   *
  *                                                                                   *
- *  Technische Universit‰t Berlin, Germany                                           *
+ *  Technische Universit√§t Berlin, Germany                                           *
  *  Audio Communication Group                                                        *
  *  www.ak.tu-berlin.de                                                              *
  *  Copyright 2006-2008                                                              *
@@ -29,12 +29,11 @@
 #include "oscstream.h"
 
 #include <cstdlib>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <filesystem>
 
-#include "cwonder_config.h"
-#include "liblo_extended.h"
+#include "liblo_extended.hpp"
 
 using std::ios;
 using std::list;
@@ -51,8 +50,8 @@ OSCStream::OSCStream(string name)
         std::cout << "Read twonders from last run:\n";
         while (std::getline(statefile, client)) {
             std::string host = client.substr(0, client.find(","));
-            std::string port =
-                client.substr(client.find(",") + 1, client.rfind(",") - client.find(",") - 1);
+            std::string port = client.substr(client.find(",") + 1,
+                                             client.rfind(",") - client.find(",") - 1);
             std::string name = client.substr(client.rfind(",") + 1);
             std::cout << "Host: " << host << "\n"
                       << "Port: " << port << "\n"
@@ -77,7 +76,8 @@ OSCStream::~OSCStream() {
         }
         statefile.close();
     } else {
-        std::cerr << "Couldn't write " << name << " client list to " << statefilename << "\n";
+        std::cerr << "Couldn't write " << name << " client list to " << statefilename
+                  << "\n";
     }
 
     for (clientsIter = begin(); clientsIter != end(); ++clientsIter) {

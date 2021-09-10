@@ -36,9 +36,9 @@
 
 #include "cwonder_config.h"
 #include "events.h"
-#include "timestamp.h"
 #include "oscstream.h"
-#include "project.h"
+#include "project.hpp"
+#include "timestamp.hpp"
 
 class Cwonder
 {
@@ -81,10 +81,9 @@ class Cwonder
 
     void notifyVisualStreamOfNewStreamClient(std::string host, std::string port,
                                              std::string name);
-    void notifyVisualStreamOfDeadStreamClients(
-        std::list<OSCStreamClient>& deadStreamClients);
+    void notifyVisualStreamOfDeadStreamClients();
 
-    void sendStreamClientDataTo(lo_address targetAdress, OSCStreamClient& clientData);
+    static void sendStreamClientDataTo(lo_address targetAdress, OSCStreamClient& clientData);
 
     void scheduler(int currtime);
     TimeStamp nowTime;

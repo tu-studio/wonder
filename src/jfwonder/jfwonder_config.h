@@ -1,10 +1,10 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *                                                                                   *
  *  WONDER - Wave field synthesis Of New Dimensions of Electronic music in Realtime  *
  *  http://swonder.sourceforge.net                                                   *
  *                                                                                   *
  *                                                                                   *
- *  Technische Universit�t Berlin, Germany                                           *
+ *  Technische Universität Berlin, Germany                                           *
  *  Audio Communication Group                                                        *
  *  www.ak.tu-berlin.de                                                              *
  *  Copyright 2006-2008                                                              *
@@ -28,25 +28,25 @@
 
 #ifndef JFWONDER_GLOBALCONFIG_H
 #define JFWONDER_GLOBALCONFIG_H
-         
-#include <string>
+
 #include <lo/lo.h>
+
+#include <string>
 
 class jfwonderConfig
 {
+  private:
+    void parse_args(int argc, char** argv);
 
-private:
-    void parse_args( int argc, char **argv );
-
-public:
-    jfwonderConfig( int argc, char **argv );
+  public:
+    jfwonderConfig(int argc, char** argv);
     ~jfwonderConfig();
 
     int verbose;
     int jfverbose;
     int daemon;
 
-	int controlRate;
+    int controlRate;
 
     const char* listeningPort;
 
@@ -55,10 +55,8 @@ public:
     const char* cwonderPort;
     const char* cwonderHost;
     lo_address cwonderAddr;
-
 };
 
-extern jfwonderConfig *jfConf;
+extern jfwonderConfig* jfConf;
 
 #endif
-

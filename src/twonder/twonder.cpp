@@ -27,32 +27,22 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include <jack/jack.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 
-#include <algorithm>
 #include <chrono>
 #include <csignal>
-#include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <fstream>
-#include <functional>
-#include <iomanip>
 #include <iostream>
-#include <memory>
 #include <ratio>
-#include <sstream>
 #include <string>
 #include <thread>
-#include <utility>
 #include <vector>
 
-#include "oscin.h"
-#include "rtcommandengine.h"
+#include "oscin.hpp"
+#include "rtcommandengine.hpp"
 #include "source.h"
 #include "speaker.h"
-#include "timestamp.h"
+#include "timestamp.hpp"
 #include "twonder_config.h"
 
 // global variables
@@ -100,7 +90,7 @@ void exitCleanupFunction() {
 }
 
 // Shutdown callback process if the server shuts down or disconnects this jack client
-void jack_shutdown(void* arg) {
+void jack_shutdown(void* /*arg*/) {
     std::cerr << "[JACK]: JACK server was shut down or disconnected this JACK client - "
                  "exiting now!\n";
     std::exit(EXIT_FAILURE);
@@ -108,7 +98,7 @@ void jack_shutdown(void* arg) {
 
 //-------------------------------Audio processing----------------------------//
 
-int process(jack_nframes_t nframes, void* arg) {
+int process(jack_nframes_t nframes, void* /*arg*/) {
     // process incoming commands
     realtimeCommandEngine->evaluateCommands((wonder_frames_t)10);
 
@@ -130,10 +120,9 @@ int process(jack_nframes_t nframes, void* arg) {
         // calculate the delay coefficients for every source-to-speaker-to-listener
         // combination
         for (int j = 0; j < twonderConf->noSources; ++j) {
-            DelayCoeff c =
-                (*sources)[j]->source->getDelayCoeff(*((*speakers)[i]));
-            DelayCoeff c2 = (*sources)[j]->source->getTargetDelayCoeff(
-                *((*speakers)[i]), nframes);
+            DelayCoeff c = (*sources)[j]->source->getDelayCoeff(*((*speakers)[i]));
+            DelayCoeff c2 =
+                (*sources)[j]->source->getTargetDelayCoeff(*((*speakers)[i]), nframes);
 
             // mute a source if it is not active
             if (!(*sources)[j]->active) {
@@ -552,11 +541,13 @@ void DopplerChangeCommand::execute() {
 //----------------------------------OSC-handler-------------------------------//
 
 // arguments of the handler functions
-#define handlerArgs                                                               \
-    const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, \
-        void *user_data
+/* #define handlerArgs                                                               \
+ *     const char *path, const char *types, lo_arg **argv, int argc, lo_message msg, \
+ *         void *user_data
+ */
 
-int oscSrcPositionHandler(handlerArgs) {
+int oscSrcPositionHandler(const char* /*path*/, const char* /*types*/, lo_arg** argv,
+                          int argc, lo_message /*msg*/, void* /*user_data*/) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return -1; }
 
     if (!sources->at(argv[0]->i)->active) { return 0; }
@@ -591,7 +582,8 @@ int oscSrcPositionHandler(handlerArgs) {
     return 0;
 }
 
-int oscSrcPositionHandler3D(handlerArgs) {
+int oscSrcPositionHandler3D(const char* /*path*/, const char* /*types*/, lo_arg** argv,
+                            int argc, lo_message /*msg*/, void* /*user_data*/) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return -1; }
 
     if (!sources->at(argv[0]->i)->active) { return 0; }
@@ -626,7 +618,8 @@ int oscSrcPositionHandler3D(handlerArgs) {
     return 0;
 }
 
-int oscSrcAngleHandler(handlerArgs) {
+int oscSrcAngleHandler(const char* /*path*/, const char* /*types*/, lo_arg** argv,
+                       int argc, lo_message /*msg*/, void* /*user_data*/) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return -1; }
 
     if (!sources->at(argv[0]->i)->active) { return 0; }
@@ -661,7 +654,8 @@ int oscSrcAngleHandler(handlerArgs) {
     return 0;
 }
 
-int oscSrcTypeHandler(handlerArgs) {
+int oscSrcTypeHandler(const char* /*path*/, const char* /*types*/, lo_arg** argv,
+                      int argc, lo_message /*msg*/, void* /*user_data*/) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0) || (argv[1]->i < 0)
         || (argv[1]->i > 1)) {
         return -1;
@@ -689,7 +683,8 @@ int oscSrcTypeHandler(handlerArgs) {
     return 0;
 }
 
-int oscSrcDopplerHandler(handlerArgs) {
+int oscSrcDopplerHandler(const char* /*path*/, const char* /*types*/, lo_arg** argv,
+                         int argc, lo_message /*msg*/, void* /*user_data*/) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return -1; }
 
     if (!sources->at(argv[0]->i)->active) { return 0; }
@@ -712,7 +707,8 @@ int oscSrcDopplerHandler(handlerArgs) {
     return 0;
 }
 
-int oscReplyHandler(handlerArgs) {
+int oscReplyHandler(const char* /*path*/, const char* /*types*/, lo_arg** argv,
+                    int /*argc*/, lo_message /*msg*/, void* /*user_data*/) {
     if (twonderConf->verbose) {
         std::cout << "[V-OSCServer] reply to: " << &argv[0]->s << " state=" << argv[1]->i
                   << " msg=" << &argv[2]->s << std::endl;
@@ -721,7 +717,8 @@ int oscReplyHandler(handlerArgs) {
     return 0;
 }
 
-int oscSrcActivateHandler(handlerArgs) {
+int oscSrcActivateHandler(const char* /*path*/, const char* /*types*/, lo_arg** argv,
+                          int /*argc*/, lo_message /*msg*/, void* /*user_data*/) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return 0; }
 
     if (twonderConf->verbose) { std::cout << "osc-activate " << argv[0]->i << std::endl; }
@@ -731,7 +728,8 @@ int oscSrcActivateHandler(handlerArgs) {
     return 0;
 }
 
-int oscSrcDeactivateHandler(handlerArgs) {
+int oscSrcDeactivateHandler(const char* /*path*/, const char* /*types*/, lo_arg** argv,
+                            int /*argc*/, lo_message /*msg*/, void* /*user_data*/) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return 0; }
 
     if (twonderConf->verbose) {
@@ -744,13 +742,15 @@ int oscSrcDeactivateHandler(handlerArgs) {
     return 0;
 }
 
-int oscPingHandler(handlerArgs) {
+int oscPingHandler(const char* /*path*/, const char* /*types*/, lo_arg** argv,
+                   int /*argc*/, lo_message /*msg*/, void* /*user_data*/) {
     lo_send(twonderConf->cwonderAddr, "/WONDER/stream/render/pong", "i", argv[0]->i);
 
     return 0;
 }
 
-int oscNoSourcesHandler(handlerArgs) {
+int oscNoSourcesHandler(const char* /*path*/, const char* /*types*/, lo_arg** argv,
+                        int /*argc*/, lo_message /*msg*/, void* /*user_data*/) {
     // this handler is only allowed to be called once and only with a valid value at
     // startup, so ignore further messages
     static bool noSourcesIsSet = false;
@@ -766,7 +766,8 @@ int oscNoSourcesHandler(handlerArgs) {
     return 0;
 }
 
-int oscRenderPolygonHandler(handlerArgs) {
+int oscRenderPolygonHandler(const char* /*path*/, const char* /*types*/, lo_arg** argv,
+                            int /*argc*/, lo_message /*msg*/, void* /*user_data*/) {
     // parse incoming points
     // argv[0] is the roomname, drop it, we don't need that
     // get number of points
@@ -784,7 +785,8 @@ int oscRenderPolygonHandler(handlerArgs) {
     return 0;
 }
 
-int oscGenericHandler(handlerArgs) {
+int oscGenericHandler(const char* path, const char* /*types*/, lo_arg** /*argv*/,
+                      int /*argc*/, lo_message /*msg*/, void* /*user_data*/) {
     if (twonderConf->verbose) {
         std::cout << "\n[twonder]: received unknown osc message: " << path << std::endl;
     }
@@ -917,7 +919,7 @@ int main(int argc, char* argv[]) {
         if (timeoutCounter % 15 == 15) {
             std::cerr << "Cannot connect to cwonder...\n";
             lo_send(twonderConf->cwonderAddr, "/WONDER/stream/render/connect", "s",
-            twonderConf->name.c_str());
+                    twonderConf->name.c_str());
         }
         timeoutCounter++;
     }

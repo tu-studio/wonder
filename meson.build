@@ -1,7 +1,7 @@
 project('wonder', 'cpp',
         version: '3.90.0',
         license: 'GPL-3.0-or-later',
-        default_options: 'cpp_std=c++17')
+        default_options: ['cpp_std=c++17', 'warning_level=3'])
 
 thread_dep = dependency('threads')
 xml_dep = dependency('libxml++-3.0', fallback: ['libxml++-3.0', 'xmlxx_dep'])

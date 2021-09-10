@@ -30,7 +30,7 @@
 
 #include <cmath>
 
-#include "vector3d.h"
+#include "vector3d.hpp"
 
 Angle::Angle(float angle) {
     this->angle =
@@ -45,6 +45,13 @@ Angle::Angle(const Angle& other) {
 }
 
 const Angle& Angle::operator=(float angle) {
+    this->angle =
+        (angle < 0) ? (2 * M_PI + fmodf(angle, 2 * M_PI)) : (fmodf(angle, 2 * M_PI));
+
+    return *this;
+}
+
+const Angle& Angle::operator=(const Angle& angle) {
     this->angle =
         (angle < 0) ? (2 * M_PI + fmodf(angle, 2 * M_PI)) : (fmodf(angle, 2 * M_PI));
 

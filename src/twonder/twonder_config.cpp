@@ -33,12 +33,10 @@
 
 #include <cstdio>
 #include <cstdlib>
-#include <cstring>
 #include <fstream>
 #include <iostream>
-#include <sstream>
 
-#include "wonder_path.h"
+#include "wonder_path.hpp"
 
 TwonderConfig* twonderConf = nullptr;
 

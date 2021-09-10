@@ -4,7 +4,7 @@
  *  http://swonder.sourceforge.net                                                   *
  *                                                                                   *
  *                                                                                   *
- *  Technische Universit‰t Berlin, Germany                                           *
+ *  Technische Universit√§t Berlin, Germany                                           *
  *  Audio Communication Group                                                        *
  *  www.ak.tu-berlin.de                                                              *
  *  Copyright 2006-2008                                                              *
@@ -31,7 +31,7 @@
 #include <iostream>
 
 #include "cwonder_config.h"
-#include "liblo_extended.h"
+#include "liblo_extended.hpp"
 #include "oscstream.h"
 
 using std::list;
@@ -78,8 +78,7 @@ bool OSCPing::ping() {
 
 void OSCPing::pong() { ++pongCount; }
 
-ListOSCPing::ListOSCPing(string path)
-    : path(path) {}
+ListOSCPing::ListOSCPing(string path) : path(path) {}
 
 ListOSCPing::~ListOSCPing() {
     for (clients = begin(); clients != end(); ++clients) { delete (*clients); }
@@ -110,7 +109,7 @@ int ListOSCPing::remove(lo_address b) {
     return 1;
 }
 
-int ListOSCPing::pong(int seq, lo_address from) {
+int ListOSCPing::pong(int /*seq*/, lo_address from) {
     for (clients = begin(); clients != end(); ++clients) {
         if (issame((*clients)->address, from)) {
             (*clients)->pong();

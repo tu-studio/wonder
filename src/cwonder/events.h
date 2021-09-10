@@ -4,7 +4,7 @@
  *  http://swonder.sourceforge.net                                                   *
  *                                                                                   *
  *                                                                                   *
- *  Technische Universit‰t Berlin, Germany                                           *
+ *  Technische Universit√§t Berlin, Germany                                           *
  *  Audio Communication Group                                                        *
  *  www.ak.tu-berlin.de                                                              *
  *  Copyright 2006-2008                                                              *
@@ -33,8 +33,8 @@
 #include <list>
 #include <string>
 
-#include "timestamp.h"
-#include "vector3d.h"
+#include "timestamp.hpp"
+#include "vector3d.hpp"
 
 using std::list;
 using std::string;
@@ -77,7 +77,7 @@ class Timeline
 
     Timeline(Timeline&&) = default;
     Timeline& operator=(Timeline&&) = default;
-    Timeline(const Timeline&) = default;
+    Timeline(const Timeline&)       = default;
     Timeline& operator=(const Timeline&) = default;
 
     void addevent(Event* event);

@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "commandqueue.h"
-#include "timestamp.h"
+#include "commandqueue.hpp"
+#include "timestamp.hpp"
 
 class RTCommandEngine
 {

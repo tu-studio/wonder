@@ -29,12 +29,10 @@
 #include "oscinctrl.h"
 
 #include <iostream>
-#include <sstream>
 
 #include "cwonder.h"
 #include "cwonder_config.h"
-#include "liblo_extended.h"
-#include "oscstream.h"
+#include "liblo_extended.hpp"
 
 // XXX:these have to be set at runtime
 Cwonder* OSCControl::cwonder        = nullptr;
@@ -163,7 +161,8 @@ void OSCControl::addMethods() {
     addMethod(nullptr, nullptr, genericHandler);
 }
 
-int OSCControl::replyHandler(handlerArgs) {
+int OSCControl::replyHandler(const char* /*path*/, const char* /*types*/, lo_arg** argv,
+                             int /*argc*/, lo_message /*msg*/, void* /*user_data*/) {
     std::ostringstream log;
     log << "[V-OSCServer] reply to: " << &argv[0]->s << " state=" << argv[1]->i
         << " msg=" << &argv[2]->s;
@@ -171,7 +170,9 @@ int OSCControl::replyHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::timerFrameHandler(handlerArgs) {
+int OSCControl::timerFrameHandler(const char* /*path*/, const char* /*types*/,
+                                  lo_arg** argv, int /*argc*/, lo_message msg,
+                                  void* /*user_data*/) {
     int ret = 0;
 
     lo_address from = lo_message_get_source(msg);
@@ -183,7 +184,9 @@ int OSCControl::timerFrameHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::timerConnectHandler(handlerArgs) {
+int OSCControl::timerConnectHandler(const char* path, const char* /*types*/,
+                                    lo_arg** /*argv*/, int /*argc*/, lo_message msg,
+                                    void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     lo_send(from, path, "");
@@ -202,14 +205,18 @@ int OSCControl::timerConnectHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::timerErrorHandler(handlerArgs) {
+int OSCControl::timerErrorHandler(const char* /*path*/, const char* /*types*/,
+                                  lo_arg** /*argv*/, int /*argc*/, lo_message /*msg*/,
+                                  void* /*user_data*/) {
     lo_address_free(timerAddress);
     timerAddress = nullptr;
 
     return 0;
 }
 
-int OSCControl::sourceActivateHandler(handlerArgs) {
+int OSCControl::sourceActivateHandler(const char* path, const char* /*types*/,
+                                      lo_arg** argv, int /*argc*/, lo_message msg,
+                                      void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     int ret = cwonder->setSourceActive(from, argv[0]->i, true);
@@ -219,7 +226,9 @@ int OSCControl::sourceActivateHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::sourceDeactivateHandler(handlerArgs) {
+int OSCControl::sourceDeactivateHandler(const char* path, const char* /*types*/,
+                                        lo_arg** argv, int /*argc*/, lo_message msg,
+                                        void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     int ret = cwonder->setSourceActive(from, argv[0]->i, false);
@@ -229,7 +238,8 @@ int OSCControl::sourceDeactivateHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::sourceNameHandler(handlerArgs) {
+int OSCControl::sourceNameHandler(const char* path, const char* /*types*/, lo_arg** argv,
+                                  int /*argc*/, lo_message msg, void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     int ret = cwonder->setSourceName(from, argv[0]->i, &argv[1]->s);
@@ -239,7 +249,9 @@ int OSCControl::sourceNameHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::sourcePositionHandler(handlerArgs) {
+int OSCControl::sourcePositionHandler(const char* path, const char* /*types*/,
+                                      lo_arg** argv, int argc, lo_message msg,
+                                      void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     float time     = 0.0;
@@ -260,7 +272,9 @@ int OSCControl::sourcePositionHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::sourcePosition3DHandler(handlerArgs) {
+int OSCControl::sourcePosition3DHandler(const char* path, const char* /*types*/,
+                                        lo_arg** argv, int argc, lo_message msg,
+                                        void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     float time     = 0.0;
@@ -283,7 +297,8 @@ int OSCControl::sourcePosition3DHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::sourceTypeHandler(handlerArgs) {
+int OSCControl::sourceTypeHandler(const char* path, const char* /*types*/, lo_arg** argv,
+                                  int argc, lo_message msg, void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     float time = 0.0;
@@ -297,7 +312,8 @@ int OSCControl::sourceTypeHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::sourceAngleHandler(handlerArgs) {
+int OSCControl::sourceAngleHandler(const char* path, const char* /*types*/, lo_arg** argv,
+                                   int argc, lo_message msg, void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     float time     = 0.0;
@@ -317,7 +333,9 @@ int OSCControl::sourceAngleHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::sourceGroupIDHandler(handlerArgs) {
+int OSCControl::sourceGroupIDHandler(const char* path, const char* /*types*/,
+                                     lo_arg** argv, int /*argc*/, lo_message msg,
+                                     void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     int ret = cwonder->setSourceGroupID(from, argv[0]->i, argv[1]->i);
@@ -327,7 +345,8 @@ int OSCControl::sourceGroupIDHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::sourceColorHandler(handlerArgs) {
+int OSCControl::sourceColorHandler(const char* path, const char* /*types*/, lo_arg** argv,
+                                   int /*argc*/, lo_message msg, void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     int ret =
@@ -338,7 +357,9 @@ int OSCControl::sourceColorHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::sourceRotationDirectionHandler(handlerArgs) {
+int OSCControl::sourceRotationDirectionHandler(const char* path, const char* /*types*/,
+                                               lo_arg** argv, int /*argc*/,
+                                               lo_message msg, void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     int ret = cwonder->setSourceRotationDirection(from, argv[0]->i, (bool)argv[1]->i);
@@ -348,7 +369,9 @@ int OSCControl::sourceRotationDirectionHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::sourceScalingDirectionHandler(handlerArgs) {
+int OSCControl::sourceScalingDirectionHandler(const char* path, const char* /*types*/,
+                                              lo_arg** argv, int /*argc*/, lo_message msg,
+                                              void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     int ret = cwonder->setSourceScalingDirection(from, argv[0]->i, (bool)argv[1]->i);
@@ -358,7 +381,9 @@ int OSCControl::sourceScalingDirectionHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::sourceDopplerEffectHandler(handlerArgs) {
+int OSCControl::sourceDopplerEffectHandler(const char* path, const char* /*types*/,
+                                           lo_arg** argv, int /*argc*/, lo_message msg,
+                                           void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     int ret = cwonder->setSourceDopplerEffect(from, argv[0]->i, (bool)argv[1]->i);
@@ -368,7 +393,9 @@ int OSCControl::sourceDopplerEffectHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::listenerPositionHandler(handlerArgs) {
+int OSCControl::listenerPositionHandler(const char* path, const char* /*types*/,
+                                        lo_arg** argv, int /*argc*/, lo_message msg,
+                                        void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     int ret = cwonder->setListenerPosition(from, argv[0]->i, argv[1]->f, argv[2]->f);
@@ -378,7 +405,9 @@ int OSCControl::listenerPositionHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::groupActivateHandler(handlerArgs) {
+int OSCControl::groupActivateHandler(const char* path, const char* /*types*/,
+                                     lo_arg** argv, int /*argc*/, lo_message msg,
+                                     void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     int ret = cwonder->setGroupActive(from, argv[0]->i, true);
@@ -388,7 +417,9 @@ int OSCControl::groupActivateHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::groupDeactivateHandler(handlerArgs) {
+int OSCControl::groupDeactivateHandler(const char* path, const char* /*types*/,
+                                       lo_arg** argv, int /*argc*/, lo_message msg,
+                                       void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     int ret = cwonder->setGroupActive(from, argv[0]->i, false);
@@ -398,7 +429,9 @@ int OSCControl::groupDeactivateHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::groupPositionHandler(handlerArgs) {
+int OSCControl::groupPositionHandler(const char* path, const char* /*types*/,
+                                     lo_arg** argv, int /*argc*/, lo_message msg,
+                                     void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     int ret = cwonder->setGroupPosition(from, argv[0]->i, argv[1]->f, argv[2]->f);
@@ -408,7 +441,8 @@ int OSCControl::groupPositionHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::groupColorHandler(handlerArgs) {
+int OSCControl::groupColorHandler(const char* path, const char* /*types*/, lo_arg** argv,
+                                  int /*argc*/, lo_message msg, void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     int ret =
@@ -419,7 +453,9 @@ int OSCControl::groupColorHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::projectCreateWithoutScoreHandler(handlerArgs) {
+int OSCControl::projectCreateWithoutScoreHandler(const char* path, const char* /*types*/,
+                                                 lo_arg** argv, int /*argc*/,
+                                                 lo_message msg, void* /*user_data*/) {
     int ret = cwonder->createProject(&argv[0]->s);
 
     lo_address from = lo_message_get_source(msg);
@@ -428,7 +464,8 @@ int OSCControl::projectCreateWithoutScoreHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::projectLoadHandler(handlerArgs) {
+int OSCControl::projectLoadHandler(const char* path, const char* /*types*/, lo_arg** argv,
+                                   int /*argc*/, lo_message msg, void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     int ret = cwonder->loadProject(&argv[0]->s);
@@ -438,7 +475,9 @@ int OSCControl::projectLoadHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::projectSaveHandler(handlerArgs) {
+int OSCControl::projectSaveHandler(const char* path, const char* /*types*/,
+                                   lo_arg** /*argv*/, int /*argc*/, lo_message msg,
+                                   void* /*user_data*/) {
     int ret = cwonder->saveProject();
 
     lo_address from = lo_message_get_source(msg);
@@ -447,7 +486,9 @@ int OSCControl::projectSaveHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::projectSaveAsHandler(handlerArgs) {
+int OSCControl::projectSaveAsHandler(const char* path, const char* /*types*/,
+                                     lo_arg** argv, int /*argc*/, lo_message msg,
+                                     void* /*user_data*/) {
     int ret = cwonder->saveProjectAs(&argv[0]->s);
 
     lo_address from = lo_message_get_source(msg);
@@ -456,7 +497,9 @@ int OSCControl::projectSaveAsHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::snapshotTakeHandler(handlerArgs) {
+int OSCControl::snapshotTakeHandler(const char* path, const char* /*types*/,
+                                    lo_arg** argv, int argc, lo_message msg,
+                                    void* /*user_data*/) {
     int ret = 0;
 
     if (argc == 1) {  // unnamed snapshot
@@ -471,7 +514,9 @@ int OSCControl::snapshotTakeHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::snapshotRecallHandler(handlerArgs) {
+int OSCControl::snapshotRecallHandler(const char* path, const char* /*types*/,
+                                      lo_arg** argv, int /*argc*/, lo_message msg,
+                                      void* /*user_data*/) {
     int ret = cwonder->recallSnapshot(argv[0]->i, argv[1]->f);
 
     lo_address from = lo_message_get_source(msg);
@@ -480,7 +525,9 @@ int OSCControl::snapshotRecallHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::snapshotDeleteHandler(handlerArgs) {
+int OSCControl::snapshotDeleteHandler(const char* path, const char* /*types*/,
+                                      lo_arg** argv, int /*argc*/, lo_message msg,
+                                      void* /*user_data*/) {
     int ret = cwonder->deleteSnapshot(argv[0]->i);
 
     lo_address from = lo_message_get_source(msg);
@@ -489,7 +536,9 @@ int OSCControl::snapshotDeleteHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::snapshotRenameHandler(handlerArgs) {
+int OSCControl::snapshotRenameHandler(const char* path, const char* /*types*/,
+                                      lo_arg** argv, int /*argc*/, lo_message msg,
+                                      void* /*user_data*/) {
     int ret = cwonder->renameSnapshot(argv[0]->i, &argv[1]->s);
 
     lo_address from = lo_message_get_source(msg);
@@ -498,7 +547,9 @@ int OSCControl::snapshotRenameHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::snapshotCopyHandler(handlerArgs) {
+int OSCControl::snapshotCopyHandler(const char* path, const char* /*types*/,
+                                    lo_arg** argv, int /*argc*/, lo_message msg,
+                                    void* /*user_data*/) {
     int ret = cwonder->copySnapshot(argv[0]->i, argv[1]->i);
 
     lo_address from = lo_message_get_source(msg);
@@ -507,7 +558,9 @@ int OSCControl::snapshotCopyHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::renderStreamConnectHandler(handlerArgs) {
+int OSCControl::renderStreamConnectHandler(const char* path, const char* /*types*/,
+                                           lo_arg** argv, int argc, lo_message msg,
+                                           void* /*user_data*/) {
     int ret = 0;
 
     if (argc == 2) {
@@ -529,7 +582,9 @@ int OSCControl::renderStreamConnectHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::visualStreamConnectHandler(handlerArgs) {
+int OSCControl::visualStreamConnectHandler(const char* path, const char* /*types*/,
+                                           lo_arg** argv, int argc, lo_message msg,
+                                           void* /*user_data*/) {
     int ret = 0;
 
     if (argc == 2) {
@@ -550,7 +605,9 @@ int OSCControl::visualStreamConnectHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::timerStreamConnectHandler(handlerArgs) {
+int OSCControl::timerStreamConnectHandler(const char* path, const char* /*types*/,
+                                          lo_arg** argv, int argc, lo_message msg,
+                                          void* /*user_data*/) {
     int ret = 0;
 
     lo_address from = lo_message_get_source(msg);
@@ -571,19 +628,22 @@ int OSCControl::timerStreamConnectHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::renderSendHandler(handlerArgs) {
+int OSCControl::renderSendHandler(const char* /*path*/, const char* types, lo_arg** argv,
+                                  int argc, lo_message msg, void* /*user_data*/) {
     cwonder->renderStream.send((char*)types, argc, argv, msg);
 
     return 0;
 }
 
-int OSCControl::visualSendHandler(handlerArgs) {
+int OSCControl::visualSendHandler(const char* /*path*/, const char* types, lo_arg** argv,
+                                  int argc, lo_message msg, void* /*user_data*/) {
     cwonder->visualStream.send((char*)types, argc, argv, msg);
 
     return 0;
 }
 
-int OSCControl::pongHandler(handlerArgs) {
+int OSCControl::pongHandler(const char* path, const char* /*types*/, lo_arg** argv,
+                            int /*argc*/, lo_message msg, void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
 
     if ((std::string)path == (std::string) "/WONDER/stream/render/pong") {
@@ -597,19 +657,24 @@ int OSCControl::pongHandler(handlerArgs) {
     return 0;
 }
 
-int OSCControl::forwardToRenderStreamHandler(handlerArgs) {
+int OSCControl::forwardToRenderStreamHandler(const char* path, const char* types,
+                                             lo_arg** argv, int argc, lo_message msg,
+                                             void* /*user_data*/) {
     cwonder->renderStream.send((char*)path, (char*)types, argc, argv, msg);
 
     return 0;
 }
 
-int OSCControl::forwardToVisualStreamHandler(handlerArgs) {
+int OSCControl::forwardToVisualStreamHandler(const char* path, const char* types,
+                                             lo_arg** argv, int argc, lo_message msg,
+                                             void* /*user_data*/) {
     cwonder->visualStream.send((char*)path, (char*)types, argc, argv, msg);
 
     return 0;
 }
 
-int OSCControl::genericHandler(handlerArgs) {
+int OSCControl::genericHandler(const char* path, const char* /*types*/, lo_arg** /*argv*/,
+                               int /*argc*/, lo_message msg, void* /*user_data*/) {
     lo_address from = lo_message_get_source(msg);
     lo_send(from, "/WONDER/reply", "sis", path, 1,
             "[cwonder]: No handler implemented for message");

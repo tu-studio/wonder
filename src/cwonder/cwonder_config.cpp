@@ -4,7 +4,7 @@
  *  http://swonder.sourceforge.net                                                   *
  *                                                                                   *
  *                                                                                   *
- *  Technische Universit‰t Berlin, Germany                                           *
+ *  Technische Universit√§t Berlin, Germany                                           *
  *  Audio Communication Group                                                        *
  *  www.ak.tu-berlin.de                                                              *
  *  Copyright 2006-2008                                                              *
@@ -32,11 +32,10 @@
 #include <libxml++/libxml++.h>
 
 #include <cstdlib>
-#include <cstring>
 #include <fstream>
 #include <sstream>
 
-#include "wonder_path.h"
+#include "wonder_path.hpp"
 
 CwonderConfig* cwonderConf = nullptr;
 

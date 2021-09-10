@@ -31,15 +31,14 @@
 #include <exception>
 #include <fstream>
 #include <iostream>
-#include <sstream>
 
 #include "cwonder_config.h"
 #include "events.h"
-#include "timestamp.h"
-#include "liblo_extended.h"
+#include "liblo_extended.hpp"
 #include "oscstream.h"
-#include "project.h"
-#include "wonder_path.h"
+#include "project.hpp"
+#include "timestamp.hpp"
+#include "wonder_path.hpp"
 
 using std::exception;
 using std::ifstream;
@@ -55,7 +54,7 @@ int Cwonder::createProject(string path) {
     // add fileextension ".xml" if it was not passed in path
     string::size_type i = path.find(".xml");
 
-    if (i == path.npos) { path.append(".xml"); }
+    if (i == std::string::npos) { path.append(".xml"); }
 
     // check if an absolute filepath or just a filename were sent
     // and construct projectname and -path accordingly
@@ -122,7 +121,7 @@ int Cwonder::loadProject(string path) {
     // add fileextension ".xml" if it was not passed in path
     string::size_type i = path.find(".xml");
 
-    if (i == path.npos) { path.append(".xml"); }
+    if (i == std::string::npos) { path.append(".xml"); }
 
     // check if an absolute filepath of just a filename were sent
     // and construct projectname and -path accordingly
@@ -215,7 +214,7 @@ int Cwonder::saveProjectAs(string path) {
     // add fileextension ".xml" if it was not passed in path
     string::size_type i = path.find(".xml");
 
-    if (i == path.npos) { path.append(".xml"); }
+    if (i == std::string::npos) { path.append(".xml"); }
 
     // check if an absolute filepath of just a filename were sent
     // and construct projectname and -path accordingly
@@ -1147,11 +1146,10 @@ int Cwonder::setGroupPosition(lo_address from, int groupID, float x, float y) {
 }
 
 int Cwonder::renderStreamConnect(string host, string port, string name) {
-    lo_address address           = renderStream.connect(host, port, name);
+    lo_address address = renderStream.connect(host, port, name);
 
     // send number of allowed sources
-    lo_send(address, "/WONDER/global/maxNoSources", "i",
-            cwonderConf->maxNoSources);
+    lo_send(address, "/WONDER/global/maxNoSources", "i", cwonderConf->maxNoSources);
 
     // send renderpolygon
     // XXX:(CAREFUL! this might easily exceed the allowed messagesize of liblo,
@@ -1171,8 +1169,7 @@ int Cwonder::renderStreamConnect(string host, string port, string name) {
         lo_message_add_float(renderPolygonMessage, (*it)[2]);
     }
 
-    lo_send_message(address, "/WONDER/global/renderpolygon",
-                    renderPolygonMessage);
+    lo_send_message(address, "/WONDER/global/renderpolygon", renderPolygonMessage);
     lo_message_free(renderPolygonMessage);
 
     // if in basic mode activate all sources for rendering and let them use their default
@@ -1190,12 +1187,10 @@ int Cwonder::renderStreamConnect(string host, string port, string name) {
 
                 if (source->active) {
                     lo_send(address, "/WONDER/source/activate", "i", i);
-                    lo_send(address, "/WONDER/source/type", "ii", i,
-                            source->type);
-                    lo_send(address, "/WONDER/source/angle", "if", i,
-                            source->angle);
-                    lo_send(address, "/WONDER/source/position", "iff", i,
-                            source->pos[0], source->pos[1]);
+                    lo_send(address, "/WONDER/source/type", "ii", i, source->type);
+                    lo_send(address, "/WONDER/source/angle", "if", i, source->angle);
+                    lo_send(address, "/WONDER/source/position", "iff", i, source->pos[0],
+                            source->pos[1]);
                     lo_send(address, "/WONDER/source/position3D", "ifff", i,
                             source->pos[0], source->pos[1], source->pos[2]);
                     lo_send(address, "/WONDER/source/dopplerEffect", "ii", i,
@@ -1223,8 +1218,7 @@ int Cwonder::visualStreamConnect(string host, string port, string name) {
     lo_address address = visualStream.connect(host, port, name);
 
     // send number of allowed sources
-    lo_send(address, "/WONDER/global/maxNoSources", "i",
-            cwonderConf->maxNoSources);
+    lo_send(address, "/WONDER/global/maxNoSources", "i", cwonderConf->maxNoSources);
 
     // send renderpolygon
     // XXX:(CAREFUL! this might easily exceed the allowed messagesize of liblo,
@@ -1244,8 +1238,7 @@ int Cwonder::visualStreamConnect(string host, string port, string name) {
         lo_message_add_float(renderPolygonMessage, (*it)[2]);
     }
 
-    lo_send_message(address, "/WONDER/global/renderPolygon",
-                    renderPolygonMessage);
+    lo_send_message(address, "/WONDER/global/renderPolygon", renderPolygonMessage);
     lo_message_free(renderPolygonMessage);
 
     // write scenario to DOM
@@ -1307,12 +1300,8 @@ void Cwonder::sendStreamClientDataTo(lo_address targetAdress,
             clientData.port.c_str(), clientData.name.c_str());
 }
 
-void Cwonder::notifyVisualStreamOfDeadStreamClients(
-    list<OSCStreamClient>& deadStreamClients) {
-    // send information about dead stream clients on the visual stream
-    list<OSCStreamClient>::iterator clients;
-
-    for (clients = deadStreamClients.begin(); clients != deadStreamClients.end();
+void Cwonder::notifyVisualStreamOfDeadStreamClients() {
+    for (auto clients = deadStreamClients.begin(); clients != deadStreamClients.end();
          ++clients) {
         for (streamIter = visualStream.begin(); streamIter != visualStream.end();
              ++streamIter) {
@@ -1439,7 +1428,7 @@ void Cwonder::scheduler(int currtime) {
 
             // send information about dead clients to visual stream
             if (!deadStreamClients.empty()) {
-                notifyVisualStreamOfDeadStreamClients(deadStreamClients);
+                notifyVisualStreamOfDeadStreamClients();
             }
 
             deadStreamClients.clear();
@@ -1455,7 +1444,7 @@ void Cwonder::scheduler(int currtime) {
 
             // send information about dead clients to visual stream
             if (!deadStreamClients.empty()) {
-                notifyVisualStreamOfDeadStreamClients(deadStreamClients);
+                notifyVisualStreamOfDeadStreamClients();
             }
 
             deadStreamClients.clear();
@@ -1471,7 +1460,7 @@ void Cwonder::scheduler(int currtime) {
 
             // send information about dead clients to visual stream
             if (!deadStreamClients.empty()) {
-                notifyVisualStreamOfDeadStreamClients(deadStreamClients);
+                notifyVisualStreamOfDeadStreamClients();
             }
 
             deadStreamClients.clear();
@@ -1566,7 +1555,7 @@ void Cwonder::sendScenario() {
         // send to stream receivers (visual)
         for (streamIter = visualStream.begin(); streamIter != visualStream.end();
              ++streamIter) {
-            lo_address address = streamIter->address;
+            address = streamIter->address;
             int id             = group.id;
 
             // (de)activate group

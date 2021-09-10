@@ -4,7 +4,7 @@
  *  http://swonder.sourceforge.net                                                   *
  *                                                                                   *
  *                                                                                   *
- *  Technische Universit‰t Berlin, Germany                                           *
+ *  Technische Universit√§t Berlin, Germany                                           *
  *  Audio Communication Group                                                        *
  *  www.ak.tu-berlin.de                                                              *
  *  Copyright 2006-2008                                                              *
@@ -26,11 +26,11 @@
  *                                                                                   *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include "timestamp.h"
+#include "timestamp.hpp"
 
 #include <iostream>
 
-#include "constants.h"
+#include "constants.hpp"
 
 //----------------------------------TimeStamp--------------------------------//
 
@@ -97,8 +97,6 @@ TimeStamp& TimeStamp::operator-=(TimeStamp const& other) {
 
     return *this;
 }
-
-TimeStamp& TimeStamp::operator=(TimeStamp const& other) = default;
 
 bool TimeStamp::operator>=(TimeStamp const& other) const { return (!(*this < other)); }
 

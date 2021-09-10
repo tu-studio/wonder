@@ -26,13 +26,12 @@
  *                                                                                   *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include "project.h"
+#include "project.hpp"
 
 #include <exception>
 #include <iostream>
-#include <sstream>
 
-#include "wonder_path.h"
+#include "wonder_path.hpp"
 
 using std::cerr;
 using std::cout;

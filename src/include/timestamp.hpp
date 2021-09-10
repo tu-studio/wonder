@@ -28,67 +28,85 @@
 
 #pragma once
 
-#include <chrono>
-#include <list>
-#include <thread>
+#include "types.hpp"
 
-#include "jackringbuffer.h"
-#include "pthread.h"
-#include "timestamp.h"
+//----------------------------------TimeStamp--------------------------------//
 
-class Command
+class TimeStamp
 {
   public:
-    Command();
-    Command(TimeStamp timeStamp);
+    static void initSampleRate(int newSampleRate);
 
-    virtual ~Command();
+    TimeStamp();
+    TimeStamp(wonder_frames_t time);
+    TimeStamp(float sec);
 
-    virtual void execute();
+    void setTime(wonder_frames_t time);
 
-    bool operator<(const Command& other);
+    // get the time in samples
+    wonder_frames_t getTime() const;
 
-    TimeStamp getTimeStamp() const;
+    float getTimeInSeconds();
+
+    void addsec(float sec);
+
+    wonder_frames_t operator-(TimeStamp const& other) const;
+    TimeStamp& operator-=(TimeStamp const& other);
+    bool operator<(TimeStamp const& other) const;
+    bool operator>=(TimeStamp const& other) const;
+    bool operator==(TimeStamp const& other) const;
+
+    void show(const char* name);
+
+  protected:
+    // the value of the timestamp in samples
+    wonder_frames_t time;
+
+    static int sampleRate;
+};
+
+//-------------------------------end of TimeStamp----------------------------//
+
+//---------------------------------TimeStampSc-------------------------------//
+
+// special timestamp class for the scoreplayer
+
+class TimeStampSc : public TimeStamp
+{
+  public:
+    TimeStampSc(int period);
+    TimeStampSc(wonder_frames_t time, int period);
+    TimeStampSc(float sec, int period, float scaleFact = 1.0);
+
+    bool operator<(TimeStampSc const& other) const;
+    bool operator>=(TimeStampSc const& other) const;
+    bool operator==(TimeStampSc const& other) const;
+
+    void setTime(wonder_frames_t time, int wraps);
+
+    void setPeriod(int period);
+
+    void setLastTime(int nowTime);
+
+    // Call this to update the timestamp at each period. This
+    // wraps around and increments a counter (called wraps) at each wrap.
+    // Use this function when you want to update the record  time.
+    void update(wonder_frames_t nowTime);
+
+    float getTimeInSeconds();
+
+    void show(char* name);
 
   private:
-    TimeStamp timeStamp;
+    // since a uint_32 wraps at (4294967295U), only 27 hours (when using a sampling rate
+    // of 44100) can be recorded. To record longer scores the timestamp wraps are stored
+    // in wraps
+    int wraps;
+
+    int period;
+
+    // used in update
+    wonder_frames_t lastTime;
 };
 
-class CommandList : public std::list<Command*>
-{
-  public:
-    CommandList();
-    CommandList(Command* commandd);
-
-    ~CommandList();
-};
-
-class CommandQueue : private JackRingbuffer
-{
-  public:
-    CommandQueue();
-
-    ~CommandQueue();
-
-    void put(Command* command);
-
-    CommandList* get();
-
-  private:
-    pthread_mutex_t mutex;
-};
-
-class FreeQueue : private JackRingbuffer
-{
-  public:
-    FreeQueue();
-
-    ~FreeQueue();
-
-    void put(CommandList* commandList);
-
-    void flush();
-
-  private:
-    pthread_mutex_t mutex;
-};
+//-----------------------------end of TimeStampSc----------------------------//

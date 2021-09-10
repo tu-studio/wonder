@@ -4,7 +4,7 @@
  *  http://swonder.sourceforge.net                                                   *
  *                                                                                   *
  *                                                                                   *
- *  Technische Universit‰t Berlin, Germany                                           *
+ *  Technische Universit√§t Berlin, Germany                                           *
  *  Audio Communication Group                                                        *
  *  www.ak.tu-berlin.de                                                              *
  *  Copyright 2006-2008                                                              *
@@ -30,9 +30,9 @@
 
 #include <lo/lo.h>
 
+#include <filesystem>
 #include <list>
 #include <string>
-#include <filesystem>
 
 #include "oscping.h"
 

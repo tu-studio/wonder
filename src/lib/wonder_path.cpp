@@ -26,7 +26,7 @@
  *                                                                                   *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include "wonder_path.h"
+#include "wonder_path.hpp"
 
 #include <fstream>
 

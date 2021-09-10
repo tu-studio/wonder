@@ -4,7 +4,7 @@
  *  http://swonder.sourceforge.net                                                   *
  *                                                                                   *
  *                                                                                   *
- *  Technische Universit‰t Berlin, Germany                                           *
+ *  Technische Universit√§t Berlin, Germany                                           *
  *  Audio Communication Group                                                        *
  *  www.ak.tu-berlin.de                                                              *
  *  Copyright 2006-2008                                                              *
@@ -28,85 +28,66 @@
 
 #pragma once
 
-#include <libxml++/libxml++.h>
+#include <chrono>
+#include <list>
+#include <thread>
 
-#include <vector>
+#include "jackringbuffer.hpp"
+#include "timestamp.hpp"
 
-#include "config.h"
-#include "vector3d.h"
-
-namespace xmlpp
-{
-class Node;
-}
-
-//-----------------------------------Segment---------------------------------//
-
-// A segment of speakers
-class Segment
+class Command
 {
   public:
-    Segment(xmlpp::Node* node);
+    Command();
+    Command(TimeStamp timeStamp);
 
-    void syncToXML();
+    virtual ~Command();
 
-    int id;
-    int noSpeakers;
-    float windowWidth;
-    Vector3D start;
-    Vector3D end;
-    Vector3D normal;
+    virtual void execute();
+
+    bool operator<(const Command& other);
+
+    TimeStamp getTimeStamp() const;
 
   private:
-    void readFromXML();
-
-    xmlpp::Node* node;
-    Glib::ustring nodeName;
+    TimeStamp timeStamp;
 };
 
-//-------------------------------end of Segment------------------------------//
-
-//---------------------------------SegmentArray------------------------------//
-
-// Array of speaker segments
-class SegmentArray
+class CommandList : public std::list<Command*>
 {
   public:
-    SegmentArray(std::string fileName);
-    ~SegmentArray();
+    CommandList();
+    CommandList(Command* commandd);
 
-    std::vector<Segment*> segments;
+    ~CommandList();
+};
+
+class CommandQueue : private JackRingbuffer
+{
+  public:
+    CommandQueue();
+
+    ~CommandQueue();
+
+    void put(Command* command);
+
+    CommandList* get();
 
   private:
-    void getSegments(xmlpp::Node* node, const Glib::ustring& xpath);
-
-    int readFromFile(std::string fileName);
+    pthread_mutex_t mutex;
 };
 
-//-----------------------------end of SegmentArray---------------------------//
-
-//-------------------------------SegmentArrayIter----------------------------//
-
-// An iterator for the dom representation of the segments of speakers.
-// This iterator is used to traverse the dom tree. If a segment is found, a new object of
-// type Segment gets constructed and initialised by the attributes of the xml-element.
-class SegmentArrayIter : public xmlpp::Node::NodeSet::iterator
+class FreeQueue : private JackRingbuffer
 {
   public:
-    SegmentArrayIter() : xmlpp::Node::NodeSet::iterator() {
-        // nothing
-    }
+    FreeQueue();
 
-    SegmentArrayIter(const xmlpp::Node::NodeSet::iterator& other)
-        : xmlpp::Node::NodeSet::iterator(other) {}
+    ~FreeQueue();
 
-    ~SegmentArrayIter() {
-        // nothing
-    }
+    void put(CommandList* commandList);
 
-    /// construct a segment when the operator* is called
-    // XXX: maybe think this over... new in * is not so common...
-    Segment* operator*();
+    void flush();
+
+  private:
+    pthread_mutex_t mutex;
 };
-
-//---------------------------end of SegmentArrayIter-------------------------//

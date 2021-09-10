@@ -32,9 +32,9 @@
 
 #include <vector>
 
-#include "speakersegment.h"
-#include "vector2d.h"
-#include "vector3d.h"
+#include "speakersegment.hpp"
+#include "vector2d.hpp"
+#include "vector3d.hpp"
 
 class Speaker
 {
@@ -50,7 +50,7 @@ class Speaker
 
     const Vector3D& get3DNormal() const { return normal3D; }
 
-    const float getCosAlpha() const { return cosAlpha; }
+    float getCosAlpha() const { return cosAlpha; }
 
   private:
     Vector2D pos;
