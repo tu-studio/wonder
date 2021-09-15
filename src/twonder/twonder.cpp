@@ -180,12 +180,12 @@ bool initialize_jack() {
 
     if (jackClient == nullptr) {
         running = false;
-        std::cerr
+        std::cout
             << "[JACK][ERROR]: Unable to open the JACK client! Failed with status: 0x"
             << std::hex << status << std::dec << '\n';
 
         if (status & JackServerFailed) {
-            std::cerr << "[JACK][ERROR]: Unable to connect to the JACK server!\n";
+            std::cout << "[JACK][ERROR]: Unable to connect to the JACK server!\n";
         }
     }
 
