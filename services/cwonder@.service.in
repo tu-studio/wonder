@@ -1,8 +1,7 @@
 [Unit]
 Description=CWonder
-After=network.target jfwonder.service
-Requires=network.target
-Wants=jfwonder.service
+After=network-online.target jfwonder.service
+Wants=jfwonder.service network-online.target
 
 [Install]
 WantedBy=multi-user.target
