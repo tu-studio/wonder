@@ -169,15 +169,13 @@ bool initialize_jack() {
     int available_outputs = 0;      // Number of physically available outputs
 
     const char* client_name = twonderConf->jackName;  // Get name from twonderConfig
-    const char* server_name = nullptr;  // Without a JACK server name the default server
-                                        // from the .jackdrc file will be started.
-    jack_options_t options = JackNullOption;  // No options needed, since we use the
+    jack_options_t options = JackNoStartServer;  // No options needed, since we use the
                                               // options from the .jackdrc file.
     jack_status_t status;  // Holds the JACK status after the connection attempt for
                            // further verifications.
 
     // 1. Try to start the JACK client and connect to the JACK server.
-    jackClient = jack_client_open(client_name, options, &status, server_name);
+    jackClient = jack_client_open(client_name, options, &status);
     running    = true;
 
     if (jackClient == nullptr) {
