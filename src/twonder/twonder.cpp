@@ -920,7 +920,7 @@ int main(int argc, char* argv[]) {
         timeoutCounter++;
     }
 
-    std::cout << "Connection to cwonder established.";
+    std::cout << "Connection to cwonder established.\n";
 
     // Initialize JACK
     if (!initialize_jack()) {
