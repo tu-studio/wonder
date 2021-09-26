@@ -2,3 +2,9 @@ build*
 
 # MkDocs build
 site/
+
+.cache/
+.idea/
+.vscode/
+
+subprojects/*/*
