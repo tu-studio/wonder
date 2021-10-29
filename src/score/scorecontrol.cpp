@@ -36,7 +36,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
-
+#include <unistd.h>
 #include <ctime>
 #include <cstdlib>
 

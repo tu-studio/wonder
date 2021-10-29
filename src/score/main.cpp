@@ -29,6 +29,7 @@
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
+#include <unistd.h>
 
 #include <lo/lo.h>
 
