@@ -12,7 +12,7 @@ if get_option('scoreplayer')
 
 	executable('score', score_src,
 		   include_directories: inc,
-		   dependencies: [jack_dep, thread_dep, xml_dep, liblo_dep, rtmidi_dep],
+		   dependencies: [thread_dep, xml_dep, liblo_dep, rtmidi_dep],
 		   link_with: libwonder,
 		   install: true
 		   )
