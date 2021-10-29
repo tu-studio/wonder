@@ -136,7 +136,7 @@ int main( int argc, char** argv )
         {
             scoreControl.mtccom->midiin->openVirtualPort( "scoreplayer_in" );
         }
-        catch( RtError& error )
+        catch( RtMidiError& error )
         {
             cerr << "[Error-scoreplayer::main]: reconnecting virtual midi port failed" << endl;
         }

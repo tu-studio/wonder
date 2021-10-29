@@ -74,7 +74,7 @@ MTC_Com::MTC_Com( ScoreControl* sc )
     {
         midiin = new RtMidiIn();
     }
-    catch( RtError& error ) 
+    catch( RtMidiError& error )
     {
         cerr << "[ERROR-MTC_Com:MTC_COM()]: ";
         error.printMessage();
@@ -86,7 +86,7 @@ MTC_Com::MTC_Com( ScoreControl* sc )
     {
         midiout = new RtMidiOut();
     }
-    catch( RtError& error ) 
+    catch( RtMidiError& error )
     {
         cerr << "[ERROR-MTC_Com:MTC_COM()]: ";
         error.printMessage();
@@ -105,7 +105,7 @@ MTC_Com::MTC_Com( ScoreControl* sc )
     {
         midiin->openVirtualPort( "scoreplayer_in" );
     }
-    catch( RtError& error ) 
+    catch( RtMidiError& error )
     {
         cerr << "[ERROR-MTC_Com:MTC_COM()]: ";
         error.printMessage();
@@ -122,7 +122,7 @@ MTC_Com::MTC_Com( ScoreControl* sc )
     {
         midiout->openVirtualPort( "scoreplayer_out" );
     }
-    catch( RtError& error ) 
+    catch( RtMidiError& error )
     {
         cerr << "[ERROR-MTC_Com:MTC_COM()]: ";
         error.printMessage();
@@ -712,7 +712,7 @@ void MTC_Com::show_mididevices()
             portNameIn = midiin->getPortName( i );
             cout << "    midi input port: " << i << ": " << portNameIn << '\n';
         }
-        catch( RtError& error ) 
+        catch( RtMidiError& error )
         {
             error.printMessage();
             return;
@@ -725,7 +725,7 @@ void MTC_Com::show_mididevices()
             portNameOut = midiout->getPortName( i );
             cout << "    midi output port: " << i << ": " << portNameOut << '\n';
         }
-        catch(RtError& error ) 
+        catch(RtMidiError& error )
         {
             error.printMessage();
             return;
@@ -811,7 +811,7 @@ bool MTC_Com::send_mmc_identity_request( int chan )
     {
         midiout->sendMessage( &mmc_id_request );
     }
-    catch( RtError& error )
+    catch( RtMidiError& error )
     {
         error.printMessage();
         return false;
@@ -871,7 +871,7 @@ bool MTC_Com::send_mmc_goto( int hours, int minutes, int seconds, int milliSecon
     {
         midiout->sendMessage( &mmc_goto );
     }
-    catch( RtError& error )
+    catch( RtMidiError& error )
     {
         error.printMessage();
         return false;
@@ -904,7 +904,7 @@ bool MTC_Com::send_stop()
         {
             midiout->sendMessage( &mmc_command );
         }
-        catch( RtError& error )
+        catch( RtMidiError& error )
         {
             error.printMessage();
             return false;
@@ -921,7 +921,7 @@ bool MTC_Com::send_stop()
         {
             midiout->sendMessage( &msrc_command );
         }
-        catch( RtError& error )
+        catch( RtMidiError& error )
         {
             error.printMessage();
             return false;
@@ -953,7 +953,7 @@ bool MTC_Com::send_play()
         {
             midiout->sendMessage( &mmc_command );
         }
-        catch( RtError& error )
+        catch( RtMidiError& error )
         {
             error.printMessage();
             return false;
@@ -971,7 +971,7 @@ bool MTC_Com::send_play()
         {
             midiout->sendMessage( &msrc_command );
         }
-        catch( RtError& error )
+        catch( RtMidiError& error )
         {
             error.printMessage();
             return false;
