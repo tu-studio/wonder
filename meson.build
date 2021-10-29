@@ -17,6 +17,7 @@ inc = include_directories('src/include')
 subdir('src/lib')
 subdir('src/cwonder')
 subdir('src/jfwonder')
+subdir('src/score')
 subdir('src/twonder')
 if get_option('xwonder') == true
 	qt5 = import('qt5')
@@ -41,5 +42,9 @@ endif
 install_subdir('scripts', install_dir: get_option('datadir') / 'wonder')
 install_subdir('dtd', install_dir: get_option('datadir') / 'wonder')
 
-summary({'CWonder': true, 'TWonder': true, 'JFWonder': get_option('jfwonder'), 'XWonder': get_option('xwonder')}, bool_yn: true, section: 'Components')
+summary({'CWonder': true,
+	'TWonder': true,
+	'JFWonder': get_option('jfwonder'),
+	'XWonder': get_option('xwonder'),
+	'ScorePlayer': get_option('scoreplayer')}, bool_yn: true, section: 'Components')
 summary({'Location': get_option('location'), 'Directory': config_dir}, section: 'Configuration')
