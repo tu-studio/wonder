@@ -56,8 +56,8 @@ ScoreplayerConfig::ScoreplayerConfig( int argc, char **argv )
     
     scorefilePath = "";
 
-    scoreplayerConfigfile = join( INSTALL_PREFIX, "share/wonder3/configs/scoreplayer_config.xml" ); 
-    dtdPath               = join( INSTALL_PREFIX, "share/wonder3/dtd" ); 
+    scoreplayerConfigfile = join( CONFIG_DIR, "scoreplayer_config.xml");
+    dtdPath               = join( DATA_DIR, "dtd/" );
 
     maxNoSources = 0;
 
