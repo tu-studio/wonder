@@ -242,19 +242,14 @@ int ScoreplayerConfig::readconfig()
 
 void ScoreplayerConfig::getSettings( xmlpp::Node* node )
 {    
-    xmlpp::NodeSet nset = node->find( "/scoreplayer_config/settings" );
+    auto nset = node->find( "/scoreplayer_config/settings" );
 
     if( nset.size() > 0 )
     {
         if( const xmlpp::Element* nodeElement = dynamic_cast<const xmlpp::Element*>( *nset.begin() ) ) 
         {
-            const xmlpp::Element::AttributeList& attributes = nodeElement->get_attributes();
-            xmlpp::Element::AttributeList::const_iterator iter;
-
-            for(iter = attributes.begin(); iter != attributes.end(); ++iter)
+            for(const auto& attribute : nodeElement->get_attributes())
             {
-                const xmlpp::Attribute* attribute = *iter;
-                
                 Glib::ustring nodename = attribute->get_name();
             
                 stringstream ss( attribute->get_value() );

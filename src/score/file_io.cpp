@@ -89,14 +89,14 @@ int File_IO::writeXML( string filepath, std::multiset<ScoreLine>* score, Scenari
     // write orchestra part of scorefile 
 
     // create the node and set it's attribute
-    orcNode = rootNode->add_child( "orchestra" );
+    orcNode = dynamic_cast<xmlpp::Element*>(rootNode)->add_child_element( "orchestra" );
     
     if( orcNode )
     {   
         for( int i = 0; i < scoreplayerConf->maxNoSources; ++i )
         {
             xmlpp::Element* nodeSrc;
-            nodeSrc = orcNode->add_child( "src" );
+            nodeSrc = dynamic_cast<xmlpp::Element*>(orcNode)->add_child_element( "src" );
 
             os.str( "" );
             os << orc->sourcesVector[ i ].id;
@@ -123,7 +123,7 @@ int File_IO::writeXML( string filepath, std::multiset<ScoreLine>* score, Scenari
     // write scorelines    
     
     // create the node and set it's attribute
-    scoreNode = rootNode->add_child( "score" );     
+    scoreNode = dynamic_cast<xmlpp::Element*>(rootNode)->add_child_element( "score" );
 
     std::multiset< ScoreLine >::iterator scoreIter;
     for( scoreIter = score->begin(); scoreIter != score->end(); ++scoreIter )
@@ -132,7 +132,7 @@ int File_IO::writeXML( string filepath, std::multiset<ScoreLine>* score, Scenari
 
         if( scoreIter->method == "/WONDER/source/position" )
         {
-            nodeChild1 = scoreNode->add_child( "pos" );
+            nodeChild1 = dynamic_cast<xmlpp::Element*>(scoreNode)->add_child_element( "pos" );
 
             os.str( "" );
             os << scoreIter->intArgs[ 0 ];
@@ -152,7 +152,7 @@ int File_IO::writeXML( string filepath, std::multiset<ScoreLine>* score, Scenari
         }           
         else if( scoreIter->method == "/WONDER/source/angle" )
         {
-            nodeChild1 = scoreNode->add_child( "angle" );
+            nodeChild1 = dynamic_cast<xmlpp::Element*>(scoreNode)->add_child_element( "angle" );
 
             os.str( "" );
             os << scoreIter->intArgs[ 0 ];
@@ -169,7 +169,7 @@ int File_IO::writeXML( string filepath, std::multiset<ScoreLine>* score, Scenari
         }           
         else if( scoreIter->method == "/WONDER/source/type" )
         {
-            nodeChild1 = scoreNode->add_child( "type" );
+            nodeChild1 = dynamic_cast<xmlpp::Element*>(scoreNode)->add_child_element( "type" );
 
             os.str("");
             os << scoreIter->intArgs[ 0 ];
