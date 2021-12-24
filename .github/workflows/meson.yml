@@ -1,0 +1,60 @@
+name: meson-build
+on: [push, pull_request]
+jobs:
+  skip-duplicates:
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          # All of these options are optional, so you can remove them if you are happy with the defaults
+          concurrent_skipping: 'same_content'
+          skip_after_successful_duplicate: 'true'
+          paths_ignore: '["**/README.md", "**/INSTALL*"]'
+          do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
+  build:
+    needs: skip-duplicates
+    if: ${{ needs.skip-duplicates.outputs.should_skip != 'true' }}
+    runs-on: ${{ matrix.runs-on }}
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false # don't abort if one of the build failse
+      matrix:
+        include:
+          - name: Linux
+            runs-on: ubuntu-20.04
+          - name: macOS
+            runs-on: macos-10.15
+
+    env:
+      SRC_PATH: ${{ github.workspace }}/src
+      BUILD_PATH: ${{ github.workspace }}/builddir
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+      - name: install dependencies for Linux
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes libjack-jackd2-dev libglibmm-2.4-dev liblo-dev libsystemd-dev
+          python -m pip install --upgrade pip
+          pip install meson ninja
+      - name: install dependencies for macOS
+        if: runner.os == 'macOS'
+        env:
+          HOMEBREW_NO_ANALYTICS: 1
+          HOMEBREW_NO_AUTO_UPDATE: 1
+          HOMEBREW_NO_INSTALL_CLEANUP: 1
+        run: |
+          brew install jack meson
+      - name: build on Linux / macOS
+        if: runner.os != 'Windows'
+        env:
+          DEVELOPER_DIR: '/Applications/Xcode_11.7.app/Contents/Developer' # specify XCode version on macOS
+        run: |
+          meson --buildtype release $BUILD_PATH
+          cd $BUILD_PATH
+          meson compile
