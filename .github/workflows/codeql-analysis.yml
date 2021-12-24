@@ -43,7 +43,7 @@ jobs:
     - name: install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install --yes libjack-jackd2-dev libglibmm-2.4-dev liblo-dev libsystemd-dev
+        sudo apt-get install --yes libjack-jackd2-dev libglibmm-2.4-dev liblo-dev libsystemd-dev librtmidi-dev
         python -m pip install --upgrade pip
         pip install meson ninja
     # Initializes the CodeQL tools for scanning.
