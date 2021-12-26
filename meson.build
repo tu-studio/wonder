@@ -8,7 +8,7 @@ xml_dep = dependency('libxml++-3.0', fallback: ['libxml++-3.0', 'xmlxx_dep'])
 jack_dep = dependency('jack')
 liblo_dep = dependency('liblo')
 systemd_dep = dependency('systemd', required: get_option('systemd'))
-libsystemd_dep = dependency('libsystemd')
+libsystemd_dep = dependency('libsystemd', required: get_option('systemd'))
 fmt_dep = dependency('fmt')
 
 subdir('src/include')

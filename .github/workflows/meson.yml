@@ -50,11 +50,18 @@ jobs:
           HOMEBREW_NO_INSTALL_CLEANUP: 1
         run: |
           brew install jack meson libxml++3 liblo rtmidi
+      - name: build on Linux
+        if: runner.os == 'Linux'
+        run: |
+          meson --buildtype release $BUILD_PATH
+          cd $BUILD_PATH
+          meson compile
       - name: build on Linux / macOS
-        if: runner.os != 'Windows'
+        if: runner.os == 'macOS'
         env:
           DEVELOPER_DIR: '/Applications/Xcode_11.7.app/Contents/Developer' # specify XCode version on macOS
         run: |
           meson --buildtype release $BUILD_PATH
           cd $BUILD_PATH
+          meson configure -Dsystemd=false
           meson compile
