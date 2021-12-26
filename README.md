@@ -19,3 +19,6 @@ Instructions for building, installing and configuring WONDER can be found in
 the [project documentation](https://ntonnaett.github.io/wonder-lite/).
 
 ---
+
+### CI Build Status
+[![](http://github-actions.40ants.com/ntonnaett/wonder-lite/matrix.svg?only=meson-build)](https://github.com/ntonnaett/wonder-lite)
