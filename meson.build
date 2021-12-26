@@ -3,6 +3,8 @@ project('wonder', 'cpp',
         license: 'GPL-3.0-or-later',
         default_options: 'cpp_std=c++17')
 
+defines = []
+
 thread_dep = dependency('threads')
 xml_dep = dependency('libxml++-3.0', fallback: ['libxml++-3.0', 'xmlxx_dep'])
 jack_dep = dependency('jack')
@@ -28,6 +30,10 @@ endif
 
 if systemd_dep.found()
 	subdir('services')
+endif
+
+if libsystemd_dep.found()
+	defines += '-DWONDER_SYSTEMD'
 endif
 
 config_dir = '/etc/wonder'
