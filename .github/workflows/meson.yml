@@ -63,5 +63,4 @@ jobs:
         run: |
           meson --buildtype release $BUILD_PATH
           cd $BUILD_PATH
-          meson configure -Dsystemd=false
           meson compile
