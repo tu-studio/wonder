@@ -13,6 +13,10 @@ systemd_dep = dependency('systemd', required: get_option('systemd'))
 libsystemd_dep = dependency('libsystemd', required: get_option('systemd'))
 fmt_dep = dependency('fmt')
 
+if libsystemd_dep.found()
+	defines += '-DWONDER_SYSTEMD'
+endif
+
 subdir('src/include')
 inc = include_directories('src/include')
 
@@ -30,10 +34,6 @@ endif
 
 if systemd_dep.found()
 	subdir('services')
-endif
-
-if libsystemd_dep.found()
-	defines += '-DWONDER_SYSTEMD'
 endif
 
 config_dir = '/etc/wonder'
