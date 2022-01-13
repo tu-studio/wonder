@@ -1,7 +1,6 @@
 [Unit]
 Description=CWonder
 After=network-online.target
-Requires=network-online.target
 
 [Install]
 WantedBy=default.target
