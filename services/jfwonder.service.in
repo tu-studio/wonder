@@ -1,7 +1,7 @@
 [Unit]
 Description=JFWonder
-After=network-online.target
-Requires=network-online.target
+After=network-online.target jack.service
+Requires=network-online.target jack.service
 
 
 [Install]
