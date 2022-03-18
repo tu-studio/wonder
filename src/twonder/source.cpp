@@ -60,6 +60,12 @@ float hanning(float x) { return 1 - (0.5 * cosf(M_PI * x) + 0.5); }
 ///
 DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
                                        const Vector3D& sourcePos) {
+    // The normal from speakerconfig is already normalized. Dividing by the
+    // norm/length of the normal is not necessary.
+    // Dot product: a * b = |a| * |b| * cos( a , b )
+    // Normalprojection when b is the normalized normal ( |b| = 1 ):
+    // |a| * cosphi = a * b
+    // cosphi = a * b / |a|
     Vector3D srcToSpkVec   = speaker.get3DPos() - sourcePos;
     float normalProjection = srcToSpkVec * speaker.get3DNormal();
     float srcToSpkDistance = srcToSpkVec.length();
