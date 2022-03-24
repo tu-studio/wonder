@@ -85,6 +85,11 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
 
     // if source is in front of speaker
     if (normalProjection > 0.0) {
+        // don't render this source if it is in front of the speaker
+        // but is not a focussed source
+        if ((!isFocused(sourcePos)) && (spkToSrcDistance > transitionRadius))
+            return DelayCoeff(0.0, 0.0);
+
         // don't render this source if it is outside of the defined maximum range
         // for focussed sources
         if (spkToSrcDistance > twonderConf->focusLimit) return DelayCoeff(0.0, 0.0);
@@ -105,10 +110,7 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
             window = window * hanning(inFocus / focusAngularMaxRange);
         }
 
-        // don't render this source if it in front of a this speaker
-        // but is not a focussed source
-        if ((!isFocused(sourcePos)) && (spkToSrcDistance > transitionRadius))
-            return DelayCoeff(0.0, 0.0);
+
         // if (twonderConf->slope) {
             // we need a slope correction in case the speaker array has a slope
         //     Vector3D src3D(sourcePos[0], sourcePos[1],
