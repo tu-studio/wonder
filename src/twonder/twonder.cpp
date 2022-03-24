@@ -143,7 +143,7 @@ int process(jack_nframes_t nframes, void* arg) {
 
             // interpolate the delayline with Doppler effect or use a fade-jump
             if ((*sources)[j]->source->hasDopplerEffect()) {
-                (*sources)[j]->inputline->getInterp(c, c2, output, nframes);
+                (*sources)[j]->inputline->get(c, c2, output, nframes);
             } else {
                 (*sources)[j]->inputline->getFadej(c, c2, output, nframes,
                                                    DelayLine::dB3);
