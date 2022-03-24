@@ -161,7 +161,7 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
             + (transitionRadius - delay) / (2 * transitionRadius) * (focuss - behind);
     }
     // speaker.getCosAlpha is the amplitude correction for the elevation compensation
-    return DelayCoeff(delay, amplitudeFactor * speaker.getCosAlpha() * window);
+    return DelayCoeff(delay, amplitudeFactor * window);
 }
 
 bool PointSource::isFocused(const Vector3D& sourcePos) {
