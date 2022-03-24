@@ -40,6 +40,7 @@
 		<point x="1.620" y="-3.023" z="1.4"/>
 		<point x="-1.620" y="-3.023" z="1.4"/>
 		<point x="-2.430" y="-1.620" z="1.4"/>
+    <point x="-2.430" y="1.620" z="1.4"/>
 		<elevation y1="1.4" z1="1.4" y2="1.4" z2="1.4"/>
     </renderpolygon>
 </cwonder_config>
