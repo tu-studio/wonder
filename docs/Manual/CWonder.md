@@ -14,20 +14,6 @@ If you start cwonder without any options the default settings are used. They are
 	
 ### System service
 
-A debian init script is placed in the /etc/init.d folder. This init script can be used to start and stop cwonder on a debian machine. It will not work for another distribution (except debian alikes like ubuntu). Since cwonder gets the time information from jfwonder this jack application needs to be started as well. jfwonder can run on a different machine that is why we did not include the start and stop in the init script of cwonder and therefore provided jfwonder with it's own debian init script. Both applications run daemonized in the background. The following commands can be used to control cwonder. You must be superuser to run the script.
-
-- /etc/init.d/cwonder-daemon start
-- /etc/init.d/cwonder-daemon stop
-- /etc/init.d/cwonder-daemon restart
-- /etc/init.d/cwonder-daemon status	
-
-You can configure the script by editing the source defaults file which is /etc/default/cwonder-daemon. Even so the init script is run as root, the script changes to the USER before starting the process. The variable is also used to determine the name of the pid files which are saved in /tmp/wonder. This enables to run several instances at the same time. If the you check the status of cwonder and jfwonder and find out that they are not running you can find out what is going on by having a look in the log files. Cwonder uses syslog to do logging and the messages are placed in /var/log/wonder.log. To have a look at the log messages you may want to use one of the following commands.
-
-- cat /var/log/wonder.log
-- tail /var/log/wonder.log
-- watch tail -n 23 /var/log/wonder.log
-
-
 Here is a step through a startup case on a single machine:
 
 - start the jack server
