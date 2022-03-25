@@ -1,11 +1,10 @@
-# **WONDER Lite**
+# **WONDER**
 **Wave field synthesis Of New Dimensions of Electronic music in Realtime**
 
-WONDER Lite is a stripped down version of the original *WONDER* suite 
-developed by the Audiocommunication Group at TU Berlin.
-Eugen Winter of HAW Hamburg updated and improved the codebase.
+*WONDER* is a software suite for using Wave Field Synthesis originally developed
+by the Audiocommunication Group at TU Berlin.
 
-This package contains the following components of WONDER:
+The *WONDER* suite is composed of the following components:
 
 - **libwonder**: Library
 - **cwonder**: Managing Application
@@ -16,9 +15,9 @@ This package contains the following components of WONDER:
 ---
 
 Instructions for building, installing and configuring WONDER can be found in
-the [project documentation](https://ntonnaett.github.io/wonder-lite/).
+the [project documentation](https://ntonnaett.github.io/wonder/).
 
 ---
 
 ### CI Build Status
-[![](http://github-actions.40ants.com/ntonnaett/wonder-lite/matrix.svg?only=meson-build)](https://github.com/ntonnaett/wonder-lite)
+[![](http://github-actions.40ants.com/ntonnaett/wonder/matrix.svg?only=meson-build)](https://github.com/ntonnaett/wonder)
