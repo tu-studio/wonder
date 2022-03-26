@@ -1,0 +1,25 @@
+name: Publish docs to GitHub Pages
+on:
+  push:
+    branches:
+      - main
+      - dev
+    paths:
+      - mkdocs.yml
+      - docs/**
+
+jobs:
+  build:
+    name: Deploy docs
+    runs-on: ubuntu-latest
+    if: github.repository == 'ntonnaett/wonder'
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v2
+
+      - name: Deploy docs
+        uses: mhausenblas/mkdocs-deploy-gh-pages@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CONFIG_FILE: mkdocs.yml
+          REQUIREMENTS: docs/requirements.txt
