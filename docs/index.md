@@ -1,11 +1,13 @@
-# Welcome to WONDER Lite
-**WONDER** - Wave field synthesis Of New Dimensions of Electronic music in Realtime
+# **WONDER**
+**Wave field synthesis Of New Dimensions of Electronic music in Realtime**
 
-WONDER Lite is a stripped down version of the original *WONDER* suite.
+*WONDER* is a software suite for using Wave Field Synthesis originally developed
+by the Audiocommunication Group at TU Berlin.
 
-This package contains the following components of WONDER:
+The *WONDER* suite is composed of the following components:
 
 - **libwonder**: Library
 - **cwonder**: Managing Application
 - **twonder**: Rendering Application
+- **jfwonder**: Time Provider
 - **xwonder**: GUI Control Application (needs some work)
