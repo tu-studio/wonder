@@ -76,8 +76,8 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
     float inFocus;  // variable to calculate whether within the focus margin
 
 // cosphi is 1 if source is directly in front of the speaker
-#define focusAngularMax      0.5
-#define focusAngularMaxRange 0.1
+// #define focusAngularMax      0.5
+// #define focusAngularMaxRange 0.1
 
     // define a circular area around the speakers in which we adjust the amplitude factor
     // to get a smooth transition when moving through the speakers ( e.g. from focussed to
@@ -95,21 +95,21 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
         // for focussed sources
         if (spkToSrcDistance > twonderConf->focusLimit) return DelayCoeff(0.0, 0.0);
 
-        if (cosphi < focusAngularMax)  // if angle too large with the speaker array, we
+        // if (cosphi < focusAngularMax)  // if angle too large with the speaker array, we
                                        // don't play this back to avoid too early arriving
                                        // contributions to the wave front
-            return DelayCoeff(0.0, 0.0);
+        //     return DelayCoeff(0.0, 0.0);
 
         inFocus = twonderConf->focusLimit - spkToSrcDistance;
         if (inFocus < twonderConf->focusMargin) {  // fade out within (fadelimit -
                                                    // fademargin up to fadelimit
             window = hanning(inFocus / twonderConf->focusMargin);
         }
-        inFocus = cosphi - focusAngularMax;
-        if (inFocus < focusAngularMaxRange) {  // fade out within (focusAngularMax + focusAngularMaxRange)
+        // inFocus = cosphi - focusAngularMax;
+        // if (inFocus < focusAngularMaxRange) {  // fade out within (focusAngularMax + focusAngularMaxRange)
                                                // up to focusAngularMax
-            window = window * hanning(inFocus / focusAngularMaxRange);
-        }
+        //     window = window * hanning(inFocus / focusAngularMaxRange);
+        // }
 
 
         // if (twonderConf->slope) {
