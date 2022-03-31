@@ -26,8 +26,9 @@
  *                                                                                   *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#include <cmath>
 #include "source.h"
+
+#include <cmath>
 
 #include "delaycoeff.h"
 #include "speaker.h"
@@ -81,7 +82,12 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
     float transitionRadius = twonderConf->speakerDistance * 1.5;  // XXX: empirical value
 
     // cosphi is 1 if source is directly in front of the speaker
-    const float focusAngularMax = 0.1 + 0.9 * (spkToSrcDistance/twonderConf->focusLimit);
+    const float focusAngularAdjustDistance = 0.5 * twonderConf->focusLimit;
+    const float focusAngularMax =
+        0.1
+        + 0.7
+              * (std::min(spkToSrcDistance, focusAngularAdjustDistance)
+                 / focusAngularAdjustDistance);
     constexpr float focusAngularMaxRange = 0.1;
 
     // if source is in front of speaker
@@ -98,7 +104,7 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
         if (cosphi < focusAngularMax)  // if angle too large with the speaker array, we
                                        // don't play this back to avoid too early arriving
                                        // contributions to the wave front
-             return DelayCoeff(0.0, 0.0);
+            return DelayCoeff(0.0, 0.0);
 
         inFocus = twonderConf->focusLimit - spkToSrcDistance;
         if (inFocus < twonderConf->focusMargin) {  // fade out within (fadelimit -
@@ -106,14 +112,14 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
             window = hanning(inFocus / twonderConf->focusMargin);
         }
         inFocus = cosphi - focusAngularMax;
-        if (inFocus < focusAngularMaxRange) {  // fade out within (focusAngularMax + focusAngularMaxRange)
-                                               // up to focusAngularMax
-             window = window * hanning(inFocus / focusAngularMaxRange);
+        if (inFocus
+            < focusAngularMaxRange) {  // fade out within (focusAngularMax +
+                                       // focusAngularMaxRange) up to focusAngularMax
+            window = window * hanning(inFocus / focusAngularMaxRange);
         }
 
-
         // if (twonderConf->slope) {
-            // we need a slope correction in case the speaker array has a slope
+        // we need a slope correction in case the speaker array has a slope
         //     Vector3D src3D(sourcePos[0], sourcePos[1],
         //                    sourcePos[1] < twonderConf->elevationY1
         //                        ? twonderConf->elevationZ1
