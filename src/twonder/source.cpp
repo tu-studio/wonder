@@ -76,7 +76,7 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
     float inFocus;  // variable to calculate whether within the focus margin
 
 // cosphi is 1 if source is directly in front of the speaker
-#define focusAngularMax      0.25
+#define focusAngularMax      0.5
 #define focusAngularMaxRange 0.1
 
     // define a circular area around the speakers in which we adjust the amplitude factor
