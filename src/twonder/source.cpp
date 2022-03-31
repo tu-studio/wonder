@@ -85,7 +85,7 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
     const float focusAngularAdjustDistance = 0.5 * twonderConf->focusLimit;
     const float focusAngularMax =
         0.1
-        + 0.7
+        + 0.9
               * (std::min(spkToSrcDistance, focusAngularAdjustDistance)
                  / focusAngularAdjustDistance);
     constexpr float focusAngularMaxRange = 0.1;
