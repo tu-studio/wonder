@@ -85,7 +85,7 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
     const float focusAngularMax =
         0.1
         + 0.8
-              * (1-minSpeakerDistance());
+              * (1-minSpeakerDistance(sourcePos));
     constexpr float focusAngularMaxRange = 0.1;
 
     // if source is in front of speaker
