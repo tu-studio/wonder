@@ -81,7 +81,7 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
     float transitionRadius = twonderConf->speakerDistance * 1.5;  // XXX: empirical value
 
     // cosphi is 1 if source is directly in front of the speaker
-    const float focusAngularMax = 0.25 + 0.5 * (spkToSrcDistance/twonderConf->focusLimit);
+    const float focusAngularMax = 0.1 + 0.7 * (spkToSrcDistance/twonderConf->focusLimit);
     constexpr float focusAngularMaxRange = 0.1;
 
     // if source is in front of speaker
