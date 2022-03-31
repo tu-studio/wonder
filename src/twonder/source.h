@@ -105,6 +105,7 @@ class PointSource : public PositionSource
     DelayCoeff calcDelayCoeff(const Speaker& spk, const Vector3D& vec);
 
     bool isFocused(const Vector3D& src);
+    float minSpeakerDistance(const Vector3D& src);
     bool didFocusCalc;
     bool wasFocused;
 };
