@@ -226,6 +226,10 @@ float PointSource::minSpeakerDistance(const Vector3D& sourcePos) {
     float ySrc   = sourcePos[1];
     float xnew;
     float ynew;
+    float xmax;
+    float xmin;
+    float ymax;
+    float ymin;
 
     for (int i = 0; i < noPoints; ++i) {
         xnew = twonderConf->renderPolygon[i][0];
