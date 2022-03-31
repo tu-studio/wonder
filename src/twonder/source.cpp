@@ -238,13 +238,13 @@ float PointSource::minSpeakerDistance(const Vector3D& sourcePos) {
         ymin = std::min(ynew,ymin);
     }
 
-    xdist_max = std::abs(xmax-xSrc);
-    xdist_min = std::abs(xmin-xSrc);
-    xdist = std::min(xdist_max, xdist_min);
+    float xdist_max = std::abs(xmax-xSrc);
+    float xdist_min = std::abs(xmin-xSrc);
+    float xdist = std::min(xdist_max, xdist_min);
 
-    ydist_max = std::abs(ymax-ySrc);
-    ydist_min = std::abs(ymin-ySrc);
-    ydist = std::min(ydist_max, ydist_min);
+    float ydist_max = std::abs(ymax-ySrc);
+    float ydist_min = std::abs(ymin-ySrc);
+    float ydist = std::min(ydist_max, ydist_min);
 
     return std::min(xdist, ydist) / twonderConf->focusLimit;
 }
