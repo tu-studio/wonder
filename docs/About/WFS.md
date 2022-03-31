@@ -6,5 +6,5 @@ On Wave Field Synthesis and electro-acoustic music, with a particular focus on t
 by Marije Baalman
 
 This is available as PDF at:
-http://opus.kobv.de/tuberlin/volltexte/2008/1836/
+http://dx.doi.org/10.14279/depositonce-1883
 Or as a book (VDM Verlag, ISBN 978-3639077315) via Amazon or other online shops.
