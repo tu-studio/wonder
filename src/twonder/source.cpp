@@ -82,12 +82,10 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
     float transitionRadius = twonderConf->speakerDistance * 1.5;  // XXX: empirical value
 
     // cosphi is 1 if source is directly in front of the speaker
-    const float focusAngularAdjustDistance = 0.4 * twonderConf->focusLimit;
     const float focusAngularMax =
         0.1
         + 0.8
-              * (std::min(spkToSrcDistance, focusAngularAdjustDistance)
-                 / focusAngularAdjustDistance);
+              * (1-minSpeakerDistance());
     constexpr float focusAngularMaxRange = 0.1;
 
     // if source is in front of speaker
@@ -220,6 +218,35 @@ bool PointSource::isFocused(const Vector3D& sourcePos) {
     didFocusCalc = true;
     wasFocused   = inside;
     return inside;
+}
+
+float PointSource::minSpeakerDistance(const Vector3D& sourcePos) {
+    int noPoints = twonderConf->renderPolygon.size();
+    float xSrc   = sourcePos[0];
+    float ySrc   = sourcePos[1];
+    float xnew;
+    float ynew;
+
+    for (int i = 0; i < noPoints; ++i) {
+        xnew = twonderConf->renderPolygon[i][0];
+        ynew = twonderConf->renderPolygon[i][1];
+
+        xmax = std::max(xnew,xmax);
+        xmin = std::min(xnew,xmin);
+
+        ymax = std::max(ynew,ymax);
+        ymin = std::min(ynew,ymin);
+    }
+
+    xdist_max = std::abs(xmax-xSrc);
+    xdist_min = std::abs(xmin-xSrc);
+    xdist = std::min(xdist_max, xdist_min);
+
+    ydist_max = std::abs(ymax-ySrc);
+    ydist_min = std::abs(ymin-ySrc);
+    ydist = std::min(ydist_max, ydist_min);
+
+    return std::min(xdist, ydist) / twonderConf->focusLimit;
 }
 
 DelayCoeff PlaneWave::getDelayCoeff(const Speaker& speaker) {
