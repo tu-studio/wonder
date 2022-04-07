@@ -24,3 +24,9 @@ theme:
     - navigation.tabs
 markdown_extensions:
   - def_list
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - admonition
