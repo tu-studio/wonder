@@ -11,8 +11,9 @@ nav:
     - CWonder: OSC/CWonder.md
     - TWonder: OSC/TWonder.md
     - XWonder: OSC/XWonder.md
-  - Build: Build.md
-  - Configuration: Config.md
+  - Installation:
+    - Build: Installation/Build.md
+    - Configuration: Installation/Config.md
   - About:
     - Wave Field Synthesis: About/WFS.md
     - Authors: About/Authors.md
