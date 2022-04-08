@@ -2,10 +2,10 @@ site_name: WONDER
 repo_url: https://github.com/ntonnaett/wonder/
 nav:
   - Home: index.md
-  - Manual:
-    - CWonder: Manual/CWonder.md
-    - TWonder: Manual/TWonder.md
-    - XWonder: Manual/XWonder.md
+  - Components:
+    - CWonder: Components/CWonder.md
+    - TWonder: Components/TWonder.md
+    - XWonder: Components/XWonder.md
   - OSC Commands:
     - Generic: OSC/OSC.md
     - CWonder:
