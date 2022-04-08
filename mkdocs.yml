@@ -8,7 +8,9 @@ nav:
     - XWonder: Manual/XWonder.md
   - OSC Commands:
     - Generic: OSC/OSC.md
-    - CWonder: OSC/CWonder.md
+    - CWonder:
+      - Usage: OSC/CWonder.md
+      - OSC Message: OSC/CWonder_Messages.md
     - TWonder: OSC/TWonder.md
     - XWonder: OSC/XWonder.md
   - Installation:
