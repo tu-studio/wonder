@@ -94,10 +94,10 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
         // for focussed sources
         if (spkToSrcDistance > twonderConf->focusLimit) return DelayCoeff(0.0, 0.0);
 
-        if (cosphi > focusAngularMax)  // if angle too large with the speaker array, we
+        // if (cosphi > focusAngularMax)  // if angle too large with the speaker array, we
                                        // don't play this back to avoid too early arriving
                                        // contributions to the wave front
-            return DelayCoeff(0.0, 0.0);
+        //     return DelayCoeff(0.0, 0.0);
 
         inFocus = twonderConf->focusLimit - spkToSrcDistance;
         if (inFocus < twonderConf->focusMargin) {  // fade out within (fadelimit -
