@@ -75,8 +75,8 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
     float window           = 1.0;  // used for interpolation out off focuslimit
     float inFocus;  // variable to calculate whether within the focus margin
 
-#define focusAngularMax      0.75
-#define focusAngularMaxRange 0.1
+// #define focusAngularMax      0.75
+// #define focusAngularMaxRange 0.1
 
     // define a circular area around the speakers in which we adjust the amplitude factor
     // to get a smooth transition when moving through the speakers ( e.g. from focussed to
@@ -104,11 +104,11 @@ DelayCoeff PointSource::calcDelayCoeff(const Speaker& speaker,
                                                    // fademargin up to fadelimit
             window = hanning(inFocus / twonderConf->focusMargin);
         }
-        inFocus = focusAngularMax - cosphi;
-        if (inFocus < focusAngularMaxRange) {  // fade out within (fadelimit - fademargin
+        // inFocus = focusAngularMax - cosphi;
+        // if (inFocus < focusAngularMaxRange) {  // fade out within (fadelimit - fademargin
                                                // up to fadelimit
-            window = window * hanning(inFocus / focusAngularMaxRange);
-        }
+        //     window = window * hanning(inFocus / focusAngularMaxRange);
+        // }
 
 
         // if (twonderConf->slope) {
