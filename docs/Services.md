@@ -4,8 +4,16 @@ The startup of Wonder is handled by SystemD services. There are two possible
 ways to do this. Because of JACK Wonder's services must be run as a specific user.
 
 ## User services (recommended)
-The recommended way is to use user services. 
 
+The recommended way is to use user services. CWonder, TWonder and JFWonder have
+a service unit installed that can be started, stopped, enabled and disabled.
+
+```bash
+systemctl --user start cwonder.service
+systemctl --user stop twonder.service
+systemctl --user disable jfwonder.service
+systemctl --user enable twonder.service
+```
 
 ## Templated system services (alternative)
 
@@ -17,6 +25,20 @@ sudo systemctl start cwonder@username
 sudo systemctl stop cwonder@username
 sudo systemctl enable cwonder@username
 ```
+
+## Status and Logs
+
+The current status of a systemd service can be obtained by:
+
+```bash
+systemctl --user status cwonder.service
+```
+
+If more log history is wanted, journalctl can be used:
+
+```bash
+journalctl --user -xeu cwonder.service
+``` 
 
 ### Startup order
 
