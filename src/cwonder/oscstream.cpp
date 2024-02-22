@@ -4,7 +4,7 @@
  *  http://swonder.sourceforge.net                                                   *
  *                                                                                   *
  *                                                                                   *
- *  Technische Universität Berlin, Germany                                           *
+ *  Technische Universitï¿½t Berlin, Germany                                           *
  *  Audio Communication Group                                                        *
  *  www.ak.tu-berlin.de                                                              *
  *  Copyright 2006-2008                                                              *
@@ -76,6 +76,7 @@ OSCStream::~OSCStream() {
                       << clientsIter->name << "\n";
         }
         statefile.close();
+        std::cout << "Saved " << name << " client list to " << statefilename << "\n";
     } else {
         std::cerr << "Couldn't write " << name << " client list to " << statefilename << "\n";
     }
