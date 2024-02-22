@@ -165,8 +165,10 @@ int process(jack_nframes_t nframes, void* arg) {
 
 bool initialize_jack() {
     bool running          = false;  // Initialization status
-    int available_inputs  = 0;      // Number of physically available inputs
-    int available_outputs = 0;      // Number of physically available outputs
+
+    // not needed since we make the connections after the jack client is started
+    // int available_inputs  = 0;      // Number of physically available inputs
+    // int available_outputs = 0;      // Number of physically available outputs
 
     const char* client_name = twonderConf->jackName;  // Get name from twonderConfig
     jack_options_t options = JackNoStartServer;  // No options needed, since we use the
@@ -282,98 +284,104 @@ bool initialize_jack() {
         }
     }
 
-    // 9. Connect the audio inputs of the soundcard with the input ports of the JACK
-    // client (JACK calls them "output ports", because they are readable by the JACK
-    // client).
-    if (running) {
-        const char** ports = jack_get_ports(jackClient, nullptr, nullptr,
-                                            JackPortIsPhysical | JackPortIsOutput);
 
-        if (ports == nullptr) {
-            running = false;
-            std::cerr << "[JACK][ERROR]: No physical audio input (capture) ports are "
-                         "available!\n";
-        }
+    /* ==========================================================================
 
-        // Proceed only if the soundcard has physical audio input (capture) ports!
-        if (running) {
-            for (int i = 0; i < twonderConf->noSources; ++i) {
-                if (!((ports[i] == nullptr)
-                      || (jack_port_name(jackInputs[i])
-                          == nullptr))) {  // Do not connect to NULL ports
-                    // jack_connect(jackClient, ports[i], jack_port_name(jackInputs[i]));
-                    // // TODO: Disabled internal auto-connect in favor of external
-                    // startup script!
-                    available_inputs++;
-                } else {
-                    // Remove JACK client input ports that have no corresponding soundcard
-                    // audio input (capture) port.
-                    jack_port_unregister(jackClient, jackInputs[i]);
-                    // TODO This break is a workaround that this whole loop doesn't work.
-                    break;
-                }
-            }
-        }
+    The following code is disabled, because we connect the JACK client ports differently
 
-        jack_free(ports);  // Free the memory allocated by jack_get_ports(...)
-    }
+    ========================================================================== */
 
-    // 10. Connect the output ports of the JACK client with the audio outputs of the
-    // soundcard (JACK calls them "input ports", because they are writable by the JACK
-    // client).
-    if (running) {
-        const char** ports = jack_get_ports(jackClient, nullptr, nullptr,
-                                            JackPortIsPhysical | JackPortIsInput);
+    // // 9. Connect the audio inputs of the soundcard with the input ports of the JACK
+    // // client (JACK calls them "output ports", because they are readable by the JACK
+    // // client).
+    // if (running) {
+    //     const char** ports = jack_get_ports(jackClient, nullptr, nullptr,
+    //                                         JackPortIsPhysical | JackPortIsOutput);
 
-        if (ports == nullptr) {
-            running = false;
-            std::cerr << "[JACK][ERROR]: No physical audio output (playback) ports are "
-                         "available!\n";
-        }
+    //     if (ports == nullptr) {
+    //         running = false;
+    //         std::cerr << "[JACK][ERROR]: No physical audio input (capture) ports are "
+    //                      "available!\n";
+    //     }
 
-        // Proceed only if the soundcard has physical audio output (playback) ports and
-        // take care of the usable loudspeakers!
-        if (running) {
-            for (size_t i = 0; i < speakers->size(); ++i) {
-                if (!((jack_port_name(jackOutputs[i]) == nullptr)
-                      || (ports[i] == nullptr))) {  // Do not connect to NULL ports
-                    // jack_connect(jackClient, jack_port_name(jackOutputs[i]), ports[i]);
-                    // // TODO: Disabled internal auto-connect in favor of external
-                    // startup script!
-                    available_outputs++;
-                } else {
-                    // Remove the JACK client output port that can not be connected to the
-                    // soundcard audio output (playback) port.
-                    jack_port_unregister(jackClient, jackOutputs[i]);
-                    // TODO This break is a workaround that this whole loop doesn't work.
-                    break;
-                }
-            }
-        }
+    //     // Proceed only if the soundcard has physical audio input (capture) ports!
+    //     if (running) {
+    //         for (int i = 0; i < twonderConf->noSources; ++i) {
+    //             if (!((ports[i] == nullptr)
+    //                   || (jack_port_name(jackInputs[i])
+    //                       == nullptr))) {  // Do not connect to NULL ports
+    //                  jack_connect(jackClient, ports[i], jack_port_name(jackInputs[i]));
+    //                 available_inputs++;
+    //             } else {
+    //                 // Remove JACK client input ports that have no corresponding soundcard
+    //                 // audio input (capture) port.
+    //                 jack_port_unregister(jackClient, jackInputs[i]);
+    //             }
+    //         }
+    //     }
 
-        jack_free(ports);  // Free the memory allocated by jack_get_ports(...)
-    }
+    //     jack_free(ports);  // Free the memory allocated by jack_get_ports(...)
+    // }
+
+    // // 10. Connect the output ports of the JACK client with the audio outputs of the
+    // // soundcard (JACK calls them "input ports", because they are writable by the JACK
+    // // client).
+    // if (running) {
+    //     const char** ports = jack_get_ports(jackClient, nullptr, nullptr,
+    //                                         JackPortIsPhysical | JackPortIsInput);
+
+    //     if (ports == nullptr) {
+    //         running = false;
+    //         std::cerr << "[JACK][ERROR]: No physical audio output (playback) ports are "
+    //                      "available!\n";
+    //     }
+
+    //     // Proceed only if the soundcard has physical audio output (playback) ports and
+    //     // take care of the usable loudspeakers!
+    //     if (running) {
+    //         for (size_t i = 0; i < speakers->size(); ++i) {
+    //             if (!((jack_port_name(jackOutputs[i]) == nullptr)
+    //                   || (ports[i] == nullptr))) {  // Do not connect to NULL ports
+    //                 jack_connect(jackClient, jack_port_name(jackOutputs[i]), ports[i]);
+    //                 available_outputs++;
+    //             } else {
+    //                 // Remove the JACK client output port that can not be connected to the
+    //                 // soundcard audio output (playback) port.
+    //                 jack_port_unregister(jackClient, jackOutputs[i]);
+    //             }
+    //         }
+    //     }
+
+    //     jack_free(ports);  // Free the memory allocated by jack_get_ports(...)
+    // }
 
     // 11. Everything is set up correctly, now print a final message with the parameters
     // of the JACK client.
     if (running) {
         std::cout << "\n" << std::endl;
+ 
+        /* ==========================================================================
 
-        // Correct the number of available sources (inputs).
-        if (twonderConf->noSources != available_inputs) {
-            std::cout << "[JACK][WARNING]: Total number of sources changed from "
-                      << twonderConf->noSources << " to " << available_inputs
-                      << " due to input limitations of the soundcard!" << std::endl;
-            twonderConf->noSources = available_inputs;
-        }
+        We will not check if we have enough inputs and outputs, because we will connect
+        the JACK client ports differently
 
-        // Correct the number of available speakers (outputs).
-        if (static_cast<int>(speakers->size()) != available_outputs) {
-            std::cout << "[JACK][WARNING]: Total number of speakers changed from "
-                      << speakers->size() << " to " << available_outputs
-                      << " due to output limitations of the soundcard!" << std::endl;
-            speakers->resize(available_outputs);
-        }
+        ========================================================================== */   
+
+        // // Correct the number of available sources (inputs).
+        // if (twonderConf->noSources != available_inputs) {
+        //     std::cout << "[JACK][WARNING]: Total number of sources changed from "
+        //               << twonderConf->noSources << " to " << available_inputs
+        //               << " due to input limitations of the soundcard!" << std::endl;
+        //     twonderConf->noSources = available_inputs;
+        // }
+
+        // // Correct the number of available speakers (outputs).
+        // if (static_cast<int>(speakers->size()) != available_outputs) {
+        //     std::cout << "[JACK][WARNING]: Total number of speakers changed from "
+        //               << speakers->size() << " to " << available_outputs
+        //               << " due to output limitations of the soundcard!" << std::endl;
+        //     speakers->resize(available_outputs);
+        // }
 
         std::chrono::duration<float, std::milli> delay_msec(
             1.0 / jack_get_sample_rate(jackClient) * jack_get_buffer_size(jackClient)
@@ -574,7 +582,7 @@ int oscSrcPositionHandler(handlerArgs) {
     }
 
     if (twonderConf->verbose) {
-        std::cout << "osc-position: src=" << sourceId << " x=" << newX << " y=" << newY
+        std::cout << "[V-OSCServer] position: src=" << sourceId << " x=" << newX << " y=" << newY
                   << " ts=" << time << " dur=" << duration << std::endl;
     }
 
@@ -609,7 +617,7 @@ int oscSrcPositionHandler3D(handlerArgs) {
     }
 
     if (twonderConf->verbose) {
-        std::cout << "osc-position: src=" << sourceId << " x=" << newX << " y=" << newY
+        std::cout << "[V-OSCServer] position: src=" << sourceId << " x=" << newX << " y=" << newY
                   << " z=" << newZ << " ts=" << time << " dur=" << duration << std::endl;
     }
 
@@ -642,7 +650,7 @@ int oscSrcAngleHandler(handlerArgs) {
     }
 
     if (twonderConf->verbose) {
-        std::cout << "osc-angle: src=" << sourceId << " a=" << newAngle << " ts=" << time
+        std::cout << "[V-OSCServer] angle: src=" << sourceId << " a=" << newAngle << " ts=" << time
                   << " dur=" << duration << std::endl;
     }
 
@@ -677,7 +685,7 @@ int oscSrcTypeHandler(handlerArgs) {
     if (argc == 3) { time = argv[2]->f; }
 
     if (twonderConf->verbose) {
-        std::cout << "osc-type-change: src=" << sourceId << " type=" << newType
+        std::cout << "[V-OSCServer] type-change: src=" << sourceId << " type=" << newType
                   << " ts=" << time << std::endl;
     }
 
@@ -699,7 +707,7 @@ int oscSrcDopplerHandler(handlerArgs) {
     if (argc == 3) { time = argv[2]->f; }
 
     if (twonderConf->verbose) {
-        std::cout << "osc-doppler-change: src=" << sourceId << " doppler=" << useDoppler
+        std::cout << "[V-OSCServer] doppler-change: src=" << sourceId << " doppler=" << useDoppler
                   << " ts=" << time << std::endl;
     }
 
@@ -722,7 +730,7 @@ int oscReplyHandler(handlerArgs) {
 int oscSrcActivateHandler(handlerArgs) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return 0; }
 
-    if (twonderConf->verbose) { std::cout << "osc-activate " << argv[0]->i << std::endl; }
+    if (twonderConf->verbose) { std::cout << "[V-OSCServer] activated source: " << argv[0]->i << std::endl; }
 
     sources->at(argv[0]->i)->active = true;
 
@@ -733,7 +741,7 @@ int oscSrcDeactivateHandler(handlerArgs) {
     if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return 0; }
 
     if (twonderConf->verbose) {
-        std::cout << "osc-deactivate " << argv[0]->i << std::endl;
+        std::cout << "[V-OSCServer] deactivated source: " << argv[0]->i << std::endl;
     }
 
     sources->at(argv[0]->i)->active = false;
@@ -758,6 +766,9 @@ int oscNoSourcesHandler(handlerArgs) {
             twonderConf->noSources = argv[0]->i;
             noSourcesIsSet         = true;
             sources = new SourceArray(twonderConf->noSources, twonderConf->negDelayInit);
+            if (twonderConf->verbose) {
+                std::cout << "[V-OSCServer] no-sources: " << argv[0]->i << std::endl;
+            }
         }
     }
 
@@ -774,6 +785,10 @@ int oscRenderPolygonHandler(handlerArgs) {
     for (int i = 1; i <= noPoints; ++i) {
         twonderConf->renderPolygon.push_back(
             Vector3D(argv[(i * 3) - 1]->f, argv[i * 3]->f, argv[(i * 3) + 1]->f));
+            if (twonderConf->verbose) {
+                std::cout << "[V-OSCServer] render-polygon: x=" << argv[(i * 3) - 1]->f
+                          << " y=" << argv[i * 3]->f << " z=" << argv[(i * 3) + 1]->f << std::endl;
+            }
     }
 
     // TODO: calculate elevation of speakers
@@ -908,17 +923,18 @@ int main(int argc, char* argv[]) {
 
     // wait for cwonder to send setup data
     // reconnect if it doesn't work
+    // its cwonder which activates the sources with osc commands
     while (twonderConf->noSources == 0) {
-        static int timeoutCounter = 0;
         std::this_thread::sleep_for(std::chrono::seconds(1));
-
-        if (timeoutCounter % 15 == 15) {
             std::cerr << "Cannot connect to cwonder...\n";
+            if (twonderConf->verbose) {
+            std::cout << "Trying to reconnect to cwonder..." << std::endl;
+            }
             lo_send(twonderConf->cwonderAddr, "/WONDER/stream/render/connect", "s",
             twonderConf->name.c_str());
-        }
-        timeoutCounter++;
     }
+
+    // if cwonder does not respond we are not going to exit the loop above
 
     std::cout << "Connection to cwonder established.\n";
 
@@ -929,7 +945,10 @@ int main(int argc, char* argv[]) {
     }
 
     // event loop
-    while (true) { std::this_thread::sleep_for(std::chrono::seconds(10)); }
+    // TODO: if cwonder is no more running the noSources shall be set to 0 and the we should try to reconnect
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::seconds(1)); 
+    }
 
     // cleanup before exiting
     exitCleanupFunction();
