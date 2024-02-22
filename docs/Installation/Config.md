@@ -1,10 +1,10 @@
 # Wonder Configuration
 
-Wonder's configuration files must be put in `/etc/wonder`.
+Wonder's configuration files must be put in `/usr/local/etc/wonder`.
 
 ## Cluster configuration
 
-`/etc/wonder/cluster.conf` sets environment variables for wonder. You should
+`/usr/local/etc/wonder/cluster.conf` sets environment variables for wonder. You should
 set the IP address of your CWonder machine, the JACK setup information
 and the negative delay length in meters for focused sources.
 
@@ -31,7 +31,7 @@ JACK_OUTPUTS=128;
 
 ## CWonder 
 
-`/etc/wonder/cwonder_config.xml` sets the project path, number of sources and room geometry.
+`/usr/local/etc/wonder/cwonder_config.xml` sets the project path, number of sources and room geometry.
 
 ## TWonder
 
