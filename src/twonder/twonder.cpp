@@ -720,8 +720,8 @@ int oscSrcDopplerHandler(handlerArgs) {
 
 int oscReplyHandler(handlerArgs) {
     if (twonderConf->verbose) {
-        std::cout << "[V-OSCServer] reply to: " << &argv[0]->s << " state=" << argv[1]->i
-                  << " msg=" << &argv[2]->s << std::endl;
+        std::cout << "[V-OSCServer] reply to: " << &argv[0]->s << " error number = " << argv[1]->i
+                  << " error message = " << &argv[2]->s << std::endl;
     }
 
     return 0;
@@ -894,12 +894,13 @@ int main(int argc, char* argv[]) {
 
     // multiple entries for one message (e.g. type) are just for convenience and will use
     // a value of 0 for timestamp and/or duration
+    // after the address we have the message types ie. "sis" means string, int, string
     oscServer->addMethod("/WONDER/reply", "sis", oscReplyHandler);
     oscServer->addMethod("/WONDER/source/activate", "i", oscSrcActivateHandler);
     oscServer->addMethod("/WONDER/source/deactivate", "i", oscSrcDeactivateHandler);
     oscServer->addMethod("/WONDER/source/position", "iff", oscSrcPositionHandler);
     oscServer->addMethod("/WONDER/source/position", "ifff", oscSrcPositionHandler);
-    oscServer->addMethod("/WONDER/source/position", "ifff", oscSrcPositionHandler);
+    oscServer->addMethod("/WONDER/source/position", "iffff", oscSrcPositionHandler);
     oscServer->addMethod("/WONDER/source/position3D", "ifff", oscSrcPositionHandler3D);
     oscServer->addMethod("/WONDER/source/position3D", "iffff", oscSrcPositionHandler3D);
     oscServer->addMethod("/WONDER/source/position3D", "ifffff", oscSrcPositionHandler3D);
@@ -926,10 +927,7 @@ int main(int argc, char* argv[]) {
     // its cwonder which activates the sources with osc commands
     while (twonderConf->noSources == 0) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
-            std::cerr << "Cannot connect to cwonder...\n";
-            if (twonderConf->verbose) {
-            std::cout << "Trying to reconnect to cwonder..." << std::endl;
-            }
+            std::cerr << "[twonder] Cannot connect to cwonder, retry..." << std::endl;
             lo_send(twonderConf->cwonderAddr, "/WONDER/stream/render/connect", "s",
             twonderConf->name.c_str());
     }
