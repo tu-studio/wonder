@@ -6,6 +6,7 @@ cwonder_src = ['cwonder.cpp',
 	       'oscping.cpp',
 	       'oscstream.cpp']
 
+# Install true installs the executable to the /usr/local/bin directory
 executable('cwonder', cwonder_src,
            include_directories: inc,
            dependencies: [xml_dep, thread_dep, liblo_dep, libsystemd_dep],
