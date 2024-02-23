@@ -13,6 +13,7 @@ message('bindir: the directory where the binary files are installed: ' + get_opt
 conf_data = configuration_data()
 conf_data.set('share_dir', get_option('prefix') / get_option('datadir') / 'wonder')
 conf_data.set('bin_dir', get_option('prefix') / get_option('bindir'))
+
 configure_file(input : 'twonder.service.in',
                output : 'twonder.service',
                configuration : conf_data,
@@ -23,22 +24,20 @@ configure_file(input : 'cwonder.service.in',
                configuration : conf_data,
                install_dir : '/etc/systemd/user')
 
-configure_file(input : 'jfwonder.service.in',
-               output : 'jfwonder.service',
-               configuration : conf_data,
-               install_dir : '/etc/systemd/user')
+# everything after the @ is inserted into the service file, where the %i is
+# in our case its the username of the user that the service is started for
 
-
-# conf_data = configuration_data()
-# conf_data.set('share_dir', get_option('prefix') / get_option('datadir') / 'wonder')
 # configure_file(input : 'twonder@.service.in',
 #                output : 'twonder@.service',
 #                configuration : conf_data,
-#                install_dir : '/usr/lib/systemd/system')
+#                install_dir : '/etc/systemd/system')
 
-# conf_data2 = configuration_data()
-# conf_data2.set('bin_dir', get_option('prefix') / get_option('bindir'))
 # configure_file(input : 'cwonder@.service.in',
 #                output : 'cwonder@.service',
 #                configuration : conf_data2,
-#                install_dir : '/usr/lib/systemd/system')
+#                install_dir : '/etc/systemd/system')
+
+# configure_file(input : 'jfwonder.service.in',
+#                output : 'jfwonder.service',
+#                configuration : conf_data,
+#                install_dir : '/etc/systemd/user')
