@@ -1,9 +1,10 @@
 [Unit]
 Description=CWonder
-After=network-online.target jfwonder.service
-Requires=jfwonder.service network-online.target
+After=network-online.target
+Requires=network-online.target
 
 [Install]
+# The multi-user.target is the default target for headless systems
 WantedBy=multi-user.target
 
 [Service]
