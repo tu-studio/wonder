@@ -1,8 +1,8 @@
 [Unit]
 Description=CWonder
-After=network-online.target
 
 [Install]
+# This is no multi-user.target for a user service, therefore we use default.target
 WantedBy=default.target
 
 [Service]
