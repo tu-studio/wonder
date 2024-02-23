@@ -19,6 +19,8 @@ endif
 
 subdir('src/include')
 inc = include_directories('src/include')
+lib_dir = get_option('prefix') / get_option('libdir')
+message('Library directory: ' + lib_dir)
 
 subdir('src/lib')
 subdir('src/cwonder')
