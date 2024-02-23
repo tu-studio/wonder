@@ -24,6 +24,8 @@ configure_file(input : 'cwonder.service.in',
                configuration : conf_data,
                install_dir : '/etc/systemd/user')
 
+install_data('jack.service', install_dir : '/etc/systemd/user')
+
 # everything after the @ is inserted into the service file, where the %i is
 # in our case its the username of the user that the service is started for
 
