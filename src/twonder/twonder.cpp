@@ -926,10 +926,14 @@ int main(int argc, char* argv[]) {
     // reconnect if it doesn't work
     // its cwonder which activates the sources with osc commands
     while (twonderConf->noSources == 0) {
+        // BUGFIX: When twonder sends two connects immediately after each other, this causes sources inside the polygon to not work. WHY??!
+        int timeout = 0;
         std::this_thread::sleep_for(std::chrono::seconds(1));
+        if (timeout % 3 == 2) {
             std::cerr << "[twonder] Cannot connect to cwonder, retry..." << std::endl;
-            lo_send(twonderConf->cwonderAddr, "/WONDER/stream/render/connect", "s",
-            twonderConf->name.c_str());
+            lo_send(twonderConf->cwonderAddr, "/WONDER/stream/render/connect", "s", twonderConf->name.c_str());
+        }
+        timeout++;
     }
 
     // if cwonder does not respond we are not going to exit the loop above
