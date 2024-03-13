@@ -9,7 +9,7 @@ WantedBy=default.target
 [Service]
 Type=forking
 PrivateTmp=true
-WorkingDirectory=@share_dir@/scripts/twonder/
+EnvironmentFile=/usr/local/etc/wonder/cluster.conf
 ExecStart=@share_dir@/scripts/twonder/start-twonder.sh
 LimitRTPRIO=95
 LimitRTTIME=infinity
