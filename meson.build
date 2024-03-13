@@ -39,22 +39,16 @@ if systemd_dep.found()
 endif
 
 # The configuration directory for locally installed programs should be /usr/local/etc/wonder and not to /etc/wonder as before
-if get_option('location') == 'none'
-	message('No location configuration selected.')
-elif get_option('location') == 'EN325'
-	install_subdir('configs/EN325', strip_directory: true, install_dir : get_option('sysconfdir') / 'wonder' )
-elif get_option('location') == 'HUFO'
-	install_subdir('configs/HuFo', strip_directory: true, install_dir : get_option('sysconfdir') / 'wonder' )
-endif
+# Configuration files examples are in config/examples and could be installed as follows:
+# subdir('config/examples/EN325')
+# For this to work the option 'location' and 'node' need to be set in the meson.options file
 
 # With install_dir: install_dir: get_option('datadir') the files are installed in the usr/local/share/ directory
 install_subdir('scripts', install_dir: get_option('datadir') / 'wonder')
 install_subdir('dtd', install_dir: get_option('datadir') / 'wonder')
-message('Data directory: ' + get_option('datadir'))
 
 summary({'CWonder': true,
 	'TWonder': true,
 	'JFWonder': get_option('jfwonder'),
 	'XWonder': get_option('xwonder'),
 	'ScorePlayer': get_option('scoreplayer')}, bool_yn: true, section: 'Components')
-summary({'Location': get_option('location'), 'Directory': get_option('prefix') / get_option('sysconfdir') / 'wonder'}, section: 'Configuration')

@@ -8,3 +8,5 @@
 6. All those scripts in the scripts directory are not needed right? Except for the start-twonder.sh script.
 7. Where is the Dante pcie driver from?
 8. Is pinging really needed for the twonder and cwonder services? And if not, cann't we just go without jfwonder?
+9. Do you know what the twonder_config.xml file is for and the the Negative Delay in the cluster configuration?
+10. Why shall we need jfwonder?
