@@ -31,8 +31,8 @@
 <!DOCTYPE cwonder_config SYSTEM "cwonder_config.dtd">
 
 <cwonder_config>
-<settings projectpath="/home/wfs/wonder3/projects" maxNoSources="64" />
-    <renderpolygon roomname="TU_Berlin_newConfig">
+<settings projectpath="/home/wfs/wonder3/projects" maxNoSources="128" />
+    <renderpolygon roomname="EN325">
 		<point x="-1.620" y="3.023" z="1.4"/>
 		<point x="1.620" y="3.023" z="1.4"/>
 		<point x="2.430" y="1.620" z="1.4"/>
