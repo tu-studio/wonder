@@ -80,6 +80,6 @@ can change the owner of files in your build directory to root. Running
 
 |Files|Location|
 |---    |---    |
-|Startup Scripts |*/usr/share/wonder/scripts*|
-|XML DTD |*/usr/share/wonder/dtd*|
-|Configuration files|*/etc/wonder*|
+|Startup Scripts |*/usr/local/share/wonder/scripts*|
+|XML DTD |*/usr/local/share/wonder/dtd*|
+|Configuration files|*/usr/local/etc/wonder*|

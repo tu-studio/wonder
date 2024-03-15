@@ -14,37 +14,36 @@ libsystemd_dep = dependency('libsystemd', required: get_option('systemd'))
 fmt_dep = dependency('fmt')
 
 if libsystemd_dep.found()
-	defines += '-DWONDER_SYSTEMD'
+	defines += '-DWONDER_SYSTEMD' # the defines are passed to the excecutables as cppargs
 endif
 
 subdir('src/include')
 inc = include_directories('src/include')
+lib_dir = get_option('prefix') / get_option('libdir')
+message('Library directory: ' + lib_dir)
 
 subdir('src/lib')
 subdir('src/cwonder')
-subdir('src/jfwonder')
-subdir('src/score')
+# subdir('src/jfwonder')
+# subdir('src/score')
 subdir('src/twonder')
-if get_option('xwonder') == true
-	qt5 = import('qt5')
-	qt5_dep = dependency('qt5', modules: ['Core', 'Gui', 'Widgets', 'OpenGL', 'Xml'], include_type: 'system')
-	glu_dep = dependency('glu')
-	subdir('src/xwonder')
-endif
+# if get_option('xwonder') == true
+# 	qt5 = import('qt5')
+# 	qt5_dep = dependency('qt5', modules: ['Core', 'Gui', 'Widgets', 'OpenGL', 'Xml'], include_type: 'system')
+# 	glu_dep = dependency('glu')
+# 	subdir('src/xwonder')
+# endif
 
 if systemd_dep.found()
 	subdir('services')
 endif
 
-config_dir = '/etc/wonder'
-if get_option('location') == 'none'
-	message('No location configuration selected.')
-elif get_option('location') == 'EN325'
-	install_subdir('configs/EN325', strip_directory: true, install_dir : config_dir )
-elif get_option('location') == 'HUFO'
-	install_subdir('configs/HuFo', strip_directory: true, install_dir : config_dir )
-endif
+# The configuration directory for locally installed programs should be /usr/local/etc/wonder and not to /etc/wonder as before
+# Configuration files examples are in config/examples and could be installed as follows:
+# subdir('config/examples/EN325')
+# For this to work the option 'location' and 'node' need to be set in the meson.options file
 
+# With install_dir: install_dir: get_option('datadir') the files are installed in the usr/local/share/ directory
 install_subdir('scripts', install_dir: get_option('datadir') / 'wonder')
 install_subdir('dtd', install_dir: get_option('datadir') / 'wonder')
 
@@ -53,4 +52,3 @@ summary({'CWonder': true,
 	'JFWonder': get_option('jfwonder'),
 	'XWonder': get_option('xwonder'),
 	'ScorePlayer': get_option('scoreplayer')}, bool_yn: true, section: 'Components')
-summary({'Location': get_option('location'), 'Directory': config_dir}, section: 'Configuration')

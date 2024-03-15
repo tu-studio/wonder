@@ -1,6 +1,6 @@
 [Unit]
 Description=TWonder
-After=network-online.target jack.service
+After=jack.service
 Requires=jack.service
 
 [Install]
@@ -9,8 +9,7 @@ WantedBy=default.target
 [Service]
 Type=forking
 PrivateTmp=true
-WorkingDirectory=@share_dir@/scripts/twonder/
-ExecStartPre=sleep 5
+EnvironmentFile=/usr/local/etc/wonder/cluster.conf
 ExecStart=@share_dir@/scripts/twonder/start-twonder.sh
 LimitRTPRIO=95
 LimitRTTIME=infinity

@@ -1,33 +1,19 @@
-conf_data = configuration_data()
-conf_data.set('share_dir', get_option('prefix') / get_option('datadir') / 'wonder')
-configure_file(input : 'twonder@.service.in',
-               output : 'twonder@.service',
-               configuration : conf_data,
-               install_dir : '/usr/lib/systemd/system')
+# configure_file takes a file and replaces the @variables@ with the values from the configuration data
+# the configuration data is a dictionary of key value pairs
 
-conf_data2 = configuration_data()
-conf_data2.set('bin_dir', get_option('prefix') / get_option('bindir'))
-configure_file(input : 'cwonder@.service.in',
-               output : 'cwonder@.service',
-               configuration : conf_data2,
-               install_dir : '/usr/lib/systemd/system')
+# the /usr/lib/systemd/user directory is used for user services but should only contain systemd files installed by the package manager of our distribution
+# therefore we use the /etc/systemd/user directory which is used for user services that are installed by the user
+
 conf_data = configuration_data()
 conf_data.set('share_dir', get_option('prefix') / get_option('datadir') / 'wonder')
+conf_data.set('bin_dir', get_option('prefix') / get_option('bindir'))
+
 configure_file(input : 'twonder.service.in',
                output : 'twonder.service',
                configuration : conf_data,
-               install_dir : '/usr/lib/systemd/user')
+               install_dir : '/etc/systemd/user')
 
-conf_data2 = configuration_data()
-conf_data2.set('bin_dir', get_option('prefix') / get_option('bindir'))
 configure_file(input : 'cwonder.service.in',
                output : 'cwonder.service',
-               configuration : conf_data2,
-               install_dir : '/usr/lib/systemd/user')
-
-conf_data2 = configuration_data()
-conf_data2.set('bin_dir', get_option('prefix') / get_option('bindir'))
-configure_file(input : 'jfwonder.service.in',
-               output : 'jfwonder.service',
-               configuration : conf_data2,
-               install_dir : '/usr/lib/systemd/user')
+               configuration : conf_data,
+               install_dir : '/etc/systemd/user')

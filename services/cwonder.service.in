@@ -1,15 +1,15 @@
 [Unit]
 Description=CWonder
-After=network-online.target
 
 [Install]
+# There is no multi-user.target for a user service, therefore we use default.target
 WantedBy=default.target
 
 [Service]
 Type=notify
 PrivateTmp=true
-EnvironmentFile=/etc/wonder/cluster.conf
-ExecStart=@bin_dir@/cwonder -c /etc/wonder/cwonder_config.xml -r 2 -b
+EnvironmentFile=/usr/local/etc/wonder/cluster.conf
+ExecStart=@bin_dir@/cwonder -c /usr/local/etc/wonder/cwonder/cwonder_config.xml -r 2 -b
 LimitRTPRIO=95
 LimitRTTIME=infinity
 LimitMEMLOCK=infinity
