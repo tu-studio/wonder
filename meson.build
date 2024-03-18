@@ -15,7 +15,7 @@ subdir('src/include')
 inc = include_directories('src/include')
 lib_dir = get_option('prefix') / get_option('libdir')
 
-if get_option('versioned_installation')
+if get_option('versioned_install')
   	install_postfix = '-' + meson.project_version()
 else
 	install_postfix = ''
@@ -36,7 +36,7 @@ endif
 # With install_dir: install_dir: get_option('datadir') the files are installed in the usr/local/share/ directory
 install_subdir('scripts', install_dir: get_option('datadir') / 'wonder' + install_postfix)
 install_subdir('dtd', install_dir: get_option('datadir') / 'wonder' + install_postfix)
-if get_option('versioned_installation')
+if get_option('versioned_install')
 meson.add_install_script(
 	'sh', '-c',
 	'ln -s -f @0@ @1@'.format(
@@ -48,5 +48,5 @@ endif
 summary({'CWonder': true,
 		'TWonder': true,
 		'JFWonder': get_option('jfwonder'),
-		'Versioned Installation': get_option('versioned_installation')},
+		'Versioned Installation': get_option('versioned_install')},
 		bool_yn: true, section: 'Options')

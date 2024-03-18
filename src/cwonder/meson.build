@@ -16,7 +16,7 @@ executable('cwonder' + install_postfix,
             link_with: libwonder,
             install: true)
 
-if get_option('versioned_installation')
+if get_option('versioned_install')
 meson.add_install_script(
 	'sh', '-c',
 	'ln -s -f @0@ @1@'.format(

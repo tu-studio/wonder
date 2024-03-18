@@ -1,2 +1,2 @@
 option('jfwonder', type : 'boolean', value : false)
-option('versioned_installation', type : 'boolean', value : false)
+option('versioned_install', type : 'boolean', value : false)
