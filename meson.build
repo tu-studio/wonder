@@ -1,7 +1,9 @@
 project('wonder', 'cpp',
-        version: '4.0.0',
+        version: run_command('git', 'describe', '--dirty', check: true).stdout().strip(),
         license: 'GPL-3.0-or-later',
         default_options: 'cpp_std=c++17')
+	
+message('Building Wonder version ' + meson.project_version())
 
 defines = []
 
