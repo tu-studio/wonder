@@ -1,4 +1,2 @@
-option('xwonder', type : 'boolean', value : false)
-option('jfwonder', type : 'boolean', value : true)
-option('scoreplayer', type : 'boolean', value : true)
-option('systemd', type : 'feature', value : 'auto')
+option('jfwonder', type : 'boolean', value : false)
+option('versioned_installation', type : 'boolean', value : false)

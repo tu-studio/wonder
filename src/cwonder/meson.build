@@ -7,11 +7,20 @@ cwonder_src = ['cwonder.cpp',
 	       'oscstream.cpp']
 
 # Install true installs the executable to the /usr/local/bin directory
-executable('cwonder', cwonder_src,
-           include_directories: inc,
-           install_rpath : lib_dir,
-           dependencies: [xml_dep, thread_dep, liblo_dep, libsystemd_dep],
-           cpp_args: defines,
-           link_with: libwonder,
-           install: true
-          )
+executable('cwonder' + install_postfix, 
+            cwonder_src,
+            include_directories: inc,
+            install_rpath : lib_dir,
+            dependencies: [xml_dep, thread_dep, liblo_dep],
+            cpp_args: defines,
+            link_with: libwonder,
+            install: true)
+
+if get_option('versioned_installation')
+meson.add_install_script(
+	'sh', '-c',
+	'ln -s -f @0@ @1@'.format(
+        get_option('prefix') / get_option('bindir') / 'cwonder' + install_postfix,
+        get_option('prefix') / get_option('bindir') / 'cwonder')
+)
+endif
