@@ -33,6 +33,8 @@
 <!-- original values (TU): limit = 2.8, margin = 0.5, distance = 0.1, refence=3.3-->
 
 <twonder_config>
+    <!-- focus limit is the radius of the area when a speaker is still considered to play a source, margin is the slope to zero -->
     <focus limit="2.8" margin="0.5" />
+    <!-- speaker distance is the distance between the speakers in the array, reference  -->
     <speakers distance="0.1" reference="3.3" /> 
 </twonder_config>
