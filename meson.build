@@ -11,7 +11,9 @@ thread_dep = dependency('threads')
 xml_dep = dependency('libxml++-3.0', fallback: ['libxml++-3.0', 'xmlxx_dep'])
 jack_dep = dependency('jack')
 liblo_dep = dependency('liblo')
-fmt_dep = dependency('fmt')
+if get_option('jfwonder')
+	fmt_dep = dependency('fmt')
+endif
 
 subdir('src/include')
 inc = include_directories('src/include')
