@@ -1,9 +1,6 @@
 #!/bin/bash
 
-# This is the script with which we start twonder instances, it is executed by the systemd service.
-
-# This configuration file should be sourced by the systemd service
-# source /usr/local/etc/wonder/cluster.conf
+# This is the script with which we start twonder instances, it is executed by the systemd service. Its variables are set in the systemd environment file.
 
 i=1;
 
