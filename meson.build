@@ -26,10 +26,14 @@ else
 endif
 
 subdir('src/lib')
-subdir('src/cwonder')
-subdir('src/twonder')
+if get_option('cwonder')
+	subdir('src/cwonder')
+endif
+if get_option('twonder')
+	subdir('src/twonder')
+endif
 if get_option('jfwonder')
-  subdir('src/jfwonder')
+	subdir('src/jfwonder')
 endif
 subdir('systemd')
 
@@ -39,8 +43,14 @@ subdir('systemd')
 # For this to work the option 'location' and 'node' need to be set in the meson.options file
 
 # With install_dir: install_dir: get_option('datadir') the files are installed in the usr/local/share/ directory
-install_subdir('scripts', install_dir: get_option('datadir') / 'wonder' + install_postfix)
-install_subdir('dtd', install_dir: get_option('datadir') / 'wonder' + install_postfix)
+if get_option('twonder')
+	install_data('scripts/start_twonder.sh', install_dir: get_option('datadir') / 'wonder' + install_postfix + '/scripts')
+	install_data(['dtd/twonder_config.dtd', 'dtd/twonder_speakerarray.dtd'], install_dir: get_option('datadir') / 'wonder' + install_postfix + '/dtd')
+endif
+if get_option('cwonder')
+	install_data('dtd/cwonder_config.dtd', install_dir: get_option('datadir') / 'wonder' + install_postfix + '/dtd')
+endif
+
 # -n option is used to overwrite symlinks to directories without dereferencing them
 if get_option('versioned_install')
 meson.add_install_script(
@@ -51,8 +61,8 @@ meson.add_install_script(
 )
 endif
 
-summary({'CWonder': true,
-		'TWonder': true,
+summary({'TWonder': get_option('twonder'),
+		 'CWonder': get_option('cwonder'),
 		'JFWonder': get_option('jfwonder'),
 		'Versioned Installation': get_option('versioned_install')},
 		bool_yn: true, section: 'Options')
