@@ -31,6 +31,7 @@ subdir('src/twonder')
 if get_option('jfwonder')
   subdir('src/jfwonder')
 endif
+subdir('systemd')
 
 # The configuration directory for locally installed programs should be /usr/local/etc/wonder and not to /etc/wonder as before
 # Configuration files examples are in config/examples and could be installed as follows:
