@@ -38,10 +38,11 @@ endif
 # With install_dir: install_dir: get_option('datadir') the files are installed in the usr/local/share/ directory
 install_subdir('scripts', install_dir: get_option('datadir') / 'wonder' + install_postfix)
 install_subdir('dtd', install_dir: get_option('datadir') / 'wonder' + install_postfix)
+# -n option is used to overwrite symlinks to directories without dereferencing them
 if get_option('versioned_install')
 meson.add_install_script(
 	'sh', '-c',
-	'ln -s -f @0@ @1@'.format(
+	'ln -s -f -n @0@ @1@'.format(
         get_option('prefix') / get_option('datadir') / 'wonder' + install_postfix + '/',
         get_option('prefix') / get_option('datadir') / 'wonder')
 )
