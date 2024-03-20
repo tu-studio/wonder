@@ -11,8 +11,16 @@ thread_dep = dependency('threads')
 xml_dep = dependency('libxml++-3.0', fallback: ['libxml++-3.0', 'xmlxx_dep'])
 jack_dep = dependency('jack')
 liblo_dep = dependency('liblo')
+libsystemd_dep = dependency('libsystemd', required: get_option('systemd'))
+
 if get_option('jfwonder')
 	fmt_dep = dependency('fmt')
+endif
+
+
+if libsystemd_dep.found()
+	message('building with systemd support')
+	defines += '-DWONDER_SYSTEMD'
 endif
 
 subdir('src/include')
@@ -35,7 +43,10 @@ endif
 if get_option('jfwonder')
 	subdir('src/jfwonder')
 endif
-subdir('systemd')
+
+if libsystemd_dep.found()
+	subdir('systemd')
+endif
 
 # The configuration directory for locally installed programs should be /usr/local/etc/wonder and not to /etc/wonder as before
 # Configuration files examples are in config/examples and could be installed as follows:

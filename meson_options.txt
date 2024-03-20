@@ -1,4 +1,5 @@
 option('twonder', type : 'boolean', value : true)
 option('cwonder', type : 'boolean', value : false)
 option('jfwonder', type : 'boolean', value : false)
+option('systemd', type : 'feature', value : 'auto')
 option('versioned_install', type : 'boolean', value : false)

@@ -11,7 +11,7 @@ executable('cwonder' + install_postfix,
             cwonder_src,
             include_directories: inc,
             install_rpath : lib_dir,
-            dependencies: [xml_dep, thread_dep, liblo_dep],
+            dependencies: [xml_dep, thread_dep, liblo_dep, libsystemd_dep],
             cpp_args: defines,
             link_with: libwonder,
             install: true)
