@@ -917,28 +917,25 @@ int main(int argc, char* argv[]) {
     oscServer->addMethod("/WONDER/stream/render/ping", "i", oscPingHandler);
     oscServer->addMethod(nullptr, nullptr, oscGenericHandler);
     oscServer->start();
-
-    // connect to cwonder
-    lo_send(twonderConf->cwonderAddr, "/WONDER/stream/render/connect", "s",
-            twonderConf->name.c_str());
-
+    
     // wait for cwonder to send setup data
     // reconnect if it doesn't work
     // its cwonder which activates the sources with osc commands
+    int timeout = 0;
     while (twonderConf->noSources == 0) {
         // BUGFIX: When twonder sends two connects immediately after each other, this causes sources inside the polygon to not work. WHY??!
-        int timeout = 0;
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        if (timeout % 3 == 2) {
-            std::cerr << "[twonder] Cannot connect to cwonder, retry..." << std::endl;
+        if (timeout % 4 == 0) {
+            std::cout << "[twonder] Sending new connect message to cwonder." << std::endl;
             lo_send(twonderConf->cwonderAddr, "/WONDER/stream/render/connect", "s", twonderConf->name.c_str());
+        } else {
+            std::this_thread::sleep_for(std::chrono::seconds(1));
         }
         timeout++;
     }
 
     // if cwonder does not respond we are not going to exit the loop above
 
-    std::cout << "Connection to cwonder established.\n";
+    std::cout << "Connection to cwonder established." << std::endl;
 
     // Initialize JACK
     if (!initialize_jack()) {
