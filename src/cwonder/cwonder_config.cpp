@@ -4,7 +4,7 @@
  *  http://swonder.sourceforge.net                                                   *
  *                                                                                   *
  *                                                                                   *
- *  Technische Universität Berlin, Germany                                           *
+ *  Technische Universitï¿½t Berlin, Germany                                           *
  *  Audio Communication Group                                                        *
  *  www.ak.tu-berlin.de                                                              *
  *  Copyright 2006-2008                                                              *
@@ -35,6 +35,8 @@
 #include <cstring>
 #include <fstream>
 #include <sstream>
+#include <iostream>
+
 
 #include "wonder_path.h"
 
@@ -125,6 +127,7 @@ int CwonderConfig::readConfig() {
     std::ifstream fin(cwonderConfigFile.c_str(), std::ios_base::in);
 
     if (!fin.is_open()) {
+        std::cout << "[Config][ERROR] file " << cwonderConfigFile << " does not exist." << std::endl;
         return 1;  // file does not exist
     }
 
@@ -146,6 +149,7 @@ int CwonderConfig::readConfig() {
                 fin.open(dtdPath.c_str(), std::ios_base::in);
 
                 if (!fin.is_open()) {
+                    std::cout << "[Config][ERROR] dtd file does not exist." << std::endl;
                     return 2;  // dtd file does not exist
                 }
 
@@ -154,6 +158,7 @@ int CwonderConfig::readConfig() {
                     validator.validate(parser.get_document());
                 }
                 catch (const xmlpp::validity_error& ex) {
+                    std::cout << "[Config][ERROR] dtd validation error" << std::endl;
                     return 3;  // dtd error
                 }
 
@@ -163,6 +168,7 @@ int CwonderConfig::readConfig() {
         }
     }
     catch (const std::exception& ex) {
+        std::cout << "[Config][ERROR] XML Error" << std::endl;
         return 4;  // xml error
     }
 

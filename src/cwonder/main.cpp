@@ -56,8 +56,9 @@ int main(int argc, char* argv[]) {
     cwonderConf = new CwonderConfig(argc, argv);
 
     int ret = cwonderConf->readConfig();
-
-    if (ret != 0) { std::exit(EXIT_FAILURE); }
+    if (ret != 0) { 
+        std::cout << "[Config][ERROR]: Could not read config. exiting..." << std::endl;
+        std::exit(EXIT_FAILURE); }
 
     // make default project path
     if (makedirs(cwonderConf->projectPath.c_str(), mode_t(0700)) != 0) {
