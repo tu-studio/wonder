@@ -9,9 +9,9 @@ jobs:
       matrix:
         include:
           - name: Linux
-            runs-on: ubuntu-20.04
+            runs-on: ubuntu-latest
           - name: macOS
-            runs-on: macos-10.15
+            runs-on: macos-latest
 
     env:
       SRC_PATH: ${{ github.workspace }}/src
