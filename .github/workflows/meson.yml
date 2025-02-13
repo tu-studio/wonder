@@ -9,15 +9,17 @@ jobs:
       matrix:
         include:
           - name: Linux
-            runs-on: ubuntu-20.04
+            runs-on: ubuntu-latest
           - name: macOS
-            runs-on: macos-10.15
+            runs-on: macos-latest
 
     env:
       SRC_PATH: ${{ github.workspace }}/src
       BUILD_PATH: ${{ github.workspace }}/builddir
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v2
       - name: install dependencies for Linux
@@ -34,7 +36,7 @@ jobs:
           HOMEBREW_NO_AUTO_UPDATE: 1
           HOMEBREW_NO_INSTALL_CLEANUP: 1
         run: |
-          brew install jack meson libxml++3 liblo rtmidi
+          brew install jack meson libxml++3 liblo rtmidi ninja
       - name: build on Linux
         if: runner.os == 'Linux'
         run: |
@@ -43,8 +45,6 @@ jobs:
           meson compile
       - name: build on Linux / macOS
         if: runner.os == 'macOS'
-        env:
-          DEVELOPER_DIR: '/Applications/Xcode_11.7.app/Contents/Developer' # specify XCode version on macOS
         run: |
           meson --buildtype release $BUILD_PATH
           cd $BUILD_PATH

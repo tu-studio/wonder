@@ -139,6 +139,7 @@ void DelayLine::get(DelayCoeff& coeff0, DelayCoeff& coeff1, float* samples,
         factor += factorsDelta;
 
         if (readPosF >= lineLengthF) { readPosF -= lineLength; }
+        if (readPosF <= -1.0) { readPosF += lineLength;}
     }
 }
 

@@ -4,9 +4,12 @@
 
 i=1;
 
+# get cwonder port
+CWONDER_PORT="${CWONDER_PORT:-58100}"
+
 for file in /usr/local/etc/wonder/twonder/speaker-positions/twonder_*;
 do
     # for debugging the --verbose flag can be added to the command line
-    twonder -c /usr/local/etc/wonder/twonder/twonder_config.xml -s $file -i $CWONDER_IP -j twonder$i -o $((58200 + $i)) --negdelay $NEG_DELAY &
+    twonder -c /usr/local/etc/wonder/twonder/twonder_config.xml -s $file -i $CWONDER_IP -j twonder$i -o $((58200 + $i)) --negdelay $NEG_DELAY -p $CWONDER_PORT &
     i=$(($i+1));
 done
