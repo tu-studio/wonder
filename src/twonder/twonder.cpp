@@ -940,6 +940,7 @@ int main(int argc, char* argv[]) {
     // Initialize JACK
     if (!initialize_jack()) {
         exitCleanupFunction();
+        std::cout << "exit after jack failure" << std::endl;
         std::exit(EXIT_FAILURE);
     }
 
@@ -951,6 +952,8 @@ int main(int argc, char* argv[]) {
 
     // cleanup before exiting
     exitCleanupFunction();
+    std::cout << "exiting..." << std::endl;
+
 
     return 0;
 }
