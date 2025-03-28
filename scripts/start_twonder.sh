@@ -5,8 +5,7 @@
 i=1;
 
 
-for file in /home/leto/data/projects/arbeit/akt/seamless-configs/EN325/wonder/twonder/wintermute/speaker-positions/twonder_*;
-# for file in /usr/local/etc/wonder/twonder/speaker-positions/twonder_*;
+for file in /usr/local/etc/wonder/twonder/speaker-positions/twonder_*;
 do
     # setup args
     args=(
@@ -29,6 +28,10 @@ do
 
     if [[ -v CWONDER_PORT ]]; then
         args+=(-p "$CWONDER_PORT")
+    fi
+
+    if [[ -v VERBOSE ]]; then
+        args+=(--verbose)
     fi
     echo "${args[@]}"
     # for debugging the --verbose flag can be added to the command line
