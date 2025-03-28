@@ -37,7 +37,7 @@ class OSCServer
 {
   public:
     OSCServer(const char* port = "58200", const char* multicast_group = nullptr,
-              const char* multicast_port = "58201");
+              const char* multicast_port = "58300");
 
     ~OSCServer();
 

@@ -28,6 +28,7 @@
 
 #include "oscin.h"
 
+#include <iostream>
 #include <sstream>
 
 OSCServer::OSCServer(const char* port, const char* multicast_group,
@@ -39,6 +40,8 @@ OSCServer::OSCServer(const char* port, const char* multicast_group,
     }
 
     if (multicast_group != nullptr && multicast_port != nullptr) {
+        std::cout << "Joining Multicast group " << multicast_group << " on port "
+                  << multicast_port << std::endl;
         multicastServerThread =
             lo_server_thread_new_multicast(multicast_group, multicast_port, nullptr);
         if (multicastServerThread == nullptr) {

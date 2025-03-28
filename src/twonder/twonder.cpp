@@ -917,7 +917,8 @@ int main(int argc, char* argv[]) {
 
     // start OSCServer and register messagehandler
     try {
-        oscServer = new OSCServer(twonderConf->listeningPort);
+        oscServer = new OSCServer(twonderConf->listeningPort, twonderConf->multicastGroup,
+                                  twonderConf->multicastPort);
     }
     catch (OSCServer::EServ) {
         std::cerr << "[twonder] Could not create server, maybe the server( using the "
