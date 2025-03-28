@@ -4,7 +4,7 @@
  *  http://swonder.sourceforge.net                                                   *
  *                                                                                   *
  *                                                                                   *
- *  Technische Universität Berlin, Germany                                           *
+ *  Technische Universitï¿½t Berlin, Germany                                           *
  *  Audio Communication Group                                                        *
  *  www.ak.tu-berlin.de                                                              *
  *  Copyright 2006-2008                                                              *
@@ -30,23 +30,48 @@
 
 #include <sstream>
 
-OSCServer::OSCServer(const char* port) {
+OSCServer::OSCServer(const char* port, const char* multicast_group,
+                     const char* multicast_port) {
     serverThread = lo_server_thread_new(port, nullptr);
 
-    if (serverThread == nullptr) { throw EServ(); }
+    if (serverThread == nullptr) {
+        throw EServ();
+    }
+
+    if (multicast_group != nullptr && multicast_port != nullptr) {
+        multicastServerThread =
+            lo_server_thread_new_multicast(multicast_group, multicast_port, nullptr);
+        if (multicastServerThread == nullptr) {
+            throw EServ();
+        }
+    }
 }
 
 OSCServer::~OSCServer() {
-    if (serverThread) { lo_server_thread_free(serverThread); }
+    if (serverThread) {
+        lo_server_thread_free(serverThread);
+    }
+
+    if (multicastServerThread) {
+        lo_server_thread_free(multicastServerThread);
+    }
 }
 
-void OSCServer::start() { lo_server_thread_start(serverThread); }
+void OSCServer::start() {
+    lo_server_thread_start(serverThread);
+    if (multicastServerThread) lo_server_thread_start(multicastServerThread);
+}
 
-void OSCServer::stop() { lo_server_thread_stop(serverThread); }
+void OSCServer::stop() {
+    lo_server_thread_stop(serverThread);
+    if (multicastServerThread) lo_server_thread_stop(multicastServerThread);
+}
 
 void OSCServer::addMethod(const char* path, const char* types, lo_method_handler h,
                           void* user_data) {
     lo_server_thread_add_method(serverThread, path, types, h, user_data);
+    if (multicastServerThread)
+        lo_server_thread_add_method(multicastServerThread, path, types, h, user_data);
 }
 
 std::string OSCServer::getContent(const char* path, const char* types, lo_arg** argv,

@@ -36,7 +36,9 @@
 class OSCServer
 {
   public:
-    OSCServer(const char* port = "58200");
+    OSCServer(const char* port = "58200", const char* multicast_group = nullptr,
+              const char* multicast_port = "58201");
+
     ~OSCServer();
 
     void start();
@@ -46,9 +48,11 @@ class OSCServer
                    void* user_data = nullptr);
     std::string getContent(const char* path, const char* types, lo_arg** argv, int argc);
 
-    lo_server_thread serverThread;
-
     // internal exception class
     class EServ
     {};
+
+  private:
+    lo_server_thread serverThread;
+    lo_server_thread multicastServerThread;
 };
