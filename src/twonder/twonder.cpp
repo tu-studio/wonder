@@ -130,10 +130,9 @@ int process(jack_nframes_t nframes, void* arg) {
         // calculate the delay coefficients for every source-to-speaker-to-listener
         // combination
         for (int j = 0; j < twonderConf->noSources; ++j) {
-            DelayCoeff c =
-                (*sources)[j]->source->getDelayCoeff(*((*speakers)[i]));
-            DelayCoeff c2 = (*sources)[j]->source->getTargetDelayCoeff(
-                *((*speakers)[i]), nframes);
+            DelayCoeff c = (*sources)[j]->source->getDelayCoeff(*((*speakers)[i]));
+            DelayCoeff c2 =
+                (*sources)[j]->source->getTargetDelayCoeff(*((*speakers)[i]), nframes);
 
             // mute a source if it is not active
             if (!(*sources)[j]->active) {
@@ -164,15 +163,15 @@ int process(jack_nframes_t nframes, void* arg) {
 //-----------------------------JACK initialization---------------------------//
 
 bool initialize_jack() {
-    bool running          = false;  // Initialization status
+    bool running = false;  // Initialization status
 
     // not needed since we make the connections after the jack client is started
     // int available_inputs  = 0;      // Number of physically available inputs
     // int available_outputs = 0;      // Number of physically available outputs
 
     const char* client_name = twonderConf->jackName;  // Get name from twonderConfig
-    jack_options_t options = JackNoStartServer;  // No options needed, since we use the
-                                              // options from the .jackdrc file.
+    jack_options_t options  = JackNoStartServer;  // No options needed, since we use the
+                                                  // options from the .jackdrc file.
     jack_status_t status;  // Holds the JACK status after the connection attempt for
                            // further verifications.
 
@@ -284,7 +283,6 @@ bool initialize_jack() {
         }
     }
 
-
     /* ==========================================================================
 
     The following code is disabled, because we connect the JACK client ports differently
@@ -313,7 +311,8 @@ bool initialize_jack() {
     //                  jack_connect(jackClient, ports[i], jack_port_name(jackInputs[i]));
     //                 available_inputs++;
     //             } else {
-    //                 // Remove JACK client input ports that have no corresponding soundcard
+    //                 // Remove JACK client input ports that have no corresponding
+    //                 soundcard
     //                 // audio input (capture) port.
     //                 jack_port_unregister(jackClient, jackInputs[i]);
     //             }
@@ -332,7 +331,8 @@ bool initialize_jack() {
 
     //     if (ports == nullptr) {
     //         running = false;
-    //         std::cerr << "[JACK][ERROR]: No physical audio output (playback) ports are "
+    //         std::cerr << "[JACK][ERROR]: No physical audio output (playback) ports are
+    //         "
     //                      "available!\n";
     //     }
 
@@ -345,7 +345,8 @@ bool initialize_jack() {
     //                 jack_connect(jackClient, jack_port_name(jackOutputs[i]), ports[i]);
     //                 available_outputs++;
     //             } else {
-    //                 // Remove the JACK client output port that can not be connected to the
+    //                 // Remove the JACK client output port that can not be connected to
+    //                 the
     //                 // soundcard audio output (playback) port.
     //                 jack_port_unregister(jackClient, jackOutputs[i]);
     //             }
@@ -359,13 +360,13 @@ bool initialize_jack() {
     // of the JACK client.
     if (running) {
         std::cout << "\n" << std::endl;
- 
+
         /* ==========================================================================
 
         We will not check if we have enough inputs and outputs, because we will connect
         the JACK client ports differently
 
-        ========================================================================== */   
+        ========================================================================== */
 
         // // Correct the number of available sources (inputs).
         // if (twonderConf->noSources != available_inputs) {
@@ -563,9 +564,13 @@ void DopplerChangeCommand::execute() {
         void *user_data
 
 int oscSrcPositionHandler(handlerArgs) {
-    if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return -1; }
+    if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) {
+        return -1;
+    }
 
-    if (!sources->at(argv[0]->i)->active) { return 0; }
+    if (!sources->at(argv[0]->i)->active) {
+        return 0;
+    }
 
     int sourceId   = argv[0]->i;
     float newX     = argv[1]->f;
@@ -582,8 +587,8 @@ int oscSrcPositionHandler(handlerArgs) {
     }
 
     if (twonderConf->verbose) {
-        std::cout << "[V-OSCServer] position: src=" << sourceId << " x=" << newX << " y=" << newY
-                  << " ts=" << time << " dur=" << duration << std::endl;
+        std::cout << "[V-OSCServer] position: src=" << sourceId << " x=" << newX
+                  << " y=" << newY << " ts=" << time << " dur=" << duration << std::endl;
     }
 
     Vector3D newPos(newX, newY, newZ);
@@ -598,9 +603,13 @@ int oscSrcPositionHandler(handlerArgs) {
 }
 
 int oscSrcPositionHandler3D(handlerArgs) {
-    if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return -1; }
+    if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) {
+        return -1;
+    }
 
-    if (!sources->at(argv[0]->i)->active) { return 0; }
+    if (!sources->at(argv[0]->i)->active) {
+        return 0;
+    }
 
     int sourceId   = argv[0]->i;
     float newX     = argv[1]->f;
@@ -617,8 +626,9 @@ int oscSrcPositionHandler3D(handlerArgs) {
     }
 
     if (twonderConf->verbose) {
-        std::cout << "[V-OSCServer] position: src=" << sourceId << " x=" << newX << " y=" << newY
-                  << " z=" << newZ << " ts=" << time << " dur=" << duration << std::endl;
+        std::cout << "[V-OSCServer] position: src=" << sourceId << " x=" << newX
+                  << " y=" << newY << " z=" << newZ << " ts=" << time
+                  << " dur=" << duration << std::endl;
     }
 
     Vector3D newPos(newX, newY, newZ);
@@ -633,9 +643,13 @@ int oscSrcPositionHandler3D(handlerArgs) {
 }
 
 int oscSrcAngleHandler(handlerArgs) {
-    if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return -1; }
+    if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) {
+        return -1;
+    }
 
-    if (!sources->at(argv[0]->i)->active) { return 0; }
+    if (!sources->at(argv[0]->i)->active) {
+        return 0;
+    }
 
     int sourceId   = argv[0]->i;
     float newAngle = argv[1]->f;
@@ -650,8 +664,8 @@ int oscSrcAngleHandler(handlerArgs) {
     }
 
     if (twonderConf->verbose) {
-        std::cout << "[V-OSCServer] angle: src=" << sourceId << " a=" << newAngle << " ts=" << time
-                  << " dur=" << duration << std::endl;
+        std::cout << "[V-OSCServer] angle: src=" << sourceId << " a=" << newAngle
+                  << " ts=" << time << " dur=" << duration << std::endl;
     }
 
     AngleCommand* angleCmd = new AngleCommand(newAngle, sourceId, TimeStamp(time),
@@ -673,16 +687,22 @@ int oscSrcTypeHandler(handlerArgs) {
         return -1;
     }
 
-    if (!sources->at(argv[0]->i)->active) { return 0; }
+    if (!sources->at(argv[0]->i)->active) {
+        return 0;
+    }
 
     int sourceId = argv[0]->i;
     int newType  = argv[1]->i;
     float time   = 0.0;
 
     // if targeted source is already of the requested type, then nothing has to be done
-    if (argv[1]->i == sources->at(sourceId)->source->getType()) { return 0; }
+    if (argv[1]->i == sources->at(sourceId)->source->getType()) {
+        return 0;
+    }
 
-    if (argc == 3) { time = argv[2]->f; }
+    if (argc == 3) {
+        time = argv[2]->f;
+    }
 
     if (twonderConf->verbose) {
         std::cout << "[V-OSCServer] type-change: src=" << sourceId << " type=" << newType
@@ -696,19 +716,25 @@ int oscSrcTypeHandler(handlerArgs) {
 }
 
 int oscSrcDopplerHandler(handlerArgs) {
-    if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return -1; }
+    if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) {
+        return -1;
+    }
 
-    if (!sources->at(argv[0]->i)->active) { return 0; }
+    if (!sources->at(argv[0]->i)->active) {
+        return 0;
+    }
 
     int sourceId    = argv[0]->i;
     bool useDoppler = (bool)argv[1]->i;
     float time      = 0.0;
 
-    if (argc == 3) { time = argv[2]->f; }
+    if (argc == 3) {
+        time = argv[2]->f;
+    }
 
     if (twonderConf->verbose) {
-        std::cout << "[V-OSCServer] doppler-change: src=" << sourceId << " doppler=" << useDoppler
-                  << " ts=" << time << std::endl;
+        std::cout << "[V-OSCServer] doppler-change: src=" << sourceId
+                  << " doppler=" << useDoppler << " ts=" << time << std::endl;
     }
 
     DopplerChangeCommand* dopplerCmd =
@@ -720,7 +746,8 @@ int oscSrcDopplerHandler(handlerArgs) {
 
 int oscReplyHandler(handlerArgs) {
     if (twonderConf->verbose) {
-        std::cout << "[V-OSCServer] reply to: " << &argv[0]->s << " error number = " << argv[1]->i
+        std::cout << "[V-OSCServer] reply to: " << &argv[0]->s
+                  << " error number = " << argv[1]->i
                   << " error message = " << &argv[2]->s << std::endl;
     }
 
@@ -728,9 +755,13 @@ int oscReplyHandler(handlerArgs) {
 }
 
 int oscSrcActivateHandler(handlerArgs) {
-    if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return 0; }
+    if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) {
+        return 0;
+    }
 
-    if (twonderConf->verbose) { std::cout << "[V-OSCServer] activated source: " << argv[0]->i << std::endl; }
+    if (twonderConf->verbose) {
+        std::cout << "[V-OSCServer] activated source: " << argv[0]->i << std::endl;
+    }
 
     sources->at(argv[0]->i)->active = true;
 
@@ -738,7 +769,9 @@ int oscSrcActivateHandler(handlerArgs) {
 }
 
 int oscSrcDeactivateHandler(handlerArgs) {
-    if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) { return 0; }
+    if ((argv[0]->i >= twonderConf->noSources) || (argv[0]->i < 0)) {
+        return 0;
+    }
 
     if (twonderConf->verbose) {
         std::cout << "[V-OSCServer] deactivated source: " << argv[0]->i << std::endl;
@@ -785,10 +818,11 @@ int oscRenderPolygonHandler(handlerArgs) {
     for (int i = 1; i <= noPoints; ++i) {
         twonderConf->renderPolygon.push_back(
             Vector3D(argv[(i * 3) - 1]->f, argv[i * 3]->f, argv[(i * 3) + 1]->f));
-            if (twonderConf->verbose) {
-                std::cout << "[V-OSCServer] render-polygon: x=" << argv[(i * 3) - 1]->f
-                          << " y=" << argv[i * 3]->f << " z=" << argv[(i * 3) + 1]->f << std::endl;
-            }
+        if (twonderConf->verbose) {
+            std::cout << "[V-OSCServer] render-polygon: x=" << argv[(i * 3) - 1]->f
+                      << " y=" << argv[i * 3]->f << " z=" << argv[(i * 3) + 1]->f
+                      << std::endl;
+        }
     }
 
     // TODO: calculate elevation of speakers
@@ -917,16 +951,18 @@ int main(int argc, char* argv[]) {
     oscServer->addMethod("/WONDER/stream/render/ping", "i", oscPingHandler);
     oscServer->addMethod(nullptr, nullptr, oscGenericHandler);
     oscServer->start();
-    
+
     // wait for cwonder to send setup data
     // reconnect if it doesn't work
     // its cwonder which activates the sources with osc commands
     int timeout = 0;
     while (twonderConf->noSources == 0) {
-        // BUGFIX: When twonder sends two connects immediately after each other, this causes sources inside the polygon to not work. WHY??!
+        // BUGFIX: When twonder sends two connects immediately after each other, this
+        // causes sources inside the polygon to not work. WHY??!
         if (timeout % 4 == 0) {
             std::cout << "[twonder] Sending new connect message to cwonder." << std::endl;
-            lo_send(twonderConf->cwonderAddr, "/WONDER/stream/render/connect", "s", twonderConf->name.c_str());
+            lo_send(twonderConf->cwonderAddr, "/WONDER/stream/render/connect", "s",
+                    twonderConf->name.c_str());
         } else {
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
@@ -945,15 +981,15 @@ int main(int argc, char* argv[]) {
     }
 
     // event loop
-    // TODO: if cwonder is no more running the noSources shall be set to 0 and the we should try to reconnect
+    // TODO: if cwonder is no more running the noSources shall be set to 0 and the we
+    // should try to reconnect
     while (true) {
-        std::this_thread::sleep_for(std::chrono::seconds(1)); 
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 
     // cleanup before exiting
     exitCleanupFunction();
     std::cout << "exiting..." << std::endl;
-
 
     return 0;
 }
