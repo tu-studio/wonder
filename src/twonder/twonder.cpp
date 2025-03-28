@@ -792,12 +792,10 @@ int oscPingHandler(handlerArgs) {
 int oscNoSourcesHandler(handlerArgs) {
     // this handler is only allowed to be called once and only with a valid value at
     // startup, so ignore further messages
-    static bool noSourcesIsSet = false;
 
-    if (!noSourcesIsSet) {
+    if (twonderConf->noSources <= 0) {
         if (argv[0]->i > 0) {
             twonderConf->noSources = argv[0]->i;
-            noSourcesIsSet         = true;
             sources = new SourceArray(twonderConf->noSources, twonderConf->negDelayInit);
             if (twonderConf->verbose) {
                 std::cout << "[V-OSCServer] no-sources: " << argv[0]->i << std::endl;
@@ -813,6 +811,8 @@ int oscRenderPolygonHandler(handlerArgs) {
     // argv[0] is the roomname, drop it, we don't need that
     // get number of points
     int noPoints = argv[1]->i;
+
+    twonderConf->renderPolygon.clear();
 
     // iterate over all points and store them
     for (int i = 1; i <= noPoints; ++i) {
@@ -957,8 +957,6 @@ int main(int argc, char* argv[]) {
     // its cwonder which activates the sources with osc commands
     int timeout = 0;
     while (twonderConf->noSources == 0) {
-        // BUGFIX: When twonder sends two connects immediately after each other, this
-        // causes sources inside the polygon to not work. WHY??!
         if (timeout % 4 == 0) {
             std::cout << "[twonder] Sending new connect message to cwonder." << std::endl;
             lo_send(twonderConf->cwonderAddr, "/WONDER/stream/render/connect", "s",
