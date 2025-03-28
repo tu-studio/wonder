@@ -1,7 +1,6 @@
 twonder_src = ['angle.cpp',
                'delaycoeff.cpp',
                'delayline.cpp',
-               'osc.cpp',
                'source.cpp',
                'speaker.cpp',
                'twonder.cpp',
