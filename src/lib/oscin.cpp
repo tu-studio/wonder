@@ -31,9 +31,13 @@
 #include <iostream>
 #include <sstream>
 
+void err_handler(int num, const char *msg, const char *where){
+    std::cout << "Error " << num << " while creating serve in function " << where <<  ": " << msg << std::endl;
+}
+
 OSCServer::OSCServer(const char* port, const char* multicast_group,
                      const char* multicast_port) {
-    serverThread = lo_server_thread_new(port, nullptr);
+    serverThread = lo_server_thread_new(port, err_handler);
 
     if (serverThread == nullptr) {
         throw EServ();
@@ -43,7 +47,7 @@ OSCServer::OSCServer(const char* port, const char* multicast_group,
         std::cout << "Joining Multicast group " << multicast_group << " on port "
                   << multicast_port << std::endl;
         multicastServerThread =
-            lo_server_thread_new_multicast(multicast_group, multicast_port, nullptr);
+            lo_server_thread_new_multicast(multicast_group, multicast_port, err_handler);
         if (multicastServerThread == nullptr) {
             throw EServ();
         }
