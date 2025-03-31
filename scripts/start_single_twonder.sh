@@ -22,12 +22,16 @@ fi
 args=(
     -c /usr/local/etc/wonder/twonder/twonder_config.xml
     -s $file
-    -i "$CWONDER_IP"
     -j "twonder$i"
     -o "$((58200 + $i))"
 )
 
 # optional args based on set environment variables
+if [[ -v CWONDER_IP ]]; then
+    args+=(-i "$CWONDER_IP")
+
+fi
+
 if [[ -v MULTICAST_GROUP ]]; then
     args+=(-g "$MULTICAST_GROUP")
 fi
