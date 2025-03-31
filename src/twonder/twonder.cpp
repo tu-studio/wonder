@@ -967,6 +967,10 @@ int main(int argc, char* argv[]) {
         }
         timeout++;
     }
+    
+    if (twonderConf->renderPolygon.size() == 0)
+        std::cout << "[twonder] WARNING: no render polygon found, can't check if source is focused, expect unexpected behaviour" << std::endl;
+
 
     // if cwonder does not respond we are not going to exit the loop above
 

@@ -28,7 +28,6 @@
 
 #include <cmath>
 #include "source.h"
-
 #include "delaycoeff.h"
 #include "speaker.h"
 #include "twonder_config.h"
@@ -169,7 +168,7 @@ bool PointSource::isFocused(const Vector3D& sourcePos) {
 
     if (twonderConf->ioMode == IOM_ALWAYSIN) { return true; }
 
-    int noPoints = twonderConf->renderPolygon.size();
+    int n_points = twonderConf->renderPolygon.size();
     float xSrc   = sourcePos[0];
     float ySrc   = sourcePos[1];
     float xnew;
@@ -182,10 +181,13 @@ bool PointSource::isFocused(const Vector3D& sourcePos) {
     float y2;
     bool inside = false;
 
-    xold = twonderConf->renderPolygon[noPoints - 1][0];
-    yold = twonderConf->renderPolygon[noPoints - 1][1];
+    if(n_points == 0){
+        return false;
+    }
+    xold = twonderConf->renderPolygon[n_points - 1][0];
+    yold = twonderConf->renderPolygon[n_points - 1][1];
 
-    for (int i = 0; i < noPoints; ++i) {
+    for (int i = 0; i < n_points; ++i) {
         xnew = twonderConf->renderPolygon[i][0];
         ynew = twonderConf->renderPolygon[i][1];
 
