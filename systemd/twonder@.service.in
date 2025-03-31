@@ -1,0 +1,16 @@
+[Unit]
+Description=TWonder instance %i
+After=jack.service network.target
+Requires=jack.service
+
+[Install]
+WantedBy=default.target
+
+[Service]
+Type=simple
+PrivateTmp=true
+EnvironmentFile=/usr/local/etc/wonder/cluster.conf
+ExecStart=@share_dir@/scripts/start_single_twonder.sh %i
+LimitRTPRIO=95
+LimitRTTIME=infinity
+LimitMEMLOCK=infinity

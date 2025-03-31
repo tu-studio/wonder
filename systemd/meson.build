@@ -13,6 +13,11 @@ configure_file(input : 'twonder.service.in',
                configuration : conf_data,
                install_dir : '/etc/systemd/user')
 
+configure_file(input : 'twonder@.service.in',
+               output : 'twonder@.service',
+               configuration : conf_data,
+               install_dir : '/etc/systemd/user')
+
 configure_file(input : 'cwonder.service.in',
                output : 'cwonder.service',
                configuration : conf_data,
