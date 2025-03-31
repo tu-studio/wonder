@@ -10,7 +10,7 @@ executable('twonder' + install_postfix,
             twonder_src,
             include_directories: inc,
             install_rpath: lib_dir,
-            dependencies: [jack_dep, thread_dep, xml_dep, liblo_dep],
+            dependencies: [jack_dep, thread_dep, xml_dep, liblo_dep, libsystemd_dep],
             link_with: libwonder,
             install: true)
 

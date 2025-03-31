@@ -5,7 +5,7 @@ Requires=jack.service
 PartOf=twonders.target
 
 [Service]
-Type=simple
+Type=notify
 PrivateTmp=true
 EnvironmentFile=/usr/local/etc/wonder/cluster.conf
 ExecStart=@share_dir@/scripts/start_single_twonder.sh %i

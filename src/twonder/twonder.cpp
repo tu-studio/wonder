@@ -48,6 +48,10 @@
 #include <utility>
 #include <vector>
 
+#ifdef WONDER_SYSTEMD
+#include <systemd/sd-daemon.h>
+#endif
+
 #include "oscin.h"
 #include "rtcommandengine.h"
 #include "source.h"
@@ -982,6 +986,11 @@ int main(int argc, char* argv[]) {
         std::cout << "exit after jack failure" << std::endl;
         std::exit(EXIT_FAILURE);
     }
+
+#ifdef WONDER_SYSTEMD
+    // Notify systemd that we are ready
+    sd_notify(0, "READY=1");
+#endif
 
     // event loop
     // TODO: if cwonder is no more running the noSources shall be set to 0 and the we
