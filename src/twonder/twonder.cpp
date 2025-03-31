@@ -921,8 +921,17 @@ int main(int argc, char* argv[]) {
 
     // start OSCServer and register messagehandler
     try {
-        oscServer = new OSCServer(twonderConf->listeningPort, twonderConf->multicastGroup,
+        if (twonderConf->multicastGroup != nullptr && 
+            twonderConf->multicastPort != nullptr){
+                std::cout << "[twonder] starting OSCServer with multicast support" << std::endl;
+                oscServer = new OSCServer(twonderConf->listeningPort, twonderConf->multicastGroup,
                                   twonderConf->multicastPort);
+            }
+        else{
+            std::cout << "[twonder] starting OSCServer" << std::endl;
+            oscServer = new OSCServer(twonderConf->listeningPort);
+        } 
+                                  
     }
     catch (OSCServer::EServ) {
         std::cerr << "[twonder] Could not create server, maybe the server( using the "
@@ -964,8 +973,8 @@ int main(int argc, char* argv[]) {
     while (twonderConf->noSources == 0) {
         if (timeout % 4 == 0) {
             std::cout << "[twonder] Sending new connect message to cwonder." << std::endl;
-            lo_send(twonderConf->cwonderAddr, "/WONDER/stream/render/connect", "s",
-                    twonderConf->name.c_str());
+            oscServer->send(twonderConf->cwonderAddr, "/WONDER/stream/render/connect", "s",
+                twonderConf->name.c_str());
         } else {
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
