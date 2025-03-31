@@ -29,6 +29,8 @@
 #pragma once
 
 #include <lo/lo.h>
+#include <lo/lo_cpp.h>
+
 
 #include <string>
 
@@ -36,8 +38,9 @@
 class OSCServer
 {
   public:
-    OSCServer(const char* port = "58200", const char* multicast_group = nullptr,
-              const char* multicast_port = "58300");
+    OSCServer(const char* port);
+    OSCServer(const char* port, const char* multicast_group,
+      const char* multicast_port);
 
     ~OSCServer();
 
@@ -48,11 +51,13 @@ class OSCServer
                    void* user_data = nullptr);
     std::string getContent(const char* path, const char* types, lo_arg** argv, int argc);
 
+    // currently only one value as content is allowed
+    void send(lo_address addr, const char* path, const char* types, const char* value);
     // internal exception class
     class EServ
     {};
 
   private:
-    lo_server_thread serverThread;
-    lo_server_thread multicastServerThread;
+    lo::ServerThread  serverThread;
+    lo::ServerThread multicastServerThread;
 };

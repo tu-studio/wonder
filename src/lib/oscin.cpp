@@ -32,54 +32,62 @@
 #include <sstream>
 
 void err_handler(int num, const char *msg, const char *where){
-    std::cout << "Error " << num << " while creating serve in function " << where <<  ": " << msg << std::endl;
+    std::cout << "Error " << num << " while creating server in function " << where <<  ": " << msg << std::endl;
 }
-
-OSCServer::OSCServer(const char* port, const char* multicast_group,
-                     const char* multicast_port) {
-    serverThread = lo_server_thread_new(port, err_handler);
-
-    if (serverThread == nullptr) {
+// multicastServerThread listens on random free port
+OSCServer::OSCServer(const char* port): serverThread(port, err_handler), multicastServerThread(nullptr, nullptr) {
+    if (!serverThread.is_valid()) {
         throw EServ();
     }
 
-    if (multicast_group != nullptr && multicast_port != nullptr) {
-        std::cout << "Joining Multicast group " << multicast_group << " on port "
-                  << multicast_port << std::endl;
-        multicastServerThread =
-            lo_server_thread_new_multicast(multicast_group, multicast_port, err_handler);
-        if (multicastServerThread == nullptr) {
-            throw EServ();
-        }
+    if (multicastServerThread.is_valid()) {
+        throw EServ();
     }
+
+}
+
+OSCServer::OSCServer(const char* port, const char* multicast_group,
+                     const char* multicast_port): serverThread(port, err_handler), multicastServerThread(multicast_group, multicast_port, nullptr, nullptr, err_handler) {
+
+    if (!serverThread.is_valid()) {
+        throw EServ();
+    }
+
+    std::cout << "Joining Multicast group " << multicast_group << " on port "
+                << multicast_port << std::endl;
+
+    if (!multicastServerThread.is_valid()) {
+        throw EServ();
+    }
+    
 }
 
 OSCServer::~OSCServer() {
-    if (serverThread) {
-        lo_server_thread_free(serverThread);
-    }
-
-    if (multicastServerThread) {
-        lo_server_thread_free(multicastServerThread);
-    }
+// Threads now take care of freeing themselves
 }
 
 void OSCServer::start() {
-    lo_server_thread_start(serverThread);
-    if (multicastServerThread) lo_server_thread_start(multicastServerThread);
+    serverThread.start();
+    if (multicastServerThread.is_valid()) multicastServerThread.start();
 }
 
 void OSCServer::stop() {
-    lo_server_thread_stop(serverThread);
-    if (multicastServerThread) lo_server_thread_stop(multicastServerThread);
+    serverThread.stop();
+    if (multicastServerThread.is_valid()) multicastServerThread.stop();
 }
 
 void OSCServer::addMethod(const char* path, const char* types, lo_method_handler h,
                           void* user_data) {
-    lo_server_thread_add_method(serverThread, path, types, h, user_data);
-    if (multicastServerThread)
-        lo_server_thread_add_method(multicastServerThread, path, types, h, user_data);
+    serverThread.add_method(path, types, h, user_data);
+    if (multicastServerThread.is_valid())
+        multicastServerThread.add_method(path, types, h, user_data);
 }
+
+void OSCServer::send(lo_address addr, const char* path, const char* types, const char* value){
+    lo::Address a(addr, false);
+    a.send_from(serverThread, path, types, value);
+}
+
 
 std::string OSCServer::getContent(const char* path, const char* types, lo_arg** argv,
                                   int argc) {
