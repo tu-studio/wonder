@@ -48,10 +48,10 @@ if [[ -v NEG_DELAY ]]; then
     args+=(--negdelay "$NEG_DELAY")
 fi
 
-
 if [[ -v VERBOSE ]]; then
     args+=(--verbose)
 fi
+
 echo "executing twonder with args ${args[@]}"
-# for debugging the --verbose flag can be added to the command line
-twonder  "${args[@]}"
+# exec so systemd notify properly works
+exec twonder  "${args[@]}"
