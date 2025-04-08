@@ -1,6 +1,7 @@
 [Unit]
 Description=TWonder instance %i
-After=jack.service network.target
+After=jack.service network-online.target
+Wants=network-online.target
 Requires=jack.service
 PartOf=twonders.target
 
