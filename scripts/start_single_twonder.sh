@@ -22,7 +22,7 @@ fi
 args=(
     -c /usr/local/etc/wonder/twonder/twonder_config.xml
     -s $file
-    -j "twonder$i"
+    -j "twonder$((1 + $i))"
     -o "$((58200 + $i))"
 )
 
