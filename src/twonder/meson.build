@@ -11,6 +11,7 @@ executable('twonder' + install_postfix,
             include_directories: inc,
             install_rpath: lib_dir,
             dependencies: [jack_dep, thread_dep, xml_dep, liblo_dep, libsystemd_dep],
+            cpp_args: defines,
             link_with: libwonder,
             install: true)
 
