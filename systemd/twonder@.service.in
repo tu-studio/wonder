@@ -13,3 +13,5 @@ ExecStart=@share_dir@/scripts/start_single_twonder.sh %i
 LimitRTPRIO=95
 LimitRTTIME=infinity
 LimitMEMLOCK=infinity
+Restart=always
+RestartSec=20
