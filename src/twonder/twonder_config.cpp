@@ -38,9 +38,13 @@
 #include <iostream>
 #include <sstream>
 
+
 #include "wonder_path.h"
 
 TwonderConfig* twonderConf = nullptr;
+
+#define INIT_FROM_ENV(target_var, env_var, default_val) target_var = std::getenv(env_var);\
+        if(target_var == nullptr) target_var = default_val;
 
 TwonderConfig::TwonderConfig(int argc, char* argv[]) {
     verbose = false;
@@ -54,14 +58,23 @@ TwonderConfig::TwonderConfig(int argc, char* argv[]) {
 
     planeComp = 0.2;  // XXX: Empirical value, might need tweaking!
 
-    cwonderHost   = "127.0.0.1";
-    multicastPort = "58300";
-    cwonderPort   = "58100";
-    listeningPort = "58200";
+    INIT_FROM_ENV(cwonderHost, "CWONDER_IP", "127.0.0.1");
+
+    INIT_FROM_ENV(multicastPort, "MULTICAST_PORT", "58300");
+    INIT_FROM_ENV(multicastGroup, "MULTICAST_GROUP", nullptr);
+
+    INIT_FROM_ENV(cwonderPort, "CWONDER_PORT", "58100");
+    INIT_FROM_ENV(listeningPort, "LISTEN_PORT", nullptr) ;
 
     sampleRate   = 44100;  // In Hz
     soundSpeed   = 340.0;  // In meters per second
+
     negDelayInit = 20.0;   // In meters (for focused sources)
+    auto neg_delay_env = std::getenv("NEG_DELAY");
+    if (neg_delay_env != nullptr){
+        negDelayInit = std::stof(neg_delay_env);
+    }
+
 
     ioMode = IOM_NORMAL;
 
