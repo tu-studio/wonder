@@ -934,7 +934,7 @@ int main(int argc, char* argv[]) {
                                   
     }
     catch (OSCServer::EServ) {
-        std::cerr << "[twonder] Could not create server, maybe the server( using the "
+        std::cerr << "[twonder] Could not create server on port " << twonderConf->listeningPort << ", maybe the server( using the "
                      "same port ) is already running?"
                   << std::endl;
         std::exit(EXIT_FAILURE);

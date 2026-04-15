@@ -39,8 +39,8 @@ OSCServer::OSCServer(const char* port): serverThread(port, err_handler), multica
     if (!serverThread.is_valid()) {
         throw EServ();
     }
-
-    if (multicastServerThread.is_valid()) {
+    // TODO make it so this is invalid, and invert the condition. we do not want the multicast thread in this operation mode
+    if (!multicastServerThread.is_valid()) {
         throw EServ();
     }
 
