@@ -1,6 +1,8 @@
 [Unit]
 Description=TWonder
-After=jack.service
+After=jack.service network-online.target
+Wants=network-online.target
+
 Requires=jack.service
 
 [Install]
