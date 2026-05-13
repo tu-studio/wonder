@@ -4,7 +4,7 @@
  *  http://swonder.sourceforge.net                                                   *
  *                                                                                   *
  *                                                                                   *
- *  Technische Universität Berlin, Germany                                           *
+ *  Technische Universitï¿½t Berlin, Germany                                           *
  *  Audio Communication Group                                                        *
  *  www.ak.tu-berlin.de                                                              *
  *  Copyright 2006-2008                                                              *
@@ -28,26 +28,66 @@
 
 #include "oscin.h"
 
+#include <iostream>
 #include <sstream>
 
-OSCServer::OSCServer(const char* port) {
-    serverThread = lo_server_thread_new(port, nullptr);
+void err_handler(int num, const char *msg, const char *where){
+    std::cout << "Error " << num << " while creating server in function " << where <<  ": " << msg << std::endl;
+}
+// multicastServerThread listens on random free port
+OSCServer::OSCServer(const char* port): serverThread(port, err_handler), multicastServerThread(nullptr, nullptr) {
+    if (!serverThread.is_valid()) {
+        throw EServ();
+    }
+    // TODO make it so this is invalid, and invert the condition. we do not want the multicast thread in this operation mode
+    if (!multicastServerThread.is_valid()) {
+        throw EServ();
+    }
 
-    if (serverThread == nullptr) { throw EServ(); }
+}
+
+OSCServer::OSCServer(const char* port, const char* multicast_group,
+                     const char* multicast_port): serverThread(port, err_handler), multicastServerThread(multicast_group, multicast_port, nullptr, nullptr, err_handler) {
+
+    if (!serverThread.is_valid()) {
+        throw EServ();
+    }
+
+    std::cout << "Joining Multicast group " << multicast_group << " on port "
+                << multicast_port << std::endl;
+
+    if (!multicastServerThread.is_valid()) {
+        throw EServ();
+    }
+    
 }
 
 OSCServer::~OSCServer() {
-    if (serverThread) { lo_server_thread_free(serverThread); }
+// Threads now take care of freeing themselves
 }
 
-void OSCServer::start() { lo_server_thread_start(serverThread); }
+void OSCServer::start() {
+    serverThread.start();
+    if (multicastServerThread.is_valid()) multicastServerThread.start();
+}
 
-void OSCServer::stop() { lo_server_thread_stop(serverThread); }
+void OSCServer::stop() {
+    serverThread.stop();
+    if (multicastServerThread.is_valid()) multicastServerThread.stop();
+}
 
 void OSCServer::addMethod(const char* path, const char* types, lo_method_handler h,
                           void* user_data) {
-    lo_server_thread_add_method(serverThread, path, types, h, user_data);
+    serverThread.add_method(path, types, h, user_data);
+    if (multicastServerThread.is_valid())
+        multicastServerThread.add_method(path, types, h, user_data);
 }
+
+void OSCServer::send(lo_address addr, const char* path, const char* types, const char* value){
+    lo::Address a(addr, false);
+    a.send_from(serverThread, path, types, value);
+}
+
 
 std::string OSCServer::getContent(const char* path, const char* types, lo_arg** argv,
                                   int argc) {

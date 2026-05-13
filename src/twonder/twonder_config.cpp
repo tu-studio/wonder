@@ -38,9 +38,13 @@
 #include <iostream>
 #include <sstream>
 
+
 #include "wonder_path.h"
 
 TwonderConfig* twonderConf = nullptr;
+
+#define INIT_FROM_ENV(target_var, env_var, default_val) target_var = std::getenv(env_var);\
+        if(target_var == nullptr) target_var = default_val;
 
 TwonderConfig::TwonderConfig(int argc, char* argv[]) {
     verbose = false;
@@ -54,13 +58,23 @@ TwonderConfig::TwonderConfig(int argc, char* argv[]) {
 
     planeComp = 0.2;  // XXX: Empirical value, might need tweaking!
 
-    cwonderHost   = "127.0.0.1";
-    cwonderPort   = "58100";
-    listeningPort = "58200";
+    INIT_FROM_ENV(cwonderHost, "CWONDER_IP", "127.0.0.1");
+
+    INIT_FROM_ENV(multicastPort, "MULTICAST_PORT", "58300");
+    INIT_FROM_ENV(multicastGroup, "MULTICAST_GROUP", nullptr);
+
+    INIT_FROM_ENV(cwonderPort, "CWONDER_PORT", "58100");
+    INIT_FROM_ENV(listeningPort, "LISTEN_PORT", nullptr) ;
 
     sampleRate   = 44100;  // In Hz
     soundSpeed   = 340.0;  // In meters per second
+
     negDelayInit = 20.0;   // In meters (for focused sources)
+    auto neg_delay_env = std::getenv("NEG_DELAY");
+    if (neg_delay_env != nullptr){
+        negDelayInit = std::stof(neg_delay_env);
+    }
+
 
     ioMode = IOM_NORMAL;
 
@@ -99,6 +113,8 @@ void TwonderConfig::parseArgs(int argc, char* argv[]) {
             {"jackname", required_argument, nullptr, 'j'},
             {"name", required_argument, nullptr, 'n'},
             {"listeningport", required_argument, nullptr, 'o'},
+            {"multicastgroup", required_argument, nullptr, 'g'},
+            {"multicastport", required_argument, nullptr, 't'},
             {"cwonderhost", required_argument, nullptr, 'i'},
             {"cwonderport", required_argument, nullptr, 'p'},
             {"planecomp", required_argument, nullptr, 'm'},
@@ -110,9 +126,12 @@ void TwonderConfig::parseArgs(int argc, char* argv[]) {
             {"help", no_argument, nullptr, 'h'},
             {nullptr, 0, nullptr, 0}};
 
-        c = getopt_long(argc, argv, "c:s:j:n:o:i:p:m:vh", long_options, &option_index);
+        c = getopt_long(argc, argv, "c:s:j:n:o:g:t:i:p:m:vh", long_options,
+                        &option_index);
 
-        if (c == -1) { break; }
+        if (c == -1) {
+            break;
+        }
 
         switch (c) {
         case 'c':
@@ -133,6 +152,14 @@ void TwonderConfig::parseArgs(int argc, char* argv[]) {
 
         case 'o':
             listeningPort = optarg;
+            break;
+
+        case 'g':
+            multicastGroup = optarg;
+            break;
+
+        case 't':
+            multicastPort = optarg;
             break;
 
         case 'i':
@@ -183,6 +210,9 @@ void TwonderConfig::parseArgs(int argc, char* argv[]) {
                 "--jackname,      -j (name with which twonder registers with jack)\n"
                 "--name,          -n (name with which twonder registers with cwonder)\n"
                 "--listeningport, -o (port where twonder listens, default is 58200)\n"
+                "--multicastgroup,-g (multicast group to join)\n"
+                "--multicastport, -t (port where twonder listens for multicast "
+                "messages)\n"
                 "--cwonderhost,   -i (ip-address where cwonder is running)\n"
                 "--cwonderport,   -p (port where cwonder can be reached)\n"
                 "--planecomp,     -m (factor to compensate for the fact that planewaves "
@@ -206,7 +236,9 @@ void TwonderConfig::parseArgs(int argc, char* argv[]) {
     if (optind < argc) {
         printf("non-option ARGV-elements: ");
 
-        while (optind < argc) { printf("%s ", argv[optind++]); }
+        while (optind < argc) {
+            printf("%s ", argv[optind++]);
+        }
 
         printf("\n");
 

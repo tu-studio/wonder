@@ -69,6 +69,9 @@ class TwonderConfig
     const char* cwonderHost;
     const char* cwonderPort;
 
+    const char* multicastGroup;
+    const char* multicastPort;
+
     const char* listeningPort;
 
     float planeComp;  // amplitude compensation for plane waves, should be < 1

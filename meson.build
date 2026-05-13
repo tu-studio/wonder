@@ -56,6 +56,7 @@ endif
 # With install_dir: install_dir: get_option('datadir') the files are installed in the usr/local/share/ directory
 if get_option('twonder')
 	install_data('scripts/start_twonder.sh', install_dir: get_option('datadir') / 'wonder' + install_postfix + '/scripts')
+	install_data('scripts/start_single_twonder.sh', install_dir: get_option('datadir') / 'wonder' + install_postfix + '/scripts')
 	install_data(['dtd/twonder_config.dtd', 'dtd/twonder_speakerarray.dtd'], install_dir: get_option('datadir') / 'wonder' + install_postfix + '/dtd')
 endif
 if get_option('cwonder')

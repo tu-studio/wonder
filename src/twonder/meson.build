@@ -1,7 +1,6 @@
 twonder_src = ['angle.cpp',
                'delaycoeff.cpp',
                'delayline.cpp',
-               'osc.cpp',
                'source.cpp',
                'speaker.cpp',
                'twonder.cpp',
@@ -11,7 +10,8 @@ executable('twonder' + install_postfix,
             twonder_src,
             include_directories: inc,
             install_rpath: lib_dir,
-            dependencies: [jack_dep, thread_dep, xml_dep, liblo_dep],
+            dependencies: [jack_dep, thread_dep, xml_dep, liblo_dep, libsystemd_dep],
+            cpp_args: defines,
             link_with: libwonder,
             install: true)
 
