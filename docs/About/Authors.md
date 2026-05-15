@@ -2,7 +2,7 @@
 
     Audio Communication Group
     www.ak.tu-berlin.de
-    Copyright 2006-2008, 2020-2021
+    Copyright 2006-2008, 2020-2026
 
 - Marije Baalman
 - Tobias Blaschke
@@ -12,6 +12,7 @@
 - Daniel Plewe 
 - Simon Schampijer
 - Nils Tonnätt
+- Max Weidauer
 
 ## HAW Hamburg
 

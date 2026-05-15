@@ -11,3 +11,5 @@ The *WONDER* suite is composed of the following components:
 - **twonder**: Rendering Application
 - **jfwonder**: Time Provider
 - **xwonder**: GUI Control Application (needs some work)
+
+Current installations only use **twonder** and the [OSC-Kreuz](https://tu-studio.github.io/osc-kreuz) as **cwonder** replacement.

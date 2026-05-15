@@ -1,18 +1,18 @@
 site_name: WONDER
-repo_url: https://github.com/ntonnaett/wonder/
+repo_url: https://github.com/tu-studio/wonder/
 nav:
   - Home: index.md
   - Components:
     - CWonder: Components/CWonder.md
     - TWonder: Components/TWonder.md
-    - XWonder: Components/XWonder.md
+    # - XWonder: Components/XWonder.md
   - OSC Commands:
     - Generic: OSC/OSC.md
     - CWonder:
       - Usage: OSC/CWonder.md
-      - OSC Message: OSC/CWonder_Messages.md
+      # - OSC Message: OSC/CWonder_Messages.md
     - TWonder: OSC/TWonder.md
-    - XWonder: OSC/XWonder.md
+    # - XWonder: OSC/XWonder.md
   - Installation:
     - Build: Installation/Build.md
     - Configuration: Installation/Config.md

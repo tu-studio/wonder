@@ -11,6 +11,13 @@ and the negative delay length in meters for focused sources.
 ```bash
 CWONDER_IP='8.8.8.8';
 
+# optionally set the port of the cwonder (especially relevant if using OSC-Kreuz as a cwonder replacement)
+CWONDER_PORT=4999
+
+# only use these when connecting twonder to the OSC-Kreuz as cWonder replacement
+# twonders will listen to multicast as well as unicast
+MULTICAST_GROUP=239.2.3.11
+MULTICAST_PORT=58300
 # Ping rate of cwonder in seconds (uses JACK_SAMPLERATE to calculate seconds)
 CWONDER_PING=2;
 

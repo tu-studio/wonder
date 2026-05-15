@@ -3,28 +3,35 @@
 The startup of Wonder is handled by SystemD services. There are two possible
 ways to do this. Because of JACK Wonder's services must be run as a specific user.
 
-## User services (recommended)
+## Templated User Services (Recommended)
+The recommended way of setting up the system is using the [OSC-Kreuz](https://tu-studio.github.io/osc-kreuz) as cWonder replacement, and start multiple tWonder services using a tWonder target filled with the amount of twonders you need:
 
-The recommended way is to use user services. CWonder, TWonder and JFWonder have
+`/etc/systemd/user/twonder.target`:
+```ini
+[Unit]
+Description=Twonders
+# add all required twonders here
+Requires= twonder@0.service twonder@1.service twonder@2.service twonder@3.service
+[Install]
+WantedBy=default.target
+```
+then enable it using
+```bash
+systemctl --user stop twonder.target
+```
+
+## User services
+
+CWonder and TWonder have
 a service unit installed that can be started, stopped, enabled and disabled.
 
 ```bash
 systemctl --user start cwonder.service
 systemctl --user stop twonder.service
-systemctl --user disable jfwonder.service
 systemctl --user enable twonder.service
 ```
 
-## Templated system services (alternative)
 
-The system service solution is a templated service. Those services must be invoked
-with the username:
-
-```bash
-sudo systemctl start cwonder@username
-sudo systemctl stop cwonder@username
-sudo systemctl enable cwonder@username
-```
 
 ## Status and Logs
 
